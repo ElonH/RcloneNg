@@ -1,13 +1,30 @@
 {
   "name": "rclone-ng",
   "version": "0.0.0",
+  "description": "An angular web application for rclone",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ElonH/RcloneNg.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ElonH/RcloneNg/issues"
+  },
+  "homepage": "https://github.com/ElonH/RcloneNg#readme",
+  "keywords": [
+    "rclone",
+    "rclone-ng",
+    "RcloneNg"
+  ],
+  "author": "ElonH <elonhhuang@gmail.com>",
+  "license": "MIT",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "commit": "git-cz"
   },
   "private": true,
   "dependencies": {
@@ -41,6 +58,20 @@
     "protractor": "~5.4.3",
     "ts-node": "~8.3.0",
     "tslint": "~6.1.0",
-    "typescript": "~3.8.3"
+    "typescript": "~3.8.3",
+    "@commitlint/cli": "^8.3.5",
+    "@commitlint/config-conventional": "^8.3.4",
+    "cz-conventional-changelog": "^3.2.0",
+    "husky": "^4.2.5"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -x @commitlint/config-conventional -E HUSKY_GIT_PARAMS"
+    }
   }
 }
