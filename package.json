@@ -21,10 +21,13 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build:prod": "npm run build -- --prod --aot",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "commit": "git-cz"
+    "commit": "git-cz",
+    "release": "standard-version",
+    "release:dry": "standard-version --dry-run"
   },
   "private": true,
   "dependencies": {
@@ -62,7 +65,8 @@
     "@commitlint/cli": "^8.3.5",
     "@commitlint/config-conventional": "^8.3.4",
     "cz-conventional-changelog": "^3.2.0",
-    "husky": "^4.2.5"
+    "husky": "^4.2.5",
+    "standard-version": "^7.1.0"
   },
   "config": {
     "commitizen": {
