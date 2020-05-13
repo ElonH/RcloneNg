@@ -24,8 +24,8 @@ export abstract class Generic {
   protected _request(x: DataFlowNode): Observable<AjaxResponse> {
     return ajax(this.request(x));
   }
-  protected operate(req: Observable<DataFlowNode>): Observable<DataFlowNode> {
-    return req;
+  protected operate(rsp: Observable<DataFlowNode>): Observable<DataFlowNode> {
+    return rsp;
   }
   protected abstract generateModule(
     current: DataFlowNode,
