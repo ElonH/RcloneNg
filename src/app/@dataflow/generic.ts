@@ -10,7 +10,7 @@ import {
 } from 'rxjs/operators';
 import { AjaxResponse, ajax, AjaxRequest } from 'rxjs/ajax';
 
-export type DataFlowNode = [any, any[]];
+export type DataFlowNode = [object, any[]];
 
 export abstract class Generic {
   protected abstract cmd: string;
@@ -73,7 +73,7 @@ export abstract class Generic {
             of(Generic.cacheData[this.cachePath]),
             this._request([data, preErrors]).pipe(
               map((rsp): DataFlowNode => [rsp, []]),
-              catchError((err): DataFlowNode => [null, [err]]),
+              catchError((err): DataFlowNode => [{}, [err]]),
               tap((x: DataFlowNode) => {
                 Generic.cacheData[this.cachePath] = x;
               })
