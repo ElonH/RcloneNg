@@ -71,7 +71,7 @@ export abstract class Generic {
               this.cacheSupport &&
               Generic.cacheData.hasOwnProperty(this.cachePath),
             of(Generic.cacheData[this.cachePath]),
-            this._request(data).pipe(
+            this._request([data, preErrors]).pipe(
               map((rsp): DataFlowNode => [rsp, []]),
               catchError((err): DataFlowNode => [null, [err]]),
               tap((x: DataFlowNode) => {
