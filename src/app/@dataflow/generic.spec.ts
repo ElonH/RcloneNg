@@ -12,7 +12,7 @@ class TestGeneric extends Generic {
 	protected request(x: DataFlowNode): AjaxRequest {
 		return {} as AjaxResponse;
 	}
-	protected generateModule(current: DataFlowNode, previous: DataFlowNode): DataFlowNode {
+	protected generateSuperset(current: DataFlowNode, previous: DataFlowNode): DataFlowNode {
 		return [{ pre: previous[0]['pre'], cur: 2 }, null];
 	}
 }

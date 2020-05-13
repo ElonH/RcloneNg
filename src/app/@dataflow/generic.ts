@@ -13,39 +13,37 @@ import { AjaxResponse, ajax, AjaxRequest } from 'rxjs/ajax';
 export type DataFlowNode = [object, any[]];
 
 export abstract class Generic {
-	protected abstract cmd: string;
-	protected abstract params: object;
 	protected abstract cacheSupport: boolean;
 
-	protected cachePath?: string;
+	protected abstract cachePath?: string;
 
 	protected abstract prerequest(): Observable<DataFlowNode>;
 	protected abstract request(x: DataFlowNode): AjaxRequest;
 	protected _request(x: DataFlowNode): Observable<AjaxResponse> {
 		return ajax(this.request(x));
 	}
-	protected operate(rsp: Observable<DataFlowNode>): Observable<DataFlowNode> {
+	protected reconstruct(rsp: Observable<DataFlowNode>): Observable<DataFlowNode> {
 		return rsp;
 	}
-	protected abstract generateModule(current: DataFlowNode, previous: DataFlowNode): DataFlowNode;
+	protected abstract generateSuperset(current: DataFlowNode, previous: DataFlowNode): DataFlowNode;
 
 	private interalData$: Observable<DataFlowNode>;
 	private data$: Observable<DataFlowNode>;
-	private static cacheData: { [index: string]: DataFlowNode } = {};
-	private moduleRst: DataFlowNode;
+	private static cacheStorage: { [index: string]: DataFlowNode } = {};
+	private supersetCache: DataFlowNode;
 
 	/**
 	 * getOutput
 	 */
-	public getDataOutput(): Observable<DataFlowNode> {
+	public getOutput(): Observable<DataFlowNode> {
 		return this.data$;
 	}
 
 	/**
-	 * getModelOutput
+	 * getSupersetoutput
 	 */
-	public getModuleOutput(): Observable<DataFlowNode> {
-		return this.interalData$.pipe(startWith(this.moduleRst), distinctUntilChanged());
+	public getSupersetOutput(): Observable<DataFlowNode> {
+		return this.interalData$.pipe(startWith(this.supersetCache), distinctUntilChanged());
 	}
 
 	/**
@@ -54,33 +52,32 @@ export abstract class Generic {
 	public deploy() {
 		const prerequest$ = this.prerequest();
 		// request
-		if (!this.cachePath) this.cachePath = JSON.stringify([this.cmd, this.params]);
 		const request$ = prerequest$.pipe(
 			switchMap(
 				([data, preErrors]): Observable<DataFlowNode> => {
 					if (preErrors.length !== 0) return prerequest$; // todo: test work around? or replase as of([null, preErrors])
 					return iif(
-						() => this.cacheSupport && Generic.cacheData.hasOwnProperty(this.cachePath),
-						of(Generic.cacheData[this.cachePath]),
+						() => this.cacheSupport && Generic.cacheStorage.hasOwnProperty(this.cachePath),
+						of(Generic.cacheStorage[this.cachePath]),
 						this._request([data, preErrors]).pipe(
 							map((rsp): DataFlowNode => [rsp, []]),
 							catchError((err): Observable<DataFlowNode> => of([{}, [err]])),
 							tap((x: DataFlowNode) => {
-								if (this.cacheSupport) Generic.cacheData[this.cachePath] = x;
+								if (this.cacheSupport) Generic.cacheStorage[this.cachePath] = x;
 							})
 						)
 					);
 				}
 			)
 		);
-		// operate
-		const operate$ = this.operate(request$);
-		this.interalData$ = operate$.pipe(
+		// reconstruct
+		const reconstruct$ = this.reconstruct(request$);
+		this.interalData$ = reconstruct$.pipe(
 			withLatestFrom(prerequest$),
-			map(([cur, pre]) => this.generateModule(cur, pre)),
-			tap((x) => (this.moduleRst = x))
+			map(([cur, pre]) => this.generateSuperset(cur, pre)),
+			tap((x) => (this.supersetCache = x))
 		);
-		this.data$ = operate$.pipe(
+		this.data$ = reconstruct$.pipe(
 			withLatestFrom(this.interalData$),
 			map(([x, y]) => x)
 		);
@@ -88,6 +85,10 @@ export abstract class Generic {
 }
 
 export abstract class RcloneAuth extends Generic {
+	protected abstract cmd: string;
+	protected abstract params: object;
+	protected cachePath?: string;
+
 	protected request(x: DataFlowNode): AjaxRequest {
 		let headers = {
 			'Content-Type': 'application/json',
@@ -100,5 +101,10 @@ export abstract class RcloneAuth extends Generic {
 			headers: headers,
 			body: this.params,
 		};
+	}
+
+	public deploy() {
+		if (!this.cachePath) this.cachePath = JSON.stringify([this.cmd, this.params]);
+		super.deploy();
 	}
 }
