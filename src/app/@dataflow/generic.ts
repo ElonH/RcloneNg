@@ -13,8 +13,28 @@ import { AjaxResponse, ajax, AjaxRequest } from 'rxjs/ajax';
 export type DataFlowNode = [object, any[]];
 
 export abstract class Generic {
+	/**
+	 * Enable cache mechanism for fetching data.
+	 * if `cacheSupport` is true, `request()` result be storaged in
+	 * object `cacheStorage` (`cacheStorage[cachePath]`).
+	 *
+	 * Unless cache is purged, data delivering to the input of `reconstruct` is always from the cache.
+	 * @protected
+	 * @abstract
+	 * @type {boolean}
+	 * @memberof Generic
+	 */
 	protected abstract cacheSupport: boolean;
 
+	/**
+	 * The index of `cacheStorage`.
+	 * Each instance should has different `cachePath` when `cacheSupport` is true.
+	 *
+	 * @protected
+	 * @abstract
+	 * @type {string}
+	 * @memberof Generic
+	 */
 	protected abstract cachePath?: string;
 
 	protected abstract prerequest(): Observable<DataFlowNode>;
@@ -22,6 +42,14 @@ export abstract class Generic {
 	protected _request(x: DataFlowNode): Observable<AjaxResponse> {
 		return ajax(this.request(x));
 	}
+
+	/**
+	 * stripping unnessary data from response.
+	 * taking role of error organizer.
+	 * transforming origin data to specify structure.
+	 *
+	 * @param rsp an observable whose data is from cache or request
+	 */
 	protected reconstruct(rsp: Observable<DataFlowNode>): Observable<DataFlowNode> {
 		return rsp;
 	}
@@ -33,21 +61,30 @@ export abstract class Generic {
 	private supersetCache: DataFlowNode;
 
 	/**
-	 * getOutput
+	 * Getting Observable that recived data from `reconstruct`
 	 */
 	public getOutput(): Observable<DataFlowNode> {
 		return this.data$;
 	}
 
 	/**
-	 * getSupersetoutput
+	 * It is different with `getOutput()`.
+	 * This Observable is recived data that
+	 * not only including reconstructed data from current instance
+	 * but also `prerequest` data.
+	 *
+	 * For Example, `prerequest` provide `[{ foo:1, bar:2 },[]]`,
+	 * `reconstruct` generate `[{ que: 3 },[]]`,
+	 * `[{ que:3 },[]]` can be directly obtained from `getOutput`.
+	 * But `getSupersetOutput` will generate `[{ foo:1, bar:2, que:3 },[]]`,
+	 * if merging two object simplily in `generateSuperset`.
 	 */
 	public getSupersetOutput(): Observable<DataFlowNode> {
 		return this.interalData$.pipe(startWith(this.supersetCache), distinctUntilChanged());
 	}
 
 	/**
-	 * deploy
+	 * setup dataflow
 	 */
 	public deploy() {
 		const prerequest$ = this.prerequest();
@@ -87,6 +124,13 @@ export abstract class Generic {
 export abstract class RcloneAuth extends Generic {
 	protected abstract cmd: string;
 	protected abstract params: object;
+	/**
+	 * auto-gen based on `cmd` and `params`
+	 *
+	 * @protected
+	 * @type {string}
+	 * @memberof RcloneAuth
+	 */
 	protected cachePath?: string;
 
 	protected request(x: DataFlowNode): AjaxRequest {
