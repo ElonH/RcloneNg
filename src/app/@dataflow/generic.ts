@@ -75,7 +75,8 @@ export abstract class Generic {
               map((rsp): DataFlowNode => [rsp, []]),
               catchError((err): DataFlowNode => [{}, [err]]),
               tap((x: DataFlowNode) => {
-                Generic.cacheData[this.cachePath] = x;
+                if(this.cacheSupport)
+                  Generic.cacheData[this.cachePath] = x;
               })
             )
           );
