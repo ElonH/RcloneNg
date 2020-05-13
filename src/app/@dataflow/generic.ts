@@ -8,7 +8,7 @@ import {
   startWith,
   distinctUntilChanged,
 } from 'rxjs/operators';
-import { AjaxResponse } from 'rxjs/ajax';
+import { AjaxResponse, ajax, AjaxRequest } from 'rxjs/ajax';
 
 export type DataFlowNode = [any, any[]];
 
@@ -20,7 +20,10 @@ export abstract class Generic {
   protected cachePath?: string;
 
   protected abstract prerequest(): Observable<DataFlowNode>;
-  protected abstract request(x: DataFlowNode): Observable<AjaxResponse>;
+  protected abstract request(x: DataFlowNode): AjaxRequest;
+  protected _request(x: DataFlowNode): Observable<AjaxResponse> {
+    return ajax(this.request(x));
+  }
   protected operate(req: Observable<DataFlowNode>): Observable<DataFlowNode> {
     return req;
   }
@@ -68,7 +71,7 @@ export abstract class Generic {
               this.cacheSupport &&
               Generic.cacheData.hasOwnProperty(this.cachePath),
             of(Generic.cacheData[this.cachePath]),
-            this.request(data).pipe(
+            this._request(data).pipe(
               map((rsp): DataFlowNode => [rsp, []]),
               catchError((err): DataFlowNode => [null, [err]]),
               tap((x: DataFlowNode) => {

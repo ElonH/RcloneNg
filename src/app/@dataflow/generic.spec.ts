@@ -1,6 +1,6 @@
 import { Generic, DataFlowNode } from './generic';
 import { Observable, of } from 'rxjs';
-import { AjaxResponse } from 'rxjs/ajax';
+import { AjaxResponse, AjaxRequest } from 'rxjs/ajax';
 
 class TestGeneric extends Generic {
   cmd = 'test';
@@ -9,8 +9,8 @@ class TestGeneric extends Generic {
   protected prerequest(): Observable<DataFlowNode> {
     return of([{ pre: 1 }, null]);
   }
-  protected request(x: DataFlowNode): Observable<AjaxResponse> {
-    return of({} as AjaxResponse);
+  protected request(x: DataFlowNode): AjaxRequest {
+    return {} as AjaxResponse;
   }
   protected generateModule(
     current: DataFlowNode,
