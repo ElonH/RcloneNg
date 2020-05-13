@@ -64,7 +64,7 @@ export abstract class Generic {
 						of(Generic.cacheData[this.cachePath]),
 						this._request([data, preErrors]).pipe(
 							map((rsp): DataFlowNode => [rsp, []]),
-							catchError((err): DataFlowNode => [{}, [err]]),
+							catchError((err): Observable<DataFlowNode> => of([{}, [err]])),
 							tap((x: DataFlowNode) => {
 								if (this.cacheSupport) Generic.cacheData[this.cachePath] = x;
 							})
