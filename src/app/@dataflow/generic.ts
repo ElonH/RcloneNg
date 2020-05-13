@@ -1,4 +1,4 @@
-import { Observable, of, iif } from 'rxjs';
+import { Observable, of, iif, Subject } from 'rxjs';
 import {
 	switchMap,
 	map,
@@ -75,13 +75,13 @@ export abstract class Generic {
 		);
 		// operate
 		const operate$ = this.operate(request$);
-		const interalData$ = operate$.pipe(
+		this.interalData$ = operate$.pipe(
 			withLatestFrom(prerequest$),
 			map(([cur, pre]) => this.generateModule(cur, pre)),
 			tap((x) => (this.moduleRst = x))
 		);
 		this.data$ = operate$.pipe(
-			withLatestFrom(interalData$),
+			withLatestFrom(this.interalData$),
 			map(([x, y]) => x)
 		);
 	}
