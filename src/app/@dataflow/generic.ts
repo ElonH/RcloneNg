@@ -86,3 +86,19 @@ export abstract class Generic {
 		);
 	}
 }
+
+export abstract class RcloneAuth extends Generic {
+	protected request(x: DataFlowNode): AjaxRequest {
+		let headers = {
+			'Content-Type': 'application/json',
+		};
+		if (x[0]['user'] && x[0]['user'] !== '' && x[0]['password'] && x[0]['password'] !== '')
+			headers['Authorization'] = 'Basic ' + btoa(`${x[0]['user']}:${x[0]['password']}`);
+		return {
+			url: x[0]['url'] + '/' + this.cmd,
+			method: 'POST',
+			headers: headers,
+			body: this.params,
+		};
+	}
+}
