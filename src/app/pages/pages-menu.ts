@@ -8,7 +8,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
 			{
 				title: 'Add User',
 				icon: 'plus-square-outline',
-				link: 'user',
+				link: 'user/add',
 			},
 			{
 				title: 'Edit User',
