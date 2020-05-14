@@ -28,4 +28,9 @@ export const MENU_ITEMS: NbMenuItem[] = [
 		link: 'dashboard',
 		home: true,
 	},
+	{
+		title: 'File Manager',
+		icon: 'folder-outline',
+		link: 'manager',
+	},
 ];
