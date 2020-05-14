@@ -33,4 +33,9 @@ export const MENU_ITEMS: NbMenuItem[] = [
 		icon: 'folder-outline',
 		link: 'manager',
 	},
+	{
+		title: 'Jobs Manager',
+		icon: 'briefcase-outline',
+		link: 'jobs',
+	},
 ];

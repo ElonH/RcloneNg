@@ -20,6 +20,10 @@ const routes: Routes = [
 				path: 'manager',
 				loadChildren: () => import('./manager/manager.module').then((m) => m.ManagerModule),
 			},
+			{
+				path: 'jobs',
+				loadChildren: () => import('./jobs/jobs.module').then((m) => m.JobsModule),
+			},
 			{ path: '', redirectTo: 'dashboard', pathMatch: 'full' },
 			{ path: '**', redirectTo: 'dashboard' },
 		],
