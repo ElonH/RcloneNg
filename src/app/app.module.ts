@@ -7,6 +7,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
 	NbThemeModule,
 	NbLayoutModule,
+  NbMenuModule,
 } from '@nebular/theme';
 
 @NgModule({
@@ -15,7 +16,8 @@ import {
 		BrowserModule,
 		AppRoutingModule,
 		BrowserAnimationsModule,
-		NbThemeModule.forRoot({ name: 'default' }),
+    NbThemeModule.forRoot({ name: 'default' }),
+    NbMenuModule.forRoot(),
 		NbLayoutModule,
 	],
 	providers: [],
