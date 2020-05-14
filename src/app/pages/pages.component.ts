@@ -10,7 +10,7 @@ import { MENU_ITEMS } from './pages-menu';
 				<nb-actions>
 					<nb-action icon="menu-outline" (click)="toggleNav()"></nb-action>
 				</nb-actions>
-				<nb-actions id="detailBtnContainer">
+				<nb-actions class="pushToRight">
 					<nb-action icon="menu-outline" (click)="toggleDetail()"></nb-action>
 				</nb-actions>
 			</nb-layout-header>
@@ -30,14 +30,19 @@ import { MENU_ITEMS } from './pages-menu';
 					<nb-action icon="trash-2"></nb-action>
 					<nb-action icon="clipboard"></nb-action>
 				</nb-actions>
+				<nb-actions class="pushToRight">
+					<nb-action icon="inbox"></nb-action>
+				</nb-actions>
 			</nb-layout-footer>
 		</nb-layout>
 	`,
-  styles: [`
-  #detailBtnContainer {
-    margin-left: auto;
-  }
-  `],
+	styles: [
+		`
+			.pushToRight {
+				margin-left: auto;
+			}
+		`,
+	],
 })
 export class PagesComponent implements OnInit {
 	menu = MENU_ITEMS;
