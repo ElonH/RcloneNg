@@ -7,6 +7,14 @@ const routes: Routes = [
 	{
 		path: '',
 		component: PagesComponent,
+		children: [
+			{
+				path: 'dashboard',
+				loadChildren: () => import('./dashboard/dashboard.module').then((m) => m.DashboardModule),
+			},
+			{ path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+			{ path: '**', redirectTo: 'dashboard' },
+		],
 	},
 ];
 
