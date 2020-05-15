@@ -39,7 +39,7 @@ export abstract class Generic {
 
 	protected abstract prerequest(): Observable<DataFlowNode>;
 	protected abstract request(x: DataFlowNode): AjaxRequest;
-	protected _request(x: DataFlowNode): Observable<AjaxResponse> {
+	protected _request(x: DataFlowNode): Observable<object> {
 		return ajax(this.request(x));
 	}
 

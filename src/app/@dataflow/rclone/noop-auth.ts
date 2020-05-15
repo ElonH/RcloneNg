@@ -3,6 +3,12 @@ import { Observable, interval, Subject } from 'rxjs';
 import { AjaxRequest, AjaxResponse } from 'rxjs/ajax';
 import { map } from 'rxjs/operators';
 
+export interface IRcloneServer {
+  url: string;
+  user?: string;
+  password?: string;
+}
+
 export abstract class NoopAuth extends RcloneAuth {
 	protected cmd: string = 'rc/noopauth';
 	protected params: object = {};
@@ -13,7 +19,7 @@ export abstract class NoopAuth extends RcloneAuth {
 	}
 }
 
-export class NoopAuthTimer extends NoopAuth {
+export class NoopAuthTimer extends NoopAuth implements IRcloneServer{
 	public url: string = 'http://localhost:5572';
 	public user: string = '';
 	public password: string = '';
