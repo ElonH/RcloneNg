@@ -1,30 +1,29 @@
 import { Generic, DataFlowNode } from './generic';
-import { Observable, of } from 'rxjs';
+import { Observable, of, scheduled, Scheduler } from 'rxjs';
 import { AjaxResponse, AjaxRequest } from 'rxjs/ajax';
-
-class TestGeneric extends Generic {
-	cmd = 'test';
-	params = {};
-	cacheSupport = true;
-	protected prerequest(): Observable<DataFlowNode> {
-		return of([{ pre: 1 }, null]);
-	}
-	protected request(x: DataFlowNode): AjaxRequest {
-		return {} as AjaxResponse;
-	}
-	protected generateSuperset(current: DataFlowNode, previous: DataFlowNode): DataFlowNode {
-		return [{ pre: previous[0]['pre'], cur: 2 }, null];
-	}
-}
+import { TestScheduler } from 'rxjs/testing';
+import { throttleTime } from 'rxjs/operators';
 
 describe('Generic', () => {
-	var g: TestGeneric;
-	beforeEach(() => {
-		g = new TestGeneric();
-		g.deploy();
-	});
+	let scheduler: TestScheduler;
+	beforeEach(
+		() =>
+			(scheduler = new TestScheduler((actual, expected) => {
+				expect(actual).toEqual(expected);
+			}))
+	);
+	// it('should create an instance', () => {
+	// 	expect(new TestGeneric()).toBeTruthy();
+	// });
+	it('generate the stream correctly', () => {
+		scheduler.run((helpers) => {
+			const { cold, hot, expectObservable, expectSubscriptions, flush } = helpers;
+			const e1 = cold(' -a--b--c---|');
+			// const subs = ' ^----------!';
+			const expected = '-a-----c---|';
 
-	it('should create an instance', () => {
-		expect(g).toBeTruthy();
+			expectObservable(e1.pipe(throttleTime(3, scheduler))).toBe(expected);
+			// expectSubscriptions(e1.subscriptions).toBe(subs);
+		});
 	});
 });

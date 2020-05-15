@@ -132,10 +132,10 @@ export class ConfigComponent implements OnInit, IUserConfig {
 		this.isAuthPass.subscribe((x) => console.log(x));
     this.users$.emitter.next(1);
 
-    this.AuthValidation$.next(1);
-		// this.name = '';
-		// this.nameValidation$.next();
-		// this.name = '123';
-		// this.nameValidation$.next();
+    // this.AuthValidation$.next(1);
+		this.name = '';
+		this.nameValidation$.next();
+		this.name = '123';
+		this.nameValidation$.next();
 	}
 }
