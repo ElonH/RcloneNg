@@ -1,4 +1,4 @@
-import { DataFlowNode, RcloneAuth } from './generic';
+import { DataFlowNode, RcloneAuth } from '../generic';
 import { Observable, interval, Subject } from 'rxjs';
 import { AjaxRequest, AjaxResponse } from 'rxjs/ajax';
 import { map } from 'rxjs/operators';
