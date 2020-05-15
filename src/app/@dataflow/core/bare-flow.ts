@@ -7,6 +7,7 @@ export abstract class BareFlow {
 	public abstract prerequest$: Observable<DataFlowNode>;
 	protected abstract request(pre: DataFlowNode): Observable<DataFlowNode>;
 	private bareData$: Observable<DataFlowNode>;
+	private deployed = false;
 	public deploy() {
 		this.bareData$ = this.prerequest$.pipe(
 			switchMap(
@@ -16,8 +17,10 @@ export abstract class BareFlow {
 				}
 			)
 		);
+		this.deployed = true;
 	}
 	public getOutput(): Observable<DataFlowNode> {
+		if (!this.deployed) throw new Error('run deploy before getOutput');
 		return this.bareData$;
 	}
 }
