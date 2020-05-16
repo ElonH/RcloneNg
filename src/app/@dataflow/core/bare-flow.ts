@@ -1,5 +1,5 @@
 import { Observable, of } from 'rxjs';
-import { switchMap, take, tap, startWith, distinctUntilChanged, skip } from 'rxjs/operators';
+import { switchMap, take, tap, startWith, distinctUntilChanged, skipWhile } from 'rxjs/operators';
 
 export type DataFlowNode = [object, Error[]];
 
@@ -26,8 +26,9 @@ export abstract class BareFlow {
 		if (!this.deployed) throw new Error('run deploy before getOutput');
 		return this.bareData$.pipe(
 			startWith(this.boostrapData),
-      distinctUntilChanged(),
-      skip(1) // don't why need it , otherwise, test failure. refs: https://stackoverflow.com/a/52157317
-    );
+			distinctUntilChanged(),
+			skipWhile((x) => typeof x === 'undefined')
+			// skip(1), // don't why need it , otherwise, test failure. refs: https://stackoverflow.com/a/52157317
+		);
 	}
 }
