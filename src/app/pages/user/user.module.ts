@@ -5,7 +5,7 @@ import { UserRoutingModule } from './user-routing.module';
 import { UserComponent } from './user.component';
 import { ConfigComponent } from './config/config.component';
 import { NbFormFieldModule, NbCardModule, NbIconModule, NbInputModule, NbActionsModule, NbButtonModule } from '@nebular/theme';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
 	declarations: [UserComponent, ConfigComponent],
@@ -18,7 +18,7 @@ import { FormsModule } from '@angular/forms';
     NbInputModule,
     NbActionsModule,
     NbButtonModule,
-    FormsModule
+    ReactiveFormsModule
 	],
 })
 export class UserModule {}
