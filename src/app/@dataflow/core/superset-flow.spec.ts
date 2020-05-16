@@ -1,6 +1,6 @@
 import { SupersetFlow } from './superset-flow';
 import { TestScheduler } from 'rxjs/testing';
-import { DataFlowNode, BareFlowPreNode } from './bare-flow';
+import { DataFlowNode, BareFlowInNode } from './bare-flow';
 import { Observable, of } from 'rxjs';
 
 describe('SupersetFlow', () => {
@@ -23,7 +23,7 @@ describe('SupersetFlow', () => {
 			const pre = cold('a--b-', values);
 			const expected = 'c--d-';
 
-			const rst = new (class extends SupersetFlow<BareFlowPreNode> {
+			const rst = new (class extends SupersetFlow<BareFlowInNode> {
 				public prerequest$ = pre;
 				protected request(pre: DataFlowNode): Observable<DataFlowNode> {
 					return of([{ cd: pre[0]['ab'] + 1 }, []]);

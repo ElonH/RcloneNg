@@ -1,9 +1,9 @@
-import { DataFlowNode, BareFlowPreNode } from './bare-flow';
+import { DataFlowNode, BareFlowInNode } from './bare-flow';
 import { Observable, iif, of } from 'rxjs';
 import { SupersetFlow } from './superset-flow';
 import { tap, take, map } from 'rxjs/operators';
 
-export abstract class CacheFlow<Tin extends BareFlowPreNode> extends SupersetFlow<Tin> {
+export abstract class CacheFlow<Tin extends BareFlowInNode> extends SupersetFlow<Tin> {
 	protected abstract requestCache(pre: DataFlowNode): Observable<DataFlowNode>;
 	protected request(pre: DataFlowNode): Observable<DataFlowNode> {
 		return iif(

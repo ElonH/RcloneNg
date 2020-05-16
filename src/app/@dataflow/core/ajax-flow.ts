@@ -1,12 +1,12 @@
 import { CacheFlow } from './cache-flow';
-import { DataFlowNode, BareFlowPreNode } from './bare-flow';
+import { DataFlowNode, BareFlowInNode } from './bare-flow';
 import { Observable, of } from 'rxjs';
 import { ajax, AjaxRequest, AjaxResponse } from 'rxjs/ajax';
 import { catchError, map } from 'rxjs/operators';
 
 export type AjaxFlowNode = [AjaxResponse | object, Error[]];
 
-export abstract class AjaxFlow<Tin extends BareFlowPreNode> extends CacheFlow<Tin> {
+export abstract class AjaxFlow<Tin extends BareFlowInNode> extends CacheFlow<Tin> {
 	// protected cacheSupport: boolean;
 	// protected cachePath: string;
 

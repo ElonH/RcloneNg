@@ -1,6 +1,6 @@
 import { CacheFlow } from './cache-flow';
 import { TestScheduler } from 'rxjs/testing';
-import { DataFlowNode, BareFlowPreNode } from './bare-flow';
+import { DataFlowNode, BareFlowInNode } from './bare-flow';
 import { Observable, of } from 'rxjs';
 
 describe('CacheFlow', () => {
@@ -27,7 +27,7 @@ describe('CacheFlow', () => {
 			const expectedOutput = 'k----';
 			const expectedSupers = 'c----';
 
-			const rst = new (class extends CacheFlow<BareFlowPreNode> {
+			const rst = new (class extends CacheFlow<BareFlowInNode> {
 				protected cacheSupport: boolean = true;
 				protected cachePath: string = 'foo';
 				public prerequest$ = pre;
@@ -56,7 +56,7 @@ describe('CacheFlow', () => {
 			const expectedOutput = 'k----';
 			const expectedSupers = 'c----';
 			const expectedSuper2 = 'd----';
-			class TestCache extends CacheFlow<BareFlowPreNode> {
+			class TestCache extends CacheFlow<BareFlowInNode> {
 				protected cacheSupport: boolean = true;
 				protected cachePath: string = 'foo';
 				public prerequest$ = null;
@@ -95,7 +95,7 @@ describe('CacheFlow', () => {
 			const expectedOutput = 'c--d-';
 			const expectedSupers = 'e--f-';
 
-			const rst = new (class extends CacheFlow<BareFlowPreNode> {
+			const rst = new (class extends CacheFlow<BareFlowInNode> {
 				protected cacheSupport: boolean = false;
 				protected cachePath: string = 'foo';
 				public prerequest$ = pre;

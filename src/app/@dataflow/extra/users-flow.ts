@@ -1,5 +1,5 @@
 import { Observable, of } from 'rxjs';
-import { BareFlow, DataFlowNode, BareFlowPreNode, CombErr } from '../core';
+import { BareFlow, DataFlowNode, BareFlowInNode, CombErr } from '../core';
 
 export interface IRcloneServer {
   url: string;
@@ -12,11 +12,11 @@ export interface IUser extends IRcloneServer {
 }
 
 // export type UsersFlowNode = [{ users: IUser[] }, Error[]];
-export interface UsersFlowNode extends BareFlowPreNode {
+export interface UsersFlowNode extends BareFlowInNode {
 	users: IUser[];
 }
 
-export abstract class UsersFlow extends BareFlow<BareFlowPreNode> {
+export abstract class UsersFlow extends BareFlow<BareFlowInNode> {
 	public static readonly defaultUser: IUser[] = [
 		{ name: 'localhost', url: 'http://localhost:5572' },
 	];
