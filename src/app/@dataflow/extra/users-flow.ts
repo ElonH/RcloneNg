@@ -1,6 +1,11 @@
 import { Observable, of } from 'rxjs';
-import { IRcloneServer } from '../rclone/noop-auth';
 import { BareFlow, DataFlowNode, BareFlowPreNode, CombErr } from '../core';
+
+export interface IRcloneServer {
+  url: string;
+  user?: string;
+  password?: string;
+}
 
 export interface IUser extends IRcloneServer {
 	name: string;
