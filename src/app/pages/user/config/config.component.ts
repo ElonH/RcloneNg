@@ -31,20 +31,22 @@ import { withLatestFrom, map, startWith } from 'rxjs/operators';
 						<nb-icon nbSuffix icon="checkmark-outline" status="success"></nb-icon>
 					</ng-template>
 				</nb-form-field>
-				<span style="color: #ff3d71;">{{ nameErr }}</span>
+				<span status="danger">{{ nameErr }}</span>
 				<br /><br />
 				<span>Server Url:</span>
 				<nb-form-field>
 					<nb-icon nbPrefix icon="monitor-outline"></nb-icon>
 					<input
 						[formControl]="url"
+						[status]="(urlValidation$ | async) ? 'danger' : 'basic'"
 						type="text"
 						nbInput
 						fullWidth
 						placeholder="http://localhost:5572"
 					/>
 				</nb-form-field>
-				<br />
+				<span status="danger">{{ urlErr }}</span>
+				<br /><br />
 				<span>User:</span>
 				<nb-form-field>
 					<nb-icon nbPrefix icon="person-outline"></nb-icon>
@@ -94,6 +96,9 @@ import { withLatestFrom, map, startWith } from 'rxjs/operators';
 			nb-card {
 				max-width: 480px;
 			}
+			span[status='danger'] {
+				color: #ff3d71;
+			}
 		`,
 	],
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -102,6 +107,7 @@ export class ConfigComponent implements OnInit {
 	name = new FormControl('');
 	nameErr = '';
 	url = new FormControl('http://localhost:5572');
+	urlErr = '';
 	user = new FormControl('');
 	password = new FormControl('');
 
@@ -110,6 +116,7 @@ export class ConfigComponent implements OnInit {
 
 	nameValidation$: NameValidation;
 	disableSave$: Observable<boolean>;
+	urlValidation$: Observable<boolean>;
 
 	constructor() {}
 
@@ -131,5 +138,14 @@ export class ConfigComponent implements OnInit {
 			if (x[1].length > 1) throw new Error('more than one erros in NameValidation');
 		});
 		this.disableSave$ = this.nameValidation$.getOutput().pipe(map(([x, err]) => err.length !== 0));
+
+		this.urlValidation$ = this.url.valueChanges.pipe(
+			startWith('http://localhost:5572'),
+			map((x) => {
+				if (x === '') this.urlErr = 'You must enter a value';
+				else this.urlErr = '';
+				return x === '';
+			})
+		);
 	}
 }
