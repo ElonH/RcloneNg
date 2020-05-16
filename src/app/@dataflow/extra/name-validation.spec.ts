@@ -1,6 +1,7 @@
-import { NameValidation } from './name-validation';
+import { NameValidation, NameValidationPreNode, NameValidationNode } from './name-validation';
 import { TestScheduler } from 'rxjs/testing';
-import { DataFlowNode } from '../core';
+import { CombErr } from '../core';
+import { Observable } from 'rxjs';
 
 describe('NameValidation', () => {
 	let scheduler: TestScheduler;
@@ -13,11 +14,11 @@ describe('NameValidation', () => {
 	it('normal', () => {
 		scheduler.run((helpers) => {
 			const { cold, hot, expectObservable, expectSubscriptions, flush } = helpers;
-			const values = {
-				a: [{ users: [{ name: '123' }], currentName: 'asd' }, []] as DataFlowNode,
-				b: [{ nameValid: true }, []] as DataFlowNode,
+			const values: { [id: string]: CombErr<NameValidationPreNode | NameValidationNode> } = {
+				a: [{ users: [{ name: '123', url: '' }], currentName: 'asd' }, []],
+				b: [{ nameValid: true }, []],
 			};
-			const pre = cold('a----', values);
+			const pre = cold('a----', values) as Observable<CombErr<NameValidationPreNode>>;
 			const expected = 'b----';
 
 			const rst = new (class extends NameValidation {
@@ -31,11 +32,11 @@ describe('NameValidation', () => {
 	it('not allow empty', () => {
 		scheduler.run((helpers) => {
 			const { cold, hot, expectObservable, expectSubscriptions, flush } = helpers;
-			const values = {
-				a: [{ users: [], currentName: '' }, []] as DataFlowNode,
-				b: [{}, [new Error('You must enter a value')]] as DataFlowNode,
+			const values: { [id: string]: CombErr<NameValidationPreNode | NameValidationNode> } = {
+				a: [{ users: [], currentName: '' }, []],
+				b: [{}, [new Error('You must enter a value')]],
 			};
-			const pre = cold('a----', values);
+			const pre = cold('a----', values) as Observable<CombErr<NameValidationPreNode>>;
 			const expected = 'b----';
 
 			const rst = new (class extends NameValidation {
@@ -49,11 +50,11 @@ describe('NameValidation', () => {
 	it('not allow duplicate name', () => {
 		scheduler.run((helpers) => {
 			const { cold, hot, expectObservable, expectSubscriptions, flush } = helpers;
-			const values = {
-				a: [{ users: [{ name: '123' }], currentName: '123' }, []] as DataFlowNode,
-				b: [{}, [new Error('This name already exists')]] as DataFlowNode,
+			const values: { [id: string]: CombErr<NameValidationPreNode | NameValidationNode> } = {
+				a: [{ users: [{ name: '123', url: '' }], currentName: '123' }, []],
+				b: [{}, [new Error('This name already exists')]],
 			};
-			const pre = cold('a----', values);
+			const pre = cold('a----', values) as Observable<CombErr<NameValidationPreNode>>;
 			const expected = 'b----';
 
 			const rst = new (class extends NameValidation {

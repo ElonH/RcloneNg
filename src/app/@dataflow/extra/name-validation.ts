@@ -1,9 +1,16 @@
-import { SupersetFlow, DataFlowNode } from '../core';
+import { SupersetFlow, DataFlowNode, BareFlowPreNode } from '../core';
 import { Observable, of } from 'rxjs';
-import { IUser } from './users-flow';
+import { IUser, UsersFlowNode } from './users-flow';
 
-export abstract class NameValidation extends SupersetFlow {
-	// public prerequest$: Observable<DataFlowNode>;
+export interface NameValidationPreNode extends UsersFlowNode {
+	currentName: string;
+}
+
+export interface NameValidationNode extends BareFlowPreNode {
+	nameValid?: boolean;
+}
+
+export abstract class NameValidation extends SupersetFlow<NameValidationPreNode> {
 	protected request(pre: DataFlowNode): Observable<DataFlowNode> {
 		const curName = pre[0]['currentName'];
 		if (curName === '') return of([{}, [new Error('You must enter a value')]]);

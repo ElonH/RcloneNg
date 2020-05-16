@@ -22,7 +22,7 @@ export class UserComponent implements OnInit {
 	ngOnInit(): void {
 		const outer = this;
 		this.usersFlow$ = new (class extends UsersFlow {
-			public prerequest$ = outer.userSubject.pipe(map(() => [{}, []] as DataFlowNode));
+			public prerequest$ = outer.userSubject.pipe(map((): DataFlowNode => [{}, []]));
 		})();
 		this.usersFlow$.deploy();
 

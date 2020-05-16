@@ -1,9 +1,9 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
 import { Observable } from 'rxjs';
-import { UsersFlowNode, NameValidation } from 'src/app/@dataflow/extra';
+import { UsersFlowNode, NameValidation, NameValidationPreNode } from 'src/app/@dataflow/extra';
 import { FormControl } from '@angular/forms';
-import { DataFlowNode } from 'src/app/@dataflow/core';
 import { withLatestFrom, map, startWith } from 'rxjs/operators';
+import { CombErr } from 'src/app/@dataflow/core';
 
 @Component({
 	selector: 'user-config',
@@ -123,12 +123,14 @@ export class ConfigComponent implements OnInit {
 	ngOnInit(): void {
 		const outer = this;
 		this.nameValidation$ = new (class extends NameValidation {
-			public prerequest$: Observable<DataFlowNode> = outer.name.valueChanges.pipe(
+			public prerequest$ = outer.name.valueChanges.pipe(
 				startWith(''),
 				withLatestFrom(outer.users$),
-				map(([curName, usersNode]) => {
-					return [{ ...usersNode[0], currentName: curName }, usersNode[1]];
-				})
+				map(
+					([curName, usersNode]): CombErr<NameValidationPreNode> => {
+						return [{ ...usersNode[0], currentName: curName }, usersNode[1]];
+					}
+				)
 			);
 		})();
 		this.nameValidation$.deploy();

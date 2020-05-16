@@ -1,4 +1,4 @@
-import { UsersFlow, IUser } from './users-flow';
+import { UsersFlow, IUser, UsersFlowNode } from './users-flow';
 import { TestScheduler } from 'rxjs/testing';
 import { DataFlowNode } from '../core';
 import { map } from 'rxjs/operators';
@@ -42,7 +42,7 @@ describe('UsersFlow', () => {
 			const expected = 'b-b--';
 
 			const rst = new (class extends UsersFlow {
-				public prerequest$ = pre.pipe(map(() => [{}, []] as DataFlowNode));
+				public prerequest$ = pre.pipe(map((): DataFlowNode => [{}, []]));
 			})();
 
 			UsersFlow.setAll([]);
@@ -67,7 +67,7 @@ describe('UsersFlow', () => {
 			const expected = 'b-b--';
 
 			const rst = new (class extends UsersFlow {
-				public prerequest$ = pre.pipe(map(() => [{}, []] as DataFlowNode));
+				public prerequest$ = pre.pipe(map((): DataFlowNode => [{}, []]));
 			})();
 
 			UsersFlow.setAll([

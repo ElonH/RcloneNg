@@ -1,10 +1,12 @@
 import { Observable, of } from 'rxjs';
 import { switchMap, take, tap, startWith, distinctUntilChanged, skipWhile } from 'rxjs/operators';
 
-export type DataFlowNode = [object, Error[]];
+export interface BareFlowPreNode {};
+export type DataFlowNode = [BareFlowPreNode, Error[]];
+export type CombErr<T> = [T, Error[]];
 
-export abstract class BareFlow {
-	public abstract prerequest$: Observable<DataFlowNode>;
+export abstract class BareFlow<Tpre extends BareFlowPreNode> {
+	public abstract prerequest$: Observable<CombErr<Tpre>>;
 	protected abstract request(pre: DataFlowNode): Observable<DataFlowNode>;
 	private bareData$: Observable<DataFlowNode>;
 	private deployed = false;

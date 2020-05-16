@@ -1,6 +1,6 @@
 import { CacheFlow } from './cache-flow';
 import { TestScheduler } from 'rxjs/testing';
-import { DataFlowNode } from './bare-flow';
+import { DataFlowNode, BareFlowPreNode } from './bare-flow';
 import { Observable, of } from 'rxjs';
 
 describe('CacheFlow', () => {
@@ -16,7 +16,7 @@ describe('CacheFlow', () => {
 	});
 	it('prerequest twice(different value), request same value, only output onece', () => {
 		scheduler.run((helpers) => {
-			const { cold, hot, expectObservable, expectSubscriptions, flush } = helpers;
+      const { cold, hot, expectObservable, expectSubscriptions, flush } = helpers;
 			const values: { [id: string]: DataFlowNode } = {
 				a: [{ ab: 555 }, []],
 				b: [{ ab: 123 }, []],
@@ -27,7 +27,7 @@ describe('CacheFlow', () => {
 			const expectedOutput = 'k----';
 			const expectedSupers = 'c----';
 
-			const rst = new (class extends CacheFlow {
+			const rst = new (class extends CacheFlow<BareFlowPreNode> {
 				protected cacheSupport: boolean = true;
 				protected cachePath: string = 'foo';
 				public prerequest$ = pre;
@@ -56,7 +56,7 @@ describe('CacheFlow', () => {
 			const expectedOutput = 'k----';
 			const expectedSupers = 'c----';
 			const expectedSuper2 = 'd----';
-			class TestCache extends CacheFlow {
+			class TestCache extends CacheFlow<BareFlowPreNode> {
 				protected cacheSupport: boolean = true;
 				protected cachePath: string = 'foo';
 				public prerequest$ = null;
@@ -95,7 +95,7 @@ describe('CacheFlow', () => {
 			const expectedOutput = 'c--d-';
 			const expectedSupers = 'e--f-';
 
-			const rst = new (class extends CacheFlow {
+			const rst = new (class extends CacheFlow<BareFlowPreNode> {
 				protected cacheSupport: boolean = false;
 				protected cachePath: string = 'foo';
 				public prerequest$ = pre;
