@@ -6,7 +6,7 @@ import { catchError, map } from 'rxjs/operators';
 
 export type AjaxFlowNode = [AjaxResponse | object, Error[]];
 
-export abstract class AjaxFlow<Tpre extends BareFlowPreNode> extends CacheFlow<Tpre> {
+export abstract class AjaxFlow<Tin extends BareFlowPreNode> extends CacheFlow<Tin> {
 	// protected cacheSupport: boolean;
 	// protected cachePath: string;
 

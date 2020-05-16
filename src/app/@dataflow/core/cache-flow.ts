@@ -3,7 +3,7 @@ import { Observable, iif, of } from 'rxjs';
 import { SupersetFlow } from './superset-flow';
 import { tap, take, map } from 'rxjs/operators';
 
-export abstract class CacheFlow<Tpre extends BareFlowPreNode> extends SupersetFlow<Tpre> {
+export abstract class CacheFlow<Tin extends BareFlowPreNode> extends SupersetFlow<Tin> {
 	protected abstract requestCache(pre: DataFlowNode): Observable<DataFlowNode>;
 	protected request(pre: DataFlowNode): Observable<DataFlowNode> {
 		return iif(

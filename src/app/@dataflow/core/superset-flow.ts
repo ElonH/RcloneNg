@@ -10,7 +10,7 @@ import {
 	map,
 } from 'rxjs/operators';
 
-export abstract class SupersetFlow<Tpre extends BareFlowPreNode> extends BareFlow<Tpre> {
+export abstract class SupersetFlow<Tin extends BareFlowPreNode> extends BareFlow<Tin> {
 	private boostrapPrerequest$: Observable<DataFlowNode>;
 	private boostrapPrerequest: DataFlowNode;
 	public deploy() {

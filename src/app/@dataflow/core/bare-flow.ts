@@ -5,8 +5,8 @@ export interface BareFlowPreNode {};
 export type DataFlowNode = [BareFlowPreNode, Error[]];
 export type CombErr<T> = [T, Error[]];
 
-export abstract class BareFlow<Tpre extends BareFlowPreNode> {
-	public abstract prerequest$: Observable<CombErr<Tpre>>;
+export abstract class BareFlow<Tin extends BareFlowPreNode> {
+	public abstract prerequest$: Observable<CombErr<Tin>>;
 	protected abstract request(pre: DataFlowNode): Observable<DataFlowNode>;
 	private bareData$: Observable<DataFlowNode>;
 	private deployed = false;
