@@ -18,7 +18,7 @@ export abstract class SupersetFlow<
 	private boostrapPrerequest: DataFlowNode;
 	public deploy() {
 		super.deploy();
-		this.boostrapPrerequest$ = this.prerequest$.pipe(tap((x) => this.boostrapPrerequest));
+		this.boostrapPrerequest$ = this.prerequest$.pipe(tap((x) => (this.boostrapPrerequest = x)));
 		this.boostrapPrerequest$.pipe(take(1)).subscribe();
 	}
 	protected generateSuperset(current: DataFlowNode, previous: DataFlowNode): DataFlowNode {
