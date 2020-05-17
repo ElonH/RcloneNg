@@ -1,9 +1,15 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
-import { Observable } from 'rxjs';
-import { UsersFlowNode, NameValidation, NameValidationPreNode } from 'src/app/@dataflow/extra';
+import { Observable, Subject } from 'rxjs';
+import {
+	UsersFlowNode,
+	NameValidation,
+	NameValidationPreNode,
+	IRcloneServer,
+} from 'src/app/@dataflow/extra';
 import { FormControl } from '@angular/forms';
-import { withLatestFrom, map, startWith } from 'rxjs/operators';
+import { withLatestFrom, map, startWith, filter } from 'rxjs/operators';
 import { CombErr } from 'src/app/@dataflow/core';
+import { NoopAuthFlow } from 'src/app/@dataflow/rclone/noop-auth-flow';
 
 @Component({
 	selector: 'user-config',
@@ -38,7 +44,7 @@ import { CombErr } from 'src/app/@dataflow/core';
 					<nb-icon nbPrefix icon="monitor-outline"></nb-icon>
 					<input
 						[formControl]="url"
-						[status]="(urlValidation$ | async) ? 'danger' : 'basic'"
+						[status]="(urlValidation$ | async) ? 'basic' : 'danger'"
 						type="text"
 						nbInput
 						fullWidth
@@ -77,9 +83,18 @@ import { CombErr } from 'src/app/@dataflow/core';
 						<button nbButton outline status="danger">Cancel</button>
 					</nb-action>
 					<nb-action>
-						<button nbButton outline status="info">
+						<button
+							nbButton
+							outline
+							[status]="authPass === null ? 'info' : authPass === true ? 'success' : 'warning'"
+							(click)="connectTrigger$.next(1)"
+							[disabled]="(urlValidation$ | async) == false"
+						>
 							Connect
-							<nb-icon icon="refresh" status="info"></nb-icon>
+							<nb-icon
+								[icon]="authPass === null ? 'refresh' : authPass === true ? 'checkmark' : 'close'"
+								[status]="authPass === null ? 'info' : authPass === true ? 'success' : 'warning'"
+							></nb-icon>
 						</button>
 					</nb-action>
 					<nb-action>
@@ -111,10 +126,14 @@ export class ConfigComponent implements OnInit {
 	user = new FormControl('');
 	password = new FormControl('');
 
+	connectTrigger$ = new Subject<number>();
+
 	@Input()
 	users$: Observable<UsersFlowNode>;
 
 	nameValidation$: NameValidation;
+	authPass$: Observable<boolean | null>;
+	authPass: boolean | null;
 	disableSave$: Observable<boolean>;
 	urlValidation$: Observable<boolean>;
 
@@ -144,10 +163,32 @@ export class ConfigComponent implements OnInit {
 		this.urlValidation$ = this.url.valueChanges.pipe(
 			startWith('http://localhost:5572'),
 			map((x) => {
-				if (x === '') this.urlErr = 'You must enter a value';
-				else this.urlErr = '';
-				return x === '';
+				if (x === '') {
+					this.urlErr = 'You must enter a value';
+					return false;
+				}
+				this.urlErr = '';
+				return true;
 			})
 		);
+
+		const authFlow$ = new (class extends NoopAuthFlow {
+			public prerequest$: Observable<CombErr<IRcloneServer>> = outer.connectTrigger$.pipe(
+				map(
+					(): CombErr<IRcloneServer> => {
+						return [
+							{ url: outer.url.value, user: outer.user.value, password: outer.password.value },
+							[],
+						];
+					}
+				)
+			);
+		})();
+		authFlow$.deploy();
+		this.authPass$ = authFlow$.getOutput().pipe(
+			map((x) => x[1].length === 0),
+			startWith(null)
+		);
+		this.authPass$.subscribe((x) => (this.authPass = x));
 	}
 }
