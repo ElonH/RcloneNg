@@ -133,7 +133,7 @@ export class ConfigComponent implements OnInit {
 	connectTrigger$ = new Subject<number>();
 
 	@Input()
-  users$: Observable<UsersFlowNode>;
+  users$: Observable<CombErr<UsersFlowNode>>;
   @Output()
   onSave: EventEmitter<any> = new EventEmitter();
 
