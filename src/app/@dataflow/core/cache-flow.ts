@@ -1,11 +1,14 @@
-import { DataFlowNode, BareFlowInNode } from './bare-flow';
+import { DataFlowNode, BareFlowInNode, BareFlowOutNode, CombErr } from './bare-flow';
 import { Observable, iif, of } from 'rxjs';
 import { SupersetFlow } from './superset-flow';
 import { tap, take, map } from 'rxjs/operators';
 
-export abstract class CacheFlow<Tin extends BareFlowInNode> extends SupersetFlow<Tin> {
-	protected abstract requestCache(pre: DataFlowNode): Observable<DataFlowNode>;
-	protected request(pre: DataFlowNode): Observable<DataFlowNode> {
+export abstract class CacheFlow<
+	Tin extends BareFlowInNode,
+	Tout extends BareFlowOutNode
+> extends SupersetFlow<Tin, Tout> {
+	protected abstract requestCache(pre: CombErr<Tin>): Observable<CombErr<Tout>>;
+	protected request(pre: CombErr<Tin>): Observable<CombErr<Tout>> {
 		return iif(
 			() => this.cacheEnabled() && this.isCached(),
 			of(this.getCache()),
@@ -28,10 +31,10 @@ export abstract class CacheFlow<Tin extends BareFlowInNode> extends SupersetFlow
 	private isCached() {
 		return CacheFlow.cacheStorage.hasOwnProperty(this.cachePath);
 	}
-	private getCache(): DataFlowNode {
-		return CacheFlow.cacheStorage[this.cachePath];
+	private getCache(): CombErr<Tout> {
+		return CacheFlow.cacheStorage[this.cachePath] as CombErr<Tout>;
 	}
-	private setCache(x: DataFlowNode) {
+	private setCache(x: CombErr<Tout>) {
 		CacheFlow.cacheStorage[this.cachePath] = x;
 	}
 	public clearCache() {

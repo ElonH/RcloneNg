@@ -1,4 +1,4 @@
-import { SupersetFlow, DataFlowNode, BareFlowInNode } from '../core';
+import { SupersetFlow, DataFlowNode, BareFlowInNode, CombErr } from '../core';
 import { Observable, of } from 'rxjs';
 import { IUser, UsersFlowNode } from './users-flow';
 
@@ -7,19 +7,19 @@ export interface NameValidationPreNode extends UsersFlowNode {
 }
 
 export interface NameValidationNode extends BareFlowInNode {
-	nameValid?: boolean;
+	nameValid: boolean;
 }
 
-export abstract class NameValidation extends SupersetFlow<NameValidationPreNode> {
-	protected request(pre: DataFlowNode): Observable<DataFlowNode> {
+export abstract class NameValidation extends SupersetFlow<NameValidationPreNode, NameValidationNode> {
+	protected request(pre: DataFlowNode): Observable<CombErr<NameValidationNode>> {
 		const curName = pre[0]['currentName'];
-		if (curName === '') return of([{}, [new Error('You must enter a value')]]);
+		if (curName === '') return of([{}, [new Error('You must enter a value')]] as any);
 		const usrs = pre[0]['users'] as IUser[];
 		let nameExist = false;
 		usrs.forEach((x) => {
 			if (x.name === curName) nameExist = true;
 		});
-		if (nameExist) return of([{}, [new Error('This name already exists')]]);
+		if (nameExist) return of([{}, [new Error('This name already exists')]] as any);
 		return of([{ nameValid: true }, []]);
 	}
 }

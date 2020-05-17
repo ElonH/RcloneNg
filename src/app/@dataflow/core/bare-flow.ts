@@ -1,22 +1,24 @@
 import { Observable, of } from 'rxjs';
 import { switchMap, take, tap, startWith, distinctUntilChanged, skipWhile } from 'rxjs/operators';
 
-export interface BareFlowInNode {};
-export type DataFlowNode = [BareFlowInNode, Error[]];
+export interface BareFlowInNode {}
+export interface BareFlowOutNode {}
+export type DataFlowNode = [BareFlowInNode, Error[]]; // TODO: drop support
 export type CombErr<T> = [T, Error[]];
 
-export abstract class BareFlow<Tin extends BareFlowInNode> {
+export abstract class BareFlow<Tin extends BareFlowInNode, Tout extends BareFlowOutNode> {
 	public abstract prerequest$: Observable<CombErr<Tin>>;
-	protected abstract request(pre: DataFlowNode): Observable<DataFlowNode>;
-	private bareData$: Observable<DataFlowNode>;
+	protected abstract request(pre: CombErr<Tin>): Observable<CombErr<Tout>>;
+	private bareData$: Observable<CombErr<Tout>>;
 	private deployed = false;
-	private boostrapData: DataFlowNode;
+	private boostrapData: CombErr<Tout>;
 	public deploy() {
 		this.bareData$ = this.prerequest$.pipe(
 			switchMap(
-				(pre): Observable<DataFlowNode> => {
+				(pre): Observable<CombErr<Tout>> => {
 					if (pre[1].length === 0) return this.request(pre).pipe(take(1));
-					return of(pre);
+          return of((pre as any) as CombErr<Tout>); // force to convert. There are some errors at privious flow.
+          // Just make sure that checking Error[] at first in subscription
 				}
 			),
 			tap((x) => (this.boostrapData = x))
@@ -24,7 +26,7 @@ export abstract class BareFlow<Tin extends BareFlowInNode> {
 		this.bareData$.pipe(take(1)).subscribe();
 		this.deployed = true;
 	}
-	public getOutput(): Observable<DataFlowNode> {
+	public getOutput(): Observable<CombErr<Tout>> {
 		if (!this.deployed) throw new Error('run deploy before getOutput');
 		return this.bareData$.pipe(
 			startWith(this.boostrapData),

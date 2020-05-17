@@ -2,34 +2,35 @@ import { Observable, of } from 'rxjs';
 import { BareFlow, DataFlowNode, BareFlowInNode, CombErr } from '../core';
 
 export interface IRcloneServer {
-  url: string;
-  user?: string;
-  password?: string;
+	url: string;
+	user?: string;
+	password?: string;
 }
 
 export interface IUser extends IRcloneServer {
 	name: string;
 }
 
-// export type UsersFlowNode = [{ users: IUser[] }, Error[]];
 export interface UsersFlowNode extends BareFlowInNode {
 	users: IUser[];
 }
 
-export abstract class UsersFlow extends BareFlow<BareFlowInNode> {
+export abstract class UsersFlow extends BareFlow<BareFlowInNode, UsersFlowNode> {
 	public static readonly defaultUser: IUser[] = [
 		{ name: 'localhost', url: 'http://localhost:5572' },
 	];
-	protected request(pre: DataFlowNode): Observable<DataFlowNode> {
+	protected request(pre: CombErr<BareFlowInNode>): Observable<CombErr<UsersFlowNode>> {
 		const dataRaw = localStorage.getItem('users');
 		if (dataRaw) return of([{ users: JSON.parse(dataRaw) }, []]);
 		localStorage.setItem('users', JSON.stringify(UsersFlow.defaultUser));
 		return of([{ users: UsersFlow.defaultUser }, []]);
 	}
 	public static setAll(data: IUser[]) {
+		// TODO: trigger dataflow
 		localStorage.setItem('users', JSON.stringify(data));
 	}
 	public static set(user: IUser) {
+		// TODO: trigger dataflow
 		const dataRaw = localStorage.getItem('users');
 		if (dataRaw) {
 			const data = JSON.parse(dataRaw) as IUser[];
@@ -47,9 +48,6 @@ export abstract class UsersFlow extends BareFlow<BareFlowInNode> {
 		const data = [];
 		data.push(user);
 		localStorage.setItem('users', JSON.stringify(data));
-	}
-	public getOutput(): Observable<CombErr<UsersFlowNode>> {
-		return super.getOutput() as Observable<CombErr<UsersFlowNode>>;
 	}
 	public static purge() {
 		localStorage.removeItem('users');

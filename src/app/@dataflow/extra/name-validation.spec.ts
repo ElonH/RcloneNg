@@ -34,7 +34,7 @@ describe('NameValidation', () => {
 			const { cold, hot, expectObservable, expectSubscriptions, flush } = helpers;
 			const values: { [id: string]: CombErr<NameValidationPreNode | NameValidationNode> } = {
 				a: [{ users: [], currentName: '' }, []],
-				b: [{}, [new Error('You must enter a value')]],
+				b: [{}, [new Error('You must enter a value')]]as any,
 			};
 			const pre = cold('a----', values) as Observable<CombErr<NameValidationPreNode>>;
 			const expected = 'b----';
@@ -52,7 +52,7 @@ describe('NameValidation', () => {
 			const { cold, hot, expectObservable, expectSubscriptions, flush } = helpers;
 			const values: { [id: string]: CombErr<NameValidationPreNode | NameValidationNode> } = {
 				a: [{ users: [{ name: '123', url: '' }], currentName: '123' }, []],
-				b: [{}, [new Error('This name already exists')]],
+				b: [{}, [new Error('This name already exists')]] as any,
 			};
 			const pre = cold('a----', values) as Observable<CombErr<NameValidationPreNode>>;
 			const expected = 'b----';

@@ -1,4 +1,4 @@
-import { BareFlow, DataFlowNode, BareFlowInNode } from './bare-flow';
+import { BareFlow, DataFlowNode, BareFlowInNode, BareFlowOutNode } from './bare-flow';
 import { Observable } from 'rxjs';
 import {
 	tap,
@@ -10,7 +10,10 @@ import {
 	map,
 } from 'rxjs/operators';
 
-export abstract class SupersetFlow<Tin extends BareFlowInNode> extends BareFlow<Tin> {
+export abstract class SupersetFlow<
+	Tin extends BareFlowInNode,
+	Tout extends BareFlowOutNode
+> extends BareFlow<Tin, Tout> {
 	private boostrapPrerequest$: Observable<DataFlowNode>;
 	private boostrapPrerequest: DataFlowNode;
 	public deploy() {

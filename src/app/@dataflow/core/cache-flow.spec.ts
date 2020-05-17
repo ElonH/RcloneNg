@@ -1,6 +1,6 @@
 import { CacheFlow } from './cache-flow';
 import { TestScheduler } from 'rxjs/testing';
-import { DataFlowNode, BareFlowInNode } from './bare-flow';
+import { DataFlowNode, BareFlowInNode, CombErr, BareFlowOutNode } from './bare-flow';
 import { Observable, of } from 'rxjs';
 
 describe('CacheFlow', () => {
@@ -16,22 +16,29 @@ describe('CacheFlow', () => {
 	});
 	it('prerequest twice(different value), request same value, only output onece', () => {
 		scheduler.run((helpers) => {
-      const { cold, hot, expectObservable, expectSubscriptions, flush } = helpers;
-			const values: { [id: string]: DataFlowNode } = {
+			const { cold, hot, expectObservable, expectSubscriptions, flush } = helpers;
+			interface TestIn extends BareFlowInNode {
+				ab: number;
+			}
+			interface TestOut extends BareFlowOutNode {
+				k: number;
+			}
+			interface TestSup extends TestOut, TestIn {}
+			const values: { [id: string]: CombErr<TestIn | TestOut | TestSup> } = {
 				a: [{ ab: 555 }, []],
 				b: [{ ab: 123 }, []],
 				c: [{ ab: 555, k: 1 }, []],
 				k: [{ k: 1 }, []],
 			};
-			const pre = cold('      a--b-', values);
+			const pre = cold('      a--b-', values) as Observable<CombErr<TestIn>>;
 			const expectedOutput = 'k----';
 			const expectedSupers = 'c----';
 
-			const rst = new (class extends CacheFlow<BareFlowInNode> {
+			const rst = new (class extends CacheFlow<TestIn, TestOut> {
 				protected cacheSupport: boolean = true;
 				protected cachePath: string = 'foo';
 				public prerequest$ = pre;
-				protected requestCache(pre: DataFlowNode): Observable<DataFlowNode> {
+				protected requestCache(pre: CombErr<TestIn>): Observable<CombErr<TestOut>> {
 					return of([{ k: 1 }, []]);
 				}
 			})();
@@ -44,23 +51,30 @@ describe('CacheFlow', () => {
 	it('check cache validation', () => {
 		scheduler.run((helpers) => {
 			const { cold, hot, expectObservable, expectSubscriptions, flush } = helpers;
-			const values: { [id: string]: DataFlowNode } = {
+			interface TestIn extends BareFlowInNode {
+				ab: number;
+			}
+			interface TestOut extends BareFlowOutNode {
+				k: number;
+			}
+			interface TestSup extends TestOut, TestIn {}
+			const values: { [id: string]: CombErr<TestIn | TestOut | TestSup> } = {
 				a: [{ ab: 555 }, []],
 				b: [{ ab: 123 }, []],
 				c: [{ ab: 555, k: 555 }, []],
 				d: [{ ab: 123, k: 555 }, []],
 				k: [{ k: 555 }, []],
 			};
-			const pre = cold('      a--b-', values);
-			const pre2 = cold('     b--a-', values);
+			const pre = cold('      a--b-', values) as Observable<CombErr<TestIn>>;
+			const pre2 = cold('     b--a-', values) as Observable<CombErr<TestIn>>;
 			const expectedOutput = 'k----';
 			const expectedSupers = 'c----';
 			const expectedSuper2 = 'd----';
-			class TestCache extends CacheFlow<BareFlowInNode> {
+			class TestCache extends CacheFlow<TestIn, TestOut> {
 				protected cacheSupport: boolean = true;
 				protected cachePath: string = 'foo';
 				public prerequest$ = null;
-				protected requestCache(pre: DataFlowNode): Observable<DataFlowNode> {
+				protected requestCache(pre: CombErr<TestIn>): Observable<CombErr<TestOut>> {
 					return of([{ k: pre[0]['ab'] }, []]);
 				}
 				constructor(pre: Observable<DataFlowNode>) {
@@ -83,7 +97,14 @@ describe('CacheFlow', () => {
 	it('disable cache', () => {
 		scheduler.run((helpers) => {
 			const { cold, hot, expectObservable, expectSubscriptions, flush } = helpers;
-			const values: { [id: string]: DataFlowNode } = {
+			interface TestIn extends BareFlowInNode {
+				ab: number;
+			}
+			interface TestOut extends BareFlowOutNode {
+				cd: number;
+			}
+			interface TestSup extends TestOut, TestIn {}
+			const values: { [id: string]: CombErr<TestIn | TestOut | TestSup> } = {
 				a: [{ ab: 555 }, []],
 				b: [{ ab: 123 }, []],
 				c: [{ cd: 556 }, []],
@@ -91,16 +112,16 @@ describe('CacheFlow', () => {
 				e: [{ ab: 555, cd: 556 }, []],
 				f: [{ ab: 123, cd: 124 }, []],
 			};
-			const pre = cold('      a--b-', values);
+			const pre = cold('      a--b-', values) as Observable<CombErr<TestIn>>;
 			const expectedOutput = 'c--d-';
 			const expectedSupers = 'e--f-';
 
-			const rst = new (class extends CacheFlow<BareFlowInNode> {
+			const rst = new (class extends CacheFlow<TestIn, TestOut> {
 				protected cacheSupport: boolean = false;
 				protected cachePath: string = 'foo';
 				public prerequest$ = pre;
-				protected requestCache(pre: DataFlowNode): Observable<DataFlowNode> {
-					return of([{ cd: pre[0]['ab'] + 1 }, []]);;
+				protected requestCache(pre: CombErr<TestIn>): Observable<CombErr<TestOut>> {
+					return of([{ cd: pre[0]['ab'] + 1 }, []]);
 				}
 			})();
 			rst.deploy();

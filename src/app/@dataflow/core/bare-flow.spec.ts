@@ -1,4 +1,4 @@
-import { BareFlow, DataFlowNode, BareFlowInNode } from './bare-flow';
+import { BareFlow, DataFlowNode, BareFlowInNode, BareFlowOutNode, CombErr } from './bare-flow';
 import { TestScheduler } from 'rxjs/testing';
 import { Observable, of } from 'rxjs';
 
@@ -19,7 +19,7 @@ describe('BareFlow', () => {
 			const pre = cold('a----', values);
 			const expected = 'a----';
 
-			const rst = new (class extends BareFlow<BareFlowInNode> {
+			const rst = new (class extends BareFlow<BareFlowInNode, BareFlowOutNode> {
 				public prerequest$ = pre;
 				protected request(pre: DataFlowNode): Observable<DataFlowNode> {
 					throw new Error('Method not implemented.');
@@ -44,7 +44,7 @@ describe('BareFlow', () => {
 			const pre = cold('a----', values);
 			const expected = 'b----';
 
-			const rst = new (class extends BareFlow<TestPreNode> {
+			const rst = new (class extends BareFlow<TestPreNode, TestPreNode> {
 				public prerequest$ = pre;
 				protected request(pre: DataFlowNode): Observable<DataFlowNode> {
 					expect(pre).toEqual(values.a);
@@ -58,8 +58,8 @@ describe('BareFlow', () => {
 	});
 	it('prerequest twice(same value), but got once only', () => {
 		scheduler.run((helpers) => {
-      const { cold, hot, expectObservable, expectSubscriptions, flush } = helpers;
-      interface TestPreNode {
+			const { cold, hot, expectObservable, expectSubscriptions, flush } = helpers;
+			interface TestPreNode {
 				a?: number;
 				b?: number;
 			}
@@ -70,7 +70,7 @@ describe('BareFlow', () => {
 			const pre = cold('a--a-', values);
 			const expected = 'b----';
 
-			const rst = new (class extends BareFlow<TestPreNode> {
+			const rst = new (class extends BareFlow<TestPreNode, TestPreNode> {
 				public prerequest$ = pre;
 				protected request(pre: DataFlowNode): Observable<DataFlowNode> {
 					return of(values.b);
@@ -83,8 +83,8 @@ describe('BareFlow', () => {
 	});
 	it('prerequest twice(different value), got twice', () => {
 		scheduler.run((helpers) => {
-      const { cold, hot, expectObservable, expectSubscriptions, flush } = helpers;
-      interface TestPreNode {
+			const { cold, hot, expectObservable, expectSubscriptions, flush } = helpers;
+			interface TestPreNode {
 				ab: number;
 			}
 			const values: { [id: string]: [TestPreNode, []] } = {
@@ -96,9 +96,12 @@ describe('BareFlow', () => {
 			const pre = cold('a--b-', values);
 			const expected = 'c--d-';
 
-			const rst = new (class extends BareFlow<TestPreNode> {
+			const rst = new (class extends BareFlow<TestPreNode, TestPreNode> {
+        // protected request(pre: import("./bare-flow").CombErr<TestPreNode>): Observable<import("./bare-flow").CombErr<TestPreNode>> {
+        //   throw new Error("Method not implemented.");
+        // }
 				public prerequest$ = pre;
-				protected request(pre: DataFlowNode): Observable<DataFlowNode> {
+				protected request(pre: CombErr<TestPreNode>): Observable<CombErr<TestPreNode>> {
 					return of([{ ab: pre[0]['ab'] + 1 }, []]);
 				}
 			})();
