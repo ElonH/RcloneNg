@@ -1,11 +1,11 @@
-import { DataFlowNode, BareFlowInNode, BareFlowOutNode, CombErr } from './bare-flow';
+import { DataFlowNode, FlowInNode, FlowOutNode, CombErr } from './bare-flow';
 import { Observable, iif, of } from 'rxjs';
 import { SupersetFlow, FlowSupNode } from './superset-flow';
 import { tap, take, map } from 'rxjs/operators';
 
 export abstract class CacheFlow<
-	Tin extends BareFlowInNode,
-	Tout extends BareFlowOutNode,
+	Tin extends FlowInNode,
+	Tout extends FlowOutNode,
 	Tsup extends FlowSupNode = Tin & Tout
 > extends SupersetFlow<Tin, Tout, Tsup> {
 	protected abstract requestCache(pre: CombErr<Tin>): Observable<CombErr<Tout>>;

@@ -1,4 +1,4 @@
-import { BareFlow, DataFlowNode, BareFlowInNode, BareFlowOutNode, CombErr } from './bare-flow';
+import { BareFlow, DataFlowNode, FlowInNode, FlowOutNode, CombErr } from './bare-flow';
 import { TestScheduler } from 'rxjs/testing';
 import { Observable, of } from 'rxjs';
 
@@ -19,7 +19,7 @@ describe('BareFlow', () => {
 			const pre = cold('a----', values);
 			const expected = 'a----';
 
-			const rst = new (class extends BareFlow<BareFlowInNode, BareFlowOutNode> {
+			const rst = new (class extends BareFlow<FlowInNode, FlowOutNode> {
 				public prerequest$ = pre;
 				protected request(pre: DataFlowNode): Observable<DataFlowNode> {
 					throw new Error('Method not implemented.');

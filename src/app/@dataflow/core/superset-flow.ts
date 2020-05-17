@@ -1,4 +1,4 @@
-import { BareFlow, BareFlowInNode, BareFlowOutNode, CombErr } from './bare-flow';
+import { BareFlow, FlowInNode, FlowOutNode, CombErr } from './bare-flow';
 import { Observable } from 'rxjs';
 import {
 	tap,
@@ -13,8 +13,8 @@ import {
 export interface FlowSupNode {}
 
 export abstract class SupersetFlow<
-	Tin extends BareFlowInNode,
-	Tout extends BareFlowOutNode,
+	Tin extends FlowInNode,
+	Tout extends FlowOutNode,
 	Tsup extends FlowSupNode = Tin & Tout
 > extends BareFlow<Tin, Tout> {
 	private boostrapPrerequest$: Observable<CombErr<Tin>>;

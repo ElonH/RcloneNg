@@ -1,6 +1,6 @@
 import { CacheFlow } from './cache-flow';
 import { TestScheduler } from 'rxjs/testing';
-import { DataFlowNode, BareFlowInNode, CombErr, BareFlowOutNode } from './bare-flow';
+import { DataFlowNode, FlowInNode, CombErr, FlowOutNode } from './bare-flow';
 import { Observable, of } from 'rxjs';
 
 describe('CacheFlow', () => {
@@ -17,10 +17,10 @@ describe('CacheFlow', () => {
 	it('prerequest twice(different value), request same value, only output onece', () => {
 		scheduler.run((helpers) => {
 			const { cold, hot, expectObservable, expectSubscriptions, flush } = helpers;
-			interface TestIn extends BareFlowInNode {
+			interface TestIn extends FlowInNode {
 				ab: number;
 			}
-			interface TestOut extends BareFlowOutNode {
+			interface TestOut extends FlowOutNode {
 				k: number;
 			}
 			interface TestSup extends TestOut, TestIn {}
@@ -51,10 +51,10 @@ describe('CacheFlow', () => {
 	it('check cache validation', () => {
 		scheduler.run((helpers) => {
 			const { cold, hot, expectObservable, expectSubscriptions, flush } = helpers;
-			interface TestIn extends BareFlowInNode {
+			interface TestIn extends FlowInNode {
 				ab: number;
 			}
-			interface TestOut extends BareFlowOutNode {
+			interface TestOut extends FlowOutNode {
 				k: number;
 			}
 			interface TestSup extends TestOut, TestIn {}
@@ -97,10 +97,10 @@ describe('CacheFlow', () => {
 	it('disable cache', () => {
 		scheduler.run((helpers) => {
 			const { cold, hot, expectObservable, expectSubscriptions, flush } = helpers;
-			interface TestIn extends BareFlowInNode {
+			interface TestIn extends FlowInNode {
 				ab: number;
 			}
-			interface TestOut extends BareFlowOutNode {
+			interface TestOut extends FlowOutNode {
 				cd: number;
 			}
 			interface TestSup extends TestOut, TestIn {}

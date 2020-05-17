@@ -1,5 +1,5 @@
 import { Observable, of } from 'rxjs';
-import { BareFlow, DataFlowNode, BareFlowInNode, CombErr } from '../core';
+import { BareFlow, DataFlowNode, FlowInNode, CombErr } from '../core';
 
 export interface IRcloneServer {
 	url: string;
@@ -11,15 +11,15 @@ export interface IUser extends IRcloneServer {
 	name: string;
 }
 
-export interface UsersFlowNode extends BareFlowInNode {
+export interface UsersFlowNode extends FlowInNode {
 	users: IUser[];
 }
 
-export abstract class UsersFlow extends BareFlow<BareFlowInNode, UsersFlowNode> {
+export abstract class UsersFlow extends BareFlow<FlowInNode, UsersFlowNode> {
 	public static readonly defaultUser: IUser[] = [
 		{ name: 'localhost', url: 'http://localhost:5572' },
 	];
-	protected request(pre: CombErr<BareFlowInNode>): Observable<CombErr<UsersFlowNode>> {
+	protected request(pre: CombErr<FlowInNode>): Observable<CombErr<UsersFlowNode>> {
 		const dataRaw = localStorage.getItem('users');
 		if (dataRaw) return of([{ users: JSON.parse(dataRaw) }, []]);
 		localStorage.setItem('users', JSON.stringify(UsersFlow.defaultUser));
