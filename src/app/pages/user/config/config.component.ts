@@ -79,11 +79,11 @@ import { NoopAuthFlow } from 'src/app/@dataflow/rclone';
 				</nb-form-field>
 			</nb-card-body>
 			<nb-card-footer>
-				<nb-actions>
-					<nb-action>
+				<!-- <nb-actions> -->
+					<!-- <nb-action> -->
 						<button nbButton outline status="danger">Cancel</button>
-					</nb-action>
-					<nb-action>
+					<!-- </nb-action> -->
+					<!-- <nb-action> -->
 						<button
 							nbButton
 							outline
@@ -97,24 +97,27 @@ import { NoopAuthFlow } from 'src/app/@dataflow/rclone';
 								[status]="authPass === null ? 'info' : authPass === true ? 'success' : 'warning'"
 							></nb-icon>
 						</button>
-					</nb-action>
-					<nb-action>
+					<!-- </nb-action> -->
+					<!-- <nb-action> -->
 						<button nbButton outline status="primary" [disabled]="disableSave$ | async" (click)="save()">
 							save
 						</button>
-					</nb-action>
-				</nb-actions>
+					<!-- </nb-action> -->
+				<!-- </nb-actions> -->
 			</nb-card-footer>
 		</nb-card>
 	`,
 	styles: [
-		`
+    `
 			nb-card {
 				max-width: 480px;
 			}
 			span[status='danger'] {
 				color: #ff3d71;
 			}
+      nb-card-footer > button {
+        margin-right: 0.668rem
+      }
 		`,
 	],
 	changeDetection: ChangeDetectionStrategy.OnPush,
