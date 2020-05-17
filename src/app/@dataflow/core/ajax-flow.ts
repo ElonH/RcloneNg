@@ -3,13 +3,15 @@ import { DataFlowNode, BareFlowInNode, BareFlowOutNode, CombErr } from './bare-f
 import { Observable, of } from 'rxjs';
 import { ajax, AjaxRequest, AjaxResponse } from 'rxjs/ajax';
 import { catchError, map } from 'rxjs/operators';
+import { FlowSupNode } from './superset-flow';
 
 export type AjaxFlowNode = [AjaxResponse | object, Error[]];
 
 export abstract class AjaxFlow<
 	Tin extends BareFlowInNode,
-	Tout extends BareFlowOutNode
-> extends CacheFlow<Tin, Tout> {
+	Tout extends BareFlowOutNode,
+	Tsup extends FlowSupNode = Tin & Tout
+> extends CacheFlow<Tin, Tout, Tsup> {
 	// protected cacheSupport: boolean;
 	// protected cachePath: string;
 

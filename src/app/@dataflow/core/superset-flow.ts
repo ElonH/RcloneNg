@@ -1,4 +1,4 @@
-import { BareFlow, DataFlowNode, BareFlowInNode, BareFlowOutNode } from './bare-flow';
+import { BareFlow, BareFlowInNode, BareFlowOutNode, CombErr } from './bare-flow';
 import { Observable } from 'rxjs';
 import {
 	tap,
@@ -10,24 +10,27 @@ import {
 	map,
 } from 'rxjs/operators';
 
+export interface FlowSupNode {}
+
 export abstract class SupersetFlow<
 	Tin extends BareFlowInNode,
-	Tout extends BareFlowOutNode
+	Tout extends BareFlowOutNode,
+	Tsup extends FlowSupNode = Tin & Tout
 > extends BareFlow<Tin, Tout> {
-	private boostrapPrerequest$: Observable<DataFlowNode>;
-	private boostrapPrerequest: DataFlowNode;
+	private boostrapPrerequest$: Observable<CombErr<Tin>>;
+	private boostrapPrerequest: CombErr<Tin>;
 	public deploy() {
 		super.deploy();
 		this.boostrapPrerequest$ = this.prerequest$.pipe(tap((x) => (this.boostrapPrerequest = x)));
 		this.boostrapPrerequest$.pipe(take(1)).subscribe();
 	}
-	protected generateSuperset(current: DataFlowNode, previous: DataFlowNode): DataFlowNode {
+	protected generateSuperset(current: CombErr<Tout>, previous: CombErr<Tin>): CombErr<Tsup> {
 		return [
-			{ ...current[0], ...previous[0] },
+			({ ...current[0], ...previous[0] } as any) as Tsup, // if Tsup is not Tin & Tout, need to override generateSupreset
 			[].concat(current[1], previous[1]).filter((x, i, a) => a.indexOf(x) === i),
 		];
 	}
-	public getSupersetOutput(): Observable<DataFlowNode> {
+	public getSupersetOutput(): Observable<CombErr<Tsup>> {
 		return this.getOutput().pipe(
 			withLatestFrom(
 				this.boostrapPrerequest$.pipe(
