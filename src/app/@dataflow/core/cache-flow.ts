@@ -1,4 +1,4 @@
-import { DataFlowNode, FlowInNode, FlowOutNode, CombErr } from './bare-flow';
+import {  FlowInNode, FlowOutNode, CombErr } from './bare-flow';
 import { Observable, iif, of } from 'rxjs';
 import { SupersetFlow, FlowSupNode } from './superset-flow';
 import { tap, take, map } from 'rxjs/operators';
@@ -24,7 +24,7 @@ export abstract class CacheFlow<
 
 	protected abstract cacheSupport: boolean;
 	protected abstract cachePath: string | undefined;
-	private static cacheStorage: { [id: string]: DataFlowNode } = {};
+	private static cacheStorage: { [id: string]: CombErr<FlowOutNode> } = {};
 
 	private cacheEnabled(): boolean {
 		return this.cacheSupport && typeof this.cachePath === 'string';

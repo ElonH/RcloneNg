@@ -1,5 +1,5 @@
 import { CacheFlow } from './cache-flow';
-import { DataFlowNode, FlowInNode, FlowOutNode, CombErr } from './bare-flow';
+import {  FlowInNode, FlowOutNode, CombErr } from './bare-flow';
 import { Observable, of } from 'rxjs';
 import { ajax, AjaxRequest, AjaxResponse } from 'rxjs/ajax';
 import { catchError, map } from 'rxjs/operators';

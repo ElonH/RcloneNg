@@ -1,4 +1,4 @@
-import { BareFlow, DataFlowNode, FlowInNode, FlowOutNode, CombErr } from './bare-flow';
+import { BareFlow, FlowInNode, FlowOutNode, CombErr } from './bare-flow';
 import { TestScheduler } from 'rxjs/testing';
 import { Observable, of } from 'rxjs';
 
@@ -14,14 +14,14 @@ describe('BareFlow', () => {
 		scheduler.run((helpers) => {
 			const { cold, hot, expectObservable, expectSubscriptions, flush } = helpers;
 			const values = {
-				a: [{}, [new Error('123')]] as DataFlowNode,
+				a: [{}, [new Error('123')]] as CombErr<{}>,
 			};
 			const pre = cold('a----', values);
 			const expected = 'a----';
 
 			const rst = new (class extends BareFlow<FlowInNode, FlowOutNode> {
 				public prerequest$ = pre;
-				protected request(pre: DataFlowNode): Observable<DataFlowNode> {
+				protected request(pre: CombErr<FlowInNode>): Observable<CombErr<FlowOutNode>> {
 					throw new Error('Method not implemented.');
 				}
 			})();
@@ -46,7 +46,7 @@ describe('BareFlow', () => {
 
 			const rst = new (class extends BareFlow<TestPreNode, TestPreNode> {
 				public prerequest$ = pre;
-				protected request(pre: DataFlowNode): Observable<DataFlowNode> {
+				protected request(pre: CombErr<TestPreNode>): Observable<CombErr<TestPreNode>> {
 					expect(pre).toEqual(values.a);
 					return of(values.b, values.b);
 				}
@@ -72,7 +72,7 @@ describe('BareFlow', () => {
 
 			const rst = new (class extends BareFlow<TestPreNode, TestPreNode> {
 				public prerequest$ = pre;
-				protected request(pre: DataFlowNode): Observable<DataFlowNode> {
+				protected request(pre: CombErr<TestPreNode>): Observable<CombErr<TestPreNode>> {
 					return of(values.b);
 				}
 			})();
@@ -97,9 +97,9 @@ describe('BareFlow', () => {
 			const expected = 'c--d-';
 
 			const rst = new (class extends BareFlow<TestPreNode, TestPreNode> {
-        // protected request(pre: import("./bare-flow").CombErr<TestPreNode>): Observable<import("./bare-flow").CombErr<TestPreNode>> {
-        //   throw new Error("Method not implemented.");
-        // }
+				// protected request(pre: import("./bare-flow").CombErr<TestPreNode>): Observable<import("./bare-flow").CombErr<TestPreNode>> {
+				//   throw new Error("Method not implemented.");
+				// }
 				public prerequest$ = pre;
 				protected request(pre: CombErr<TestPreNode>): Observable<CombErr<TestPreNode>> {
 					return of([{ ab: pre[0]['ab'] + 1 }, []]);

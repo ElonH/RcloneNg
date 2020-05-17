@@ -1,5 +1,5 @@
 import { Observable, of } from 'rxjs';
-import { BareFlow, DataFlowNode, FlowInNode, CombErr } from '../core';
+import { BareFlow,  FlowInNode, CombErr } from '../core';
 
 export interface IRcloneServer {
 	url: string;

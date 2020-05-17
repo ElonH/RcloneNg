@@ -1,6 +1,6 @@
 import { CacheFlow } from './cache-flow';
 import { TestScheduler } from 'rxjs/testing';
-import { DataFlowNode, FlowInNode, CombErr, FlowOutNode } from './bare-flow';
+import {  FlowInNode, CombErr, FlowOutNode } from './bare-flow';
 import { Observable, of } from 'rxjs';
 
 describe('CacheFlow', () => {
@@ -77,7 +77,7 @@ describe('CacheFlow', () => {
 				protected requestCache(pre: CombErr<TestIn>): Observable<CombErr<TestOut>> {
 					return of([{ k: pre[0]['ab'] }, []]);
 				}
-				constructor(pre: Observable<DataFlowNode>) {
+				constructor(pre: Observable<CombErr<TestIn>>) {
 					super();
 					this.prerequest$ = pre;
 				}

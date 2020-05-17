@@ -3,7 +3,6 @@ import { switchMap, take, tap, startWith, distinctUntilChanged, skipWhile } from
 
 export interface FlowInNode {}
 export interface FlowOutNode {}
-export type DataFlowNode = [FlowInNode, Error[]]; // TODO: drop support
 export type CombErr<T> = [T, Error[]];
 
 export abstract class BareFlow<Tin extends FlowInNode, Tout extends FlowOutNode> {

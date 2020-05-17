@@ -1,7 +1,7 @@
-import { UsersFlow, IUser, UsersFlowNode } from './users-flow';
+import { UsersFlow, IUser } from './users-flow';
 import { TestScheduler } from 'rxjs/testing';
-import { DataFlowNode } from '../core';
 import { map } from 'rxjs/operators';
+import { CombErr, FlowInNode } from '../core';
 
 describe('UsersFlow', () => {
 	let scheduler: TestScheduler;
@@ -22,7 +22,7 @@ describe('UsersFlow', () => {
 			const expected = 'b-b--';
 
 			const rst = new (class extends UsersFlow {
-				public prerequest$ = pre.pipe(map(() => [{}, []] as DataFlowNode));
+				public prerequest$ = pre.pipe(map((): CombErr<FlowInNode> => [{}, []]));
 			})();
 
 			UsersFlow.purge();
@@ -42,7 +42,7 @@ describe('UsersFlow', () => {
 			const expected = 'b-b--';
 
 			const rst = new (class extends UsersFlow {
-				public prerequest$ = pre.pipe(map((): DataFlowNode => [{}, []]));
+				public prerequest$ = pre.pipe(map((): CombErr<FlowInNode> => [{}, []]));
 			})();
 
 			UsersFlow.setAll([]);
@@ -67,7 +67,7 @@ describe('UsersFlow', () => {
 			const expected = 'b-b--';
 
 			const rst = new (class extends UsersFlow {
-				public prerequest$ = pre.pipe(map((): DataFlowNode => [{}, []]));
+				public prerequest$ = pre.pipe(map((): CombErr<FlowInNode> => [{}, []]));
 			})();
 
 			UsersFlow.setAll([
