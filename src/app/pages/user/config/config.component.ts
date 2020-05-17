@@ -9,7 +9,7 @@ import {
 import { FormControl } from '@angular/forms';
 import { withLatestFrom, map, startWith, filter } from 'rxjs/operators';
 import { CombErr } from 'src/app/@dataflow/core';
-import { NoopAuthFlow } from 'src/app/@dataflow/rclone/noop-auth-flow';
+import { NoopAuthFlow } from 'src/app/@dataflow/rclone';
 
 @Component({
 	selector: 'user-config',
