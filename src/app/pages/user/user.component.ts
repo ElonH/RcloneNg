@@ -10,7 +10,7 @@ import { CombErr, FlowInNode } from 'src/app/@dataflow/core';
 		<p>
 			user works!
 		</p>
-		<user-config [users$]="usersFlow$.getOutput()"> </user-config>
+		<user-config [users$]="usersFlow$.getOutput()" (onSave)="onSave()"> </user-config>
 	`,
 	styles: [],
 })
@@ -27,5 +27,9 @@ export class UserComponent implements OnInit {
 		this.usersFlow$.deploy();
 
 		this.userSubject.next(1);
-	}
+  }
+
+  onSave(){
+    this.userSubject.next(1);
+  }
 }

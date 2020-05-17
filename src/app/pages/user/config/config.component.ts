@@ -1,10 +1,11 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import {
 	UsersFlowNode,
 	NameValidation,
 	NameValidationPreNode,
 	IRcloneServer,
+	UsersFlow,
 } from 'src/app/@dataflow/extra';
 import { FormControl } from '@angular/forms';
 import { withLatestFrom, map, startWith, filter } from 'rxjs/operators';
@@ -98,7 +99,7 @@ import { NoopAuthFlow } from 'src/app/@dataflow/rclone';
 						</button>
 					</nb-action>
 					<nb-action>
-						<button nbButton outline status="primary" [disabled]="disableSave$ | async">
+						<button nbButton outline status="primary" [disabled]="disableSave$ | async" (click)="save()">
 							save
 						</button>
 					</nb-action>
@@ -129,7 +130,9 @@ export class ConfigComponent implements OnInit {
 	connectTrigger$ = new Subject<number>();
 
 	@Input()
-	users$: Observable<UsersFlowNode>;
+  users$: Observable<UsersFlowNode>;
+  @Output()
+  onSave: EventEmitter<any> = new EventEmitter();
 
 	nameValidation$: NameValidation;
 	authPass$: Observable<boolean | null>;
@@ -138,6 +141,16 @@ export class ConfigComponent implements OnInit {
 	urlValidation$: Observable<boolean>;
 
 	constructor() {}
+
+	save() {
+		UsersFlow.set({
+			name: this.name.value,
+			url: this.url.value,
+			user: this.user.value,
+			password: this.password.value,
+    });
+    this.onSave.emit(true);
+	}
 
 	ngOnInit(): void {
 		const outer = this;
