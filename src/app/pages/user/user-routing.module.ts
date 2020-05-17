@@ -4,9 +4,11 @@ import { Routes, RouterModule } from '@angular/router';
 import { UserComponent } from './user.component';
 
 const routes: Routes = [
-  { path: 'add', component: UserComponent },
-	{ path: 'edit', component: UserComponent },
-	{ path: 'remove', component: UserComponent },
+	{
+		path: '',
+		component: UserComponent,
+		pathMatch: 'full',
+	},
 ];
 
 @NgModule({

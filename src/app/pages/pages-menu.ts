@@ -9,17 +9,17 @@ export const MENU_ITEMS: NbMenuItem[] = [
 			{
 				title: 'Add User',
 				icon: 'plus-square-outline',
-				link: 'user/add',
+				link: 'user',
 			},
 			{
 				title: 'Edit User',
 				icon: 'edit-outline',
-				link: 'user/edit',
+				link: 'user',
 			},
 			{
 				title: 'Remove User',
 				icon: 'trash-outline',
-				link: 'user/remove',
+				link: 'user',
 			},
 		],
 	},
