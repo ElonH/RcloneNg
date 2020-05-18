@@ -48,7 +48,7 @@ import { NbStepperComponent, NbStepComponent } from '@nebular/theme';
 						<user-confirm
 							[users$]="usersFlow$.getOutput()"
 							[selected$]="selectedTrigger"
-							(onDelete)="onConfirm()"
+							(onDelete)="onConfirm($event)"
 						>
 						</user-confirm>
 						<button nbButton (click)="realPrev()">prev</button>
@@ -152,7 +152,8 @@ export class UserComponent implements OnInit {
 		this.saveUserTrigger.next(user);
 	}
 
-	onConfirm() {
-		console.log('deleted');
+	onConfirm(name: string) {
+		UsersFlow.del(name);
+		this.usersTrigger.next(1); // update users
 	}
 }

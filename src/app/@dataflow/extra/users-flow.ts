@@ -46,6 +46,10 @@ export abstract class UsersFlow extends BareFlow<FlowInNode, UsersFlowNode> {
 		data.push(user);
 		this.setAll(data);
 	}
+	public static del(name: string) {
+		const data = this.getAll();
+		this.setAll(data.filter((x) => x.name !== name));
+	}
 	public static purge() {
 		localStorage.removeItem('users');
 	}
