@@ -29,7 +29,7 @@ import { NbStepperComponent, NbStepComponent } from '@nebular/theme';
 					</nb-step>
 					<nb-step hidden label="Select">
 						<h4>Select User</h4>
-						<user-select [users$]="usersFlow$.getOutput()" (onConfirm)="onSelected($event)"> </user-select>
+						<user-select [users$]="usersFlow$.getOutput()" (onConfirm)="onSelect($event)"> </user-select>
 						<button nbButton nbStepperPrevious>prev</button>
 					</nb-step>
 					<nb-step hidden label="Config">
@@ -38,7 +38,7 @@ import { NbStepperComponent, NbStepComponent } from '@nebular/theme';
 					</nb-step>
 					<nb-step hidden label="Confirm">
 						<h4>Delete Confirm</h4>
-						<user-confirm [users$]="usersFlow$.getOutput()" [selected$]="selectedSubject" (onDelete)="onDelete()"> </user-confirm>
+						<user-confirm [users$]="usersFlow$.getOutput()" [selected$]="selectedSubject" (onDelete)="onConfirm()"> </user-confirm>
 					</nb-step>
 				</nb-stepper>
 			</nb-card-body>
@@ -54,7 +54,7 @@ import { NbStepperComponent, NbStepComponent } from '@nebular/theme';
 	],
 })
 export class UserComponent implements OnInit {
-  public userSubject = new Subject<number>();
+  public configSubject = new Subject<number>();
   public selectedSubject = new Subject<string>();
 	public usersFlow$: UsersFlow;
 	operation = [
@@ -89,23 +89,23 @@ export class UserComponent implements OnInit {
 	ngOnInit(): void {
 		const outer = this;
 		this.usersFlow$ = new (class extends UsersFlow {
-			public prerequest$ = outer.userSubject.pipe(map((): CombErr<FlowInNode> => [{}, []]));
+			public prerequest$ = outer.configSubject.pipe(map((): CombErr<FlowInNode> => [{}, []]));
 		})();
 		this.usersFlow$.deploy();
 
-		this.userSubject.next(1);
+		this.configSubject.next(1);
 	}
 
 	onSave() {
-		this.userSubject.next(1);
+		this.configSubject.next(1);
   }
 
-  onSelected(item: string){
+  onSelect(item: string){
     console.log(item);
     this.selectedSubject.next(item);
     this.realNext();
   }
-  onDelete(){
+  onConfirm(){
     console.log('deleted');
   }
 }
