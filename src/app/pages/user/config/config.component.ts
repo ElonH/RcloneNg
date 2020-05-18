@@ -1,11 +1,19 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import {
+	Component,
+	OnInit,
+	ChangeDetectionStrategy,
+	Input,
+	Output,
+	EventEmitter,
+} from '@angular/core';
+import { Observable, Subject, of } from 'rxjs';
 import {
 	UsersFlowNode,
 	NameValidation,
 	NameValidationPreNode,
 	IRcloneServer,
 	UsersFlow,
+	IUser,
 } from 'src/app/@dataflow/extra';
 import { FormControl } from '@angular/forms';
 import { withLatestFrom, map, startWith, filter } from 'rxjs/operators';
@@ -79,45 +87,43 @@ import { NoopAuthFlow } from 'src/app/@dataflow/rclone';
 				</nb-form-field>
 			</nb-card-body>
 			<nb-card-footer>
-				<!-- <nb-actions> -->
-					<!-- <nb-action> -->
-						<button nbButton outline status="danger">Cancel</button>
-					<!-- </nb-action> -->
-					<!-- <nb-action> -->
-						<button
-							nbButton
-							outline
-							[status]="authPass === null ? 'info' : authPass === true ? 'success' : 'warning'"
-							(click)="connectTrigger$.next(1)"
-							[disabled]="(urlValidation$ | async) == false"
-						>
-							Connect
-							<nb-icon
-								[icon]="authPass === null ? 'refresh' : authPass === true ? 'checkmark' : 'close'"
-								[status]="authPass === null ? 'info' : authPass === true ? 'success' : 'warning'"
-							></nb-icon>
-						</button>
-					<!-- </nb-action> -->
-					<!-- <nb-action> -->
-						<button nbButton outline status="primary" [disabled]="disableSave$ | async" (click)="save()">
-							save
-						</button>
-					<!-- </nb-action> -->
-				<!-- </nb-actions> -->
+				<button nbButton outline status="danger">Cancel</button>
+				<button
+					nbButton
+					outline
+					[status]="authPass === null ? 'info' : authPass === true ? 'success' : 'warning'"
+					(click)="connectTrigger$.next(1)"
+					[disabled]="(urlValidation$ | async) == false"
+				>
+					Connect
+					<nb-icon
+						[icon]="authPass === null ? 'refresh' : authPass === true ? 'checkmark' : 'close'"
+						[status]="authPass === null ? 'info' : authPass === true ? 'success' : 'warning'"
+					></nb-icon>
+				</button>
+				<button
+					nbButton
+					outline
+					status="primary"
+					[disabled]="disableSave$ | async"
+					(click)="save()"
+				>
+					save
+				</button>
 			</nb-card-footer>
 		</nb-card>
 	`,
 	styles: [
-    `
+		`
 			nb-card {
 				max-width: 480px;
 			}
 			span[status='danger'] {
 				color: #ff3d71;
 			}
-      nb-card-footer > button {
-        margin-right: 0.668rem
-      }
+			nb-card-footer > button {
+				margin-right: 0.668rem;
+			}
 		`,
 	],
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -125,7 +131,7 @@ import { NoopAuthFlow } from 'src/app/@dataflow/rclone';
 export class ConfigComponent implements OnInit {
 	name = new FormControl('');
 	nameErr = '';
-	url = new FormControl('http://localhost:5572');
+	url = new FormControl('');
 	urlErr = '';
 	user = new FormControl('');
 	password = new FormControl('');
@@ -133,9 +139,11 @@ export class ConfigComponent implements OnInit {
 	connectTrigger$ = new Subject<number>();
 
 	@Input()
-  users$: Observable<CombErr<UsersFlowNode>>;
-  @Output()
-  onSave: EventEmitter<any> = new EventEmitter();
+	users$: Observable<CombErr<UsersFlowNode>>;
+	@Input()
+	editUser: Observable<CombErr<{ prevName: string }>> = of([{ prevName: '' }, []]);
+	@Output()
+	onSave: EventEmitter<any> = new EventEmitter();
 
 	nameValidation$: NameValidation;
 	authPass$: Observable<boolean | null>;
@@ -151,19 +159,40 @@ export class ConfigComponent implements OnInit {
 			url: this.url.value,
 			user: this.user.value,
 			password: this.password.value,
-    });
-    this.onSave.emit(true);
+		});
+		this.onSave.emit(true);
+	}
+
+	private setUser(...args: string[]) {
+		this.name.setValue(args[0]);
+		this.url.setValue(args[1]);
+		this.user.setValue(args[2]);
+		this.password.setValue(args[3]);
 	}
 
 	ngOnInit(): void {
 		const outer = this;
+		this.editUser.pipe(withLatestFrom(this.users$)).subscribe(([pre, users]) => {
+			if (pre[1].length !== 0 || users[1].length !== 0) return;
+			for (const it of users[0].users) {
+				if (it.name !== pre[0].prevName) continue;
+				this.setUser(it.name, it.url, it.user, it.password);
+				return;
+			}
+			this.setUser('', 'http://localhost:5572', '', '');
+		});
 		this.nameValidation$ = new (class extends NameValidation {
 			public prerequest$ = outer.name.valueChanges.pipe(
-				startWith(''),
-				withLatestFrom(outer.users$),
+				withLatestFrom(outer.users$, outer.editUser),
 				map(
-					([curName, usersNode]): CombErr<NameValidationPreNode> => {
-						return [{ ...usersNode[0], currentName: curName }, usersNode[1]];
+					([curName, usersNode, prevNameNode]): CombErr<NameValidationPreNode> => {
+						return [
+							{
+								users: usersNode[0].users.filter((x) => x.name !== prevNameNode[0]['prevName']),
+								currentName: curName,
+							},
+							[].concat(usersNode[1], prevNameNode[1]),
+						];
 					}
 				)
 			);
