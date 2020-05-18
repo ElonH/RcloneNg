@@ -4,6 +4,7 @@ import { Subject, Observable, of } from 'rxjs';
 import { map, withLatestFrom, filter, tap } from 'rxjs/operators';
 import { CombErr, FlowInNode, NothingFlow } from 'src/app/@dataflow/core';
 import { NbStepperComponent, NbStepComponent } from '@nebular/theme';
+import { UsersService } from '../users.service';
 
 @Component({
 	selector: 'app-user',
@@ -29,27 +30,18 @@ import { NbStepperComponent, NbStepComponent } from '@nebular/theme';
 					</nb-step>
 					<nb-step hidden label="Select">
 						<h4>Select User</h4>
-						<user-select [users$]="usersFlow$.getOutput()" (onConfirm)="onSelect($event)">
-						</user-select>
+						<user-select (onConfirm)="onSelect($event)"> </user-select>
 						<button nbButton (click)="realPrev()">prev</button>
 					</nb-step>
 					<nb-step hidden label="Config">
 						<h4>Configurate User</h4>
-						<user-config
-							[users$]="usersFlow$.getOutput()"
-							[editUser]="prevUserFlow$.getOutput()"
-							(onSave)="onSave($event)"
-						>
+						<user-config [editUser]="prevUserFlow$.getOutput()" (onSave)="onSave($event)">
 						</user-config>
 						<button nbButton (click)="realPrev()">prev</button>
 					</nb-step>
 					<nb-step hidden label="Confirm">
 						<h4>Delete Confirm</h4>
-						<user-confirm
-							[users$]="usersFlow$.getOutput()"
-							[selected$]="selectedTrigger"
-							(onDelete)="onConfirm($event)"
-						>
+						<user-confirm [selected$]="selectedTrigger" (onDelete)="onConfirm($event)">
 						</user-confirm>
 						<button nbButton (click)="realPrev()">prev</button>
 					</nb-step>
@@ -67,7 +59,6 @@ import { NbStepperComponent, NbStepComponent } from '@nebular/theme';
 	],
 })
 export class UserComponent implements OnInit {
-	public usersTrigger = new Subject<number>();
 	public usersFlow$: UsersFlow;
 	public selectedTrigger = new Subject<string>();
 	public prevUserFlow$: NothingFlow<{ prevName: string }>;
@@ -77,7 +68,7 @@ export class UserComponent implements OnInit {
 		{ request: [true, true, false], icon: 'edit', status: 'info', text: 'Edit user' },
 		{ request: [true, false, true], icon: 'trash', status: 'danger', text: 'Delete user' },
 	];
-	constructor() {}
+	constructor(private usersService: UsersService) {}
 
 	@ViewChild(NbStepperComponent) stepper: NbStepperComponent;
 
@@ -116,12 +107,7 @@ export class UserComponent implements OnInit {
 
 	ngOnInit(): void {
 		const outer = this;
-		this.usersFlow$ = new (class extends UsersFlow {
-			public prerequest$ = outer.usersTrigger.pipe(map((): CombErr<FlowInNode> => [{}, []]));
-		})();
-		this.usersFlow$.deploy();
-
-		this.usersTrigger.next(1);
+		this.usersFlow$ = this.usersService.usersFlow$;
 
 		this.prevUserFlow$ = new (class extends NothingFlow<{ prevName: string }> {
 			public prerequest$ = outer.selectedTrigger.pipe(
@@ -138,7 +124,7 @@ export class UserComponent implements OnInit {
 			)
 			.subscribe(([x, y]) => {
 				UsersFlow.set(x, y[0].prevName);
-				this.usersTrigger.next(1); // update users
+				this.usersService.usersTrigger.next(1); // update users
 			});
 	}
 
@@ -155,7 +141,7 @@ export class UserComponent implements OnInit {
 
 	onConfirm(name: string) {
 		UsersFlow.del(name);
-		this.usersTrigger.next(1); // update users
+		this.usersService.usersTrigger.next(1); // update users
 		this.stepper.reset();
 	}
 }

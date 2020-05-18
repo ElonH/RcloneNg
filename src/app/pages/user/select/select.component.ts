@@ -4,6 +4,7 @@ import { UsersFlowNode } from 'src/app/@dataflow/extra';
 import { map, startWith } from 'rxjs/operators';
 import { CombErr } from 'src/app/@dataflow/core';
 import { FormControl } from '@angular/forms';
+import { UsersService } from '../../users.service';
 
 @Component({
 	selector: 'user-select',
@@ -28,19 +29,19 @@ import { FormControl } from '@angular/forms';
 			</nb-card-footer>
 		</nb-card>
 	`,
-  styles: [`
-  nb-card-footer {
-    margin-inline-start: auto
-  }
-  `
-  ],
+	styles: [
+		`
+			nb-card-footer {
+				margin-inline-start: auto;
+			}
+		`,
+	],
 })
 export class SelectComponent implements OnInit {
 	option = new FormControl('');
 
-	constructor() {}
+	constructor(private usersService: UsersService) {}
 
-	@Input()
 	users$: Observable<CombErr<UsersFlowNode>>;
 	@Output()
 	onConfirm: EventEmitter<string> = new EventEmitter();
@@ -48,6 +49,7 @@ export class SelectComponent implements OnInit {
 	toOptionsList$: Observable<{ name: string; url: string }[]>;
 	confirm$: Observable<boolean>;
 	ngOnInit(): void {
+		this.users$ = this.usersService.usersFlow$.getOutput();
 		this.toOptionsList$ = this.users$.pipe(
 			map((x) => {
 				if (x[1].length === 0) return x[0].users;

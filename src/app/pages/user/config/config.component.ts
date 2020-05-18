@@ -19,6 +19,7 @@ import { FormControl } from '@angular/forms';
 import { withLatestFrom, map, startWith, filter } from 'rxjs/operators';
 import { CombErr } from 'src/app/@dataflow/core';
 import { NoopAuthFlow } from 'src/app/@dataflow/rclone';
+import { UsersService } from '../../users.service';
 
 @Component({
 	selector: 'user-config',
@@ -138,7 +139,6 @@ export class ConfigComponent implements OnInit {
 
 	connectTrigger$ = new Subject<number>();
 
-	@Input()
 	users$: Observable<CombErr<UsersFlowNode>>;
 	@Input()
 	editUser: Observable<CombErr<{ prevName: string }>> = of([{ prevName: '' }, []]);
@@ -151,7 +151,7 @@ export class ConfigComponent implements OnInit {
 	disableSave$: Observable<boolean>;
 	urlValidation$: Observable<boolean>;
 
-	constructor() {}
+	constructor(private usersService: UsersService) {}
 
 	save() {
 		this.onSave.emit({
@@ -170,6 +170,7 @@ export class ConfigComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
+    this.users$ = this.usersService.usersFlow$.getOutput();
 		const outer = this;
 		this.editUser.pipe(withLatestFrom(this.users$)).subscribe(([pre, users]) => {
 			if (pre[1].length !== 0 || users[1].length !== 0) return;

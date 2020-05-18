@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NbSidebarService } from '@nebular/theme';
 import { MENU_ITEMS } from './pages-menu';
+import { UsersService } from './users.service';
 
 @Component({
 	selector: 'rng-pages',
@@ -46,7 +47,7 @@ import { MENU_ITEMS } from './pages-menu';
 })
 export class PagesComponent implements OnInit {
 	menu = MENU_ITEMS;
-	constructor(private sidebarService: NbSidebarService) {}
+	constructor(private sidebarService: NbSidebarService, private usersService: UsersService) {}
 	toggleDetail() {
 		this.sidebarService.toggle(false, 'detail');
 	}

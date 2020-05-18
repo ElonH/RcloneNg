@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { CombErr } from 'src/app/@dataflow/core';
 import { UsersFlowNode, IUser } from 'src/app/@dataflow/extra';
 import { map, filter, withLatestFrom, startWith, tap } from 'rxjs/operators';
+import { UsersService } from '../../users.service';
 
 @Component({
 	selector: 'user-confirm',
@@ -33,15 +34,15 @@ export class ConfirmComponent implements OnInit {
 	name: string = '';
 	@Input()
 	selected$: Observable<string>;
-	@Input()
-	users$: Observable<CombErr<UsersFlowNode>>;
 	@Output()
 	onDelete: EventEmitter<string> = new EventEmitter();
 	selectedUser$: Observable<IUser>;
+	users$: Observable<CombErr<UsersFlowNode>>;
 
-	constructor() {}
+	constructor(private usersService: UsersService) {}
 
 	ngOnInit(): void {
+    this.users$ = this.usersService.usersFlow$.getOutput();
 		this.selectedUser$ = this.selected$.pipe(
 			withLatestFrom(this.users$),
 			filter(([x, y]) => y[1].length === 0 && y[0].users.some((i) => x === i.name)),
