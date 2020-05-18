@@ -1,6 +1,5 @@
 import { Observable, of, Subject } from 'rxjs';
 import { BareFlow, FlowInNode, CombErr } from '../core';
-import { startWith } from 'rxjs/operators';
 
 export interface IRcloneServer {
 	url: string;
@@ -22,30 +21,28 @@ export abstract class UsersFlow extends BareFlow<FlowInNode, UsersFlowNode> {
 	];
 	private static trigger$ = new Subject<number>();
 	protected request(pre: CombErr<FlowInNode>): Observable<CombErr<UsersFlowNode>> {
-		const dataRaw = localStorage.getItem('users');
-		if (dataRaw) return of([{ users: JSON.parse(dataRaw) }, []]);
-		localStorage.setItem('users', JSON.stringify(UsersFlow.defaultUser));
-		return of([{ users: UsersFlow.defaultUser }, []]);
+		return of([{ users: UsersFlow.getAll() }, []]);
 	}
+	public static getAll(): IUser[] {
+		const dataRaw = localStorage.getItem('users');
+		if (!dataRaw) {
+			localStorage.setItem('users', JSON.stringify(UsersFlow.defaultUser));
+			return UsersFlow.defaultUser;
+		}
+		return JSON.parse(dataRaw);
+	}
+
 	public static setAll(data: IUser[]) {
 		localStorage.setItem('users', JSON.stringify(data));
 	}
-	public static set(user: IUser) {
-		const dataRaw = localStorage.getItem('users');
-		if (dataRaw) {
-			const data = JSON.parse(dataRaw) as IUser[];
-			for (let i = 0; i < data.length; i++) {
-				if (data[i].name === user.name) {
-					data[i] = user;
-					this.setAll(data);
-					return;
-				}
-			}
-			data.push(user);
+	public static set(user: IUser, preName: string = '') {
+		const data = this.getAll();
+		for (let i = 0; i < data.length; i++) {
+			if (preName !== data[i].name) continue;
+			data[i] = user;
 			this.setAll(data);
 			return;
 		}
-		const data = [];
 		data.push(user);
 		this.setAll(data);
 	}

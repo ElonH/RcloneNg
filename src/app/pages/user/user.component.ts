@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { UsersFlow } from 'src/app/@dataflow/extra';
-import { Subject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { UsersFlow, IUser } from 'src/app/@dataflow/extra';
+import { Subject, Observable, of } from 'rxjs';
+import { map, withLatestFrom, filter, tap } from 'rxjs/operators';
 import { CombErr, FlowInNode, NothingFlow } from 'src/app/@dataflow/core';
 import { NbStepperComponent, NbStepComponent } from '@nebular/theme';
 
@@ -38,7 +38,7 @@ import { NbStepperComponent, NbStepComponent } from '@nebular/theme';
 						<user-config
 							[users$]="usersFlow$.getOutput()"
 							[editUser]="prevUserFlow$.getOutput()"
-							(onSave)="onSave()"
+							(onSave)="onSave($event)"
 						>
 						</user-config>
 						<button nbButton (click)="realPrev()">prev</button>
@@ -71,6 +71,7 @@ export class UserComponent implements OnInit {
 	public usersFlow$: UsersFlow;
 	public selectedTrigger = new Subject<string>();
 	public prevUserFlow$: NothingFlow<{ prevName: string }>;
+	private saveUserTrigger = new Subject<IUser>();
 	operation = [
 		{ request: [false, true, false], icon: 'plus-square', status: 'primary', text: 'Add user' },
 		{ request: [true, true, false], icon: 'edit', status: 'info', text: 'Edit user' },
@@ -129,10 +130,16 @@ export class UserComponent implements OnInit {
 		})();
 		this.prevUserFlow$.deploy();
 		this.selectedTrigger.next('');
-	}
 
-	onSave() {
-		this.usersTrigger.next(1);
+		this.saveUserTrigger
+			.pipe(
+				withLatestFrom(this.prevUserFlow$.getOutput()),
+				filter(([x, y]) => y[1].length === 0)
+			)
+			.subscribe(([x, y]) => {
+				UsersFlow.set(x, y[0].prevName);
+				this.usersTrigger.next(1); // update users
+			});
 	}
 
 	onSelect(item: string) {
@@ -140,6 +147,11 @@ export class UserComponent implements OnInit {
 		this.selectedTrigger.next(item);
 		this.realNext();
 	}
+
+	onSave(user: IUser) {
+		this.saveUserTrigger.next(user);
+	}
+
 	onConfirm() {
 		console.log('deleted');
 	}

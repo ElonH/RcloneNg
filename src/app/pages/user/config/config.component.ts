@@ -143,7 +143,7 @@ export class ConfigComponent implements OnInit {
 	@Input()
 	editUser: Observable<CombErr<{ prevName: string }>> = of([{ prevName: '' }, []]);
 	@Output()
-	onSave: EventEmitter<any> = new EventEmitter();
+	onSave: EventEmitter<IUser> = new EventEmitter();
 
 	nameValidation$: NameValidation;
 	authPass$: Observable<boolean | null>;
@@ -154,13 +154,12 @@ export class ConfigComponent implements OnInit {
 	constructor() {}
 
 	save() {
-		UsersFlow.set({
+		this.onSave.emit({
 			name: this.name.value,
 			url: this.url.value,
 			user: this.user.value,
 			password: this.password.value,
 		});
-		this.onSave.emit(true);
 	}
 
 	private setUser(...args: string[]) {
