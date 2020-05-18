@@ -28,7 +28,12 @@ import { FormControl } from '@angular/forms';
 			</nb-card-footer>
 		</nb-card>
 	`,
-	styles: [],
+  styles: [`
+  nb-card-footer {
+    margin-inline-start: auto
+  }
+  `
+  ],
 })
 export class SelectComponent implements OnInit {
 	option = new FormControl('');
