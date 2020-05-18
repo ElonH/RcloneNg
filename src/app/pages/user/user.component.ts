@@ -30,15 +30,17 @@ import { NbStepperComponent, NbStepComponent } from '@nebular/theme';
 					<nb-step hidden label="Select">
 						<h4>Select User</h4>
 						<user-select [users$]="usersFlow$.getOutput()" (onConfirm)="onSelect($event)"> </user-select>
-						<button nbButton nbStepperPrevious>prev</button>
+						<button nbButton (click)="realPrev()">prev</button>
 					</nb-step>
 					<nb-step hidden label="Config">
 						<h4>Configurate User</h4>
 						<user-config [users$]="usersFlow$.getOutput()" (onSave)="onSave()"> </user-config>
+						<button nbButton (click)="realPrev()">prev</button>
 					</nb-step>
 					<nb-step hidden label="Confirm">
 						<h4>Delete Confirm</h4>
 						<user-confirm [users$]="usersFlow$.getOutput()" [selected$]="selectedSubject" (onDelete)="onConfirm()"> </user-confirm>
+						<button nbButton (click)="realPrev()">prev</button>
 					</nb-step>
 				</nb-stepper>
 			</nb-card-body>
@@ -84,7 +86,19 @@ export class UserComponent implements OnInit {
 				return;
 			}
 		}
-	}
+  }
+
+  public realPrev(){
+		const current = this.stepper.selectedIndex;
+		const steps = this.stepper.steps.toArray();
+		for (let i = current - 1; i >= 0; i--) {
+			if (steps[i].hidden) this.stepper.previous();
+			else {
+				this.stepper.previous();
+				return;
+			}
+		}
+  }
 
 	ngOnInit(): void {
 		const outer = this;
