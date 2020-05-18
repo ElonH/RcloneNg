@@ -11,7 +11,7 @@ import { NbStepperComponent, NbStepComponent } from '@nebular/theme';
 		<router-outlet> </router-outlet>
 		<nb-card>
 			<nb-card-body>
-				<nb-stepper orientation="horizontal">
+				<nb-stepper orientation="horizontal" disableStepNavigation>
 					<nb-step label="Operation">
 						<h4>Select an operation</h4>
 						<ng-container *ngFor="let item of operation">
