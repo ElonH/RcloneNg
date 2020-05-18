@@ -7,18 +7,8 @@ export const MENU_ITEMS: NbMenuItem[] = [
 		icon: 'people-outline',
 		children: [
 			{
-				title: 'Add User',
-				icon: 'plus-square-outline',
-				link: 'user',
-			},
-			{
-				title: 'Edit User',
-				icon: 'edit-outline',
-				link: 'user',
-			},
-			{
-				title: 'Remove User',
-				icon: 'trash-outline',
+				title: 'Manage',
+				icon: 'grid-outline',
 				link: 'user',
 			},
 		],
