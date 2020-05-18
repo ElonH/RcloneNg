@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { UsersFlow } from 'src/app/@dataflow/extra';
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { CombErr, FlowInNode } from 'src/app/@dataflow/core';
+import { CombErr, FlowInNode, NothingFlow } from 'src/app/@dataflow/core';
 import { NbStepperComponent, NbStepComponent } from '@nebular/theme';
 
 @Component({
@@ -29,17 +29,28 @@ import { NbStepperComponent, NbStepComponent } from '@nebular/theme';
 					</nb-step>
 					<nb-step hidden label="Select">
 						<h4>Select User</h4>
-						<user-select [users$]="usersFlow$.getOutput()" (onConfirm)="onSelect($event)"> </user-select>
+						<user-select [users$]="usersFlow$.getOutput()" (onConfirm)="onSelect($event)">
+						</user-select>
 						<button nbButton (click)="realPrev()">prev</button>
 					</nb-step>
 					<nb-step hidden label="Config">
 						<h4>Configurate User</h4>
-						<user-config [users$]="usersFlow$.getOutput()" (onSave)="onSave()"> </user-config>
+						<user-config
+							[users$]="usersFlow$.getOutput()"
+							[editUser]="prevUserFlow$.getOutput()"
+							(onSave)="onSave()"
+						>
+						</user-config>
 						<button nbButton (click)="realPrev()">prev</button>
 					</nb-step>
 					<nb-step hidden label="Confirm">
 						<h4>Delete Confirm</h4>
-						<user-confirm [users$]="usersFlow$.getOutput()" [selected$]="selected$" (onDelete)="onConfirm()"> </user-confirm>
+						<user-confirm
+							[users$]="usersFlow$.getOutput()"
+							[selected$]="selectedTrigger"
+							(onDelete)="onConfirm()"
+						>
+						</user-confirm>
 						<button nbButton (click)="realPrev()">prev</button>
 					</nb-step>
 				</nb-stepper>
@@ -56,9 +67,10 @@ import { NbStepperComponent, NbStepComponent } from '@nebular/theme';
 	],
 })
 export class UserComponent implements OnInit {
-  public usersTrigger = new Subject<number>();
-  public selected$ = new Subject<string>();
+	public usersTrigger = new Subject<number>();
 	public usersFlow$: UsersFlow;
+	public selectedTrigger = new Subject<string>();
+	public prevUserFlow$: NothingFlow<{ prevName: string }>;
 	operation = [
 		{ request: [false, true, false], icon: 'plus-square', status: 'primary', text: 'Add user' },
 		{ request: [true, true, false], icon: 'edit', status: 'info', text: 'Edit user' },
@@ -74,6 +86,7 @@ export class UserComponent implements OnInit {
 		steps[2].hidden = !args[1];
 		steps[3].hidden = !args[2];
 		this.realNext();
+		this.selectedTrigger.next(''); // clear privious result or init value
 	}
 
 	private realNext() {
@@ -86,9 +99,9 @@ export class UserComponent implements OnInit {
 				return;
 			}
 		}
-  }
+	}
 
-  public realPrev(){
+	public realPrev() {
 		const current = this.stepper.selectedIndex;
 		const steps = this.stepper.steps.toArray();
 		for (let i = current - 1; i >= 0; i--) {
@@ -98,7 +111,7 @@ export class UserComponent implements OnInit {
 				return;
 			}
 		}
-  }
+	}
 
 	ngOnInit(): void {
 		const outer = this;
@@ -108,18 +121,26 @@ export class UserComponent implements OnInit {
 		this.usersFlow$.deploy();
 
 		this.usersTrigger.next(1);
+
+		this.prevUserFlow$ = new (class extends NothingFlow<{ prevName: string }> {
+			public prerequest$ = outer.selectedTrigger.pipe(
+				map((x): CombErr<{ prevName: string }> => [{ prevName: x }, []])
+			);
+		})();
+		this.prevUserFlow$.deploy();
+		this.selectedTrigger.next('');
 	}
 
 	onSave() {
 		this.usersTrigger.next(1);
-  }
+	}
 
-  onSelect(item: string){
-    console.log(item);
-    this.selected$.next(item);
-    this.realNext();
-  }
-  onConfirm(){
-    console.log('deleted');
-  }
+	onSelect(item: string) {
+		console.log(item);
+		this.selectedTrigger.next(item);
+		this.realNext();
+	}
+	onConfirm() {
+		console.log('deleted');
+	}
 }
