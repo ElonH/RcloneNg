@@ -150,10 +150,12 @@ export class UserComponent implements OnInit {
 
 	onSave(user: IUser) {
 		this.saveUserTrigger.next(user);
+		this.stepper.reset();
 	}
 
 	onConfirm(name: string) {
 		UsersFlow.del(name);
 		this.usersTrigger.next(1); // update users
+		this.stepper.reset();
 	}
 }
