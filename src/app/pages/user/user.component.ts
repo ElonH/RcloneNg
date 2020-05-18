@@ -39,7 +39,7 @@ import { NbStepperComponent, NbStepComponent } from '@nebular/theme';
 					</nb-step>
 					<nb-step hidden label="Confirm">
 						<h4>Delete Confirm</h4>
-						<user-confirm [users$]="usersFlow$.getOutput()" [selected$]="selectedSubject" (onDelete)="onConfirm()"> </user-confirm>
+						<user-confirm [users$]="usersFlow$.getOutput()" [selected$]="selected$" (onDelete)="onConfirm()"> </user-confirm>
 						<button nbButton (click)="realPrev()">prev</button>
 					</nb-step>
 				</nb-stepper>
@@ -56,8 +56,8 @@ import { NbStepperComponent, NbStepComponent } from '@nebular/theme';
 	],
 })
 export class UserComponent implements OnInit {
-  public configSubject = new Subject<number>();
-  public selectedSubject = new Subject<string>();
+  public usersTrigger = new Subject<number>();
+  public selected$ = new Subject<string>();
 	public usersFlow$: UsersFlow;
 	operation = [
 		{ request: [false, true, false], icon: 'plus-square', status: 'primary', text: 'Add user' },
@@ -103,20 +103,20 @@ export class UserComponent implements OnInit {
 	ngOnInit(): void {
 		const outer = this;
 		this.usersFlow$ = new (class extends UsersFlow {
-			public prerequest$ = outer.configSubject.pipe(map((): CombErr<FlowInNode> => [{}, []]));
+			public prerequest$ = outer.usersTrigger.pipe(map((): CombErr<FlowInNode> => [{}, []]));
 		})();
 		this.usersFlow$.deploy();
 
-		this.configSubject.next(1);
+		this.usersTrigger.next(1);
 	}
 
 	onSave() {
-		this.configSubject.next(1);
+		this.usersTrigger.next(1);
   }
 
   onSelect(item: string){
     console.log(item);
-    this.selectedSubject.next(item);
+    this.selected$.next(item);
     this.realNext();
   }
   onConfirm(){
