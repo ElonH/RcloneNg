@@ -13,6 +13,7 @@ export interface IUser extends IRcloneServer {
 
 export interface UsersFlowNode extends FlowInNode {
 	users: IUser[];
+	loginUser: IUser;
 }
 
 export abstract class UsersFlow extends BareFlow<FlowInNode, UsersFlowNode> {
@@ -21,7 +22,7 @@ export abstract class UsersFlow extends BareFlow<FlowInNode, UsersFlowNode> {
 	];
 	private static trigger$ = new Subject<number>();
 	protected request(pre: CombErr<FlowInNode>): Observable<CombErr<UsersFlowNode>> {
-		return of([{ users: UsersFlow.getAll() }, []]);
+		return of([{ users: UsersFlow.getAll(), loginUser: UsersFlow.getLogin() }, []]);
 	}
 	public static getAll(): IUser[] {
 		const dataRaw = localStorage.getItem('users');
@@ -30,6 +31,28 @@ export abstract class UsersFlow extends BareFlow<FlowInNode, UsersFlowNode> {
 			return UsersFlow.defaultUser;
 		}
 		return JSON.parse(dataRaw);
+	}
+
+	public static get(name: string): IUser | undefined {
+		const users = this.getAll();
+		return users.find((x) => x.name === name);
+	}
+
+	public static getLogin(): IUser {
+		const dataRaw = localStorage.getItem('loginUser');
+		if (!dataRaw) {
+			localStorage.setItem('loginUser', JSON.stringify(UsersFlow.defaultUser[0]));
+			return UsersFlow.defaultUser[0];
+		}
+		const data = JSON.parse(dataRaw);
+		const users = this.getAll();
+		if (users.some((x) => JSON.stringify(x) === dataRaw)) return data;
+		this.setLogin(users[0]);
+		return users[0];
+	}
+
+	public static setLogin(user: IUser) {
+		localStorage.setItem('loginUser', JSON.stringify(user));
 	}
 
 	public static setAll(data: IUser[]) {

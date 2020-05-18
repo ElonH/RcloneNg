@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NbSidebarService } from '@nebular/theme';
+import { NbSidebarService, NbMenuItem } from '@nebular/theme';
 import { MENU_ITEMS } from './pages-menu';
 import { UsersService } from './users.service';
 
@@ -55,5 +55,28 @@ export class PagesComponent implements OnInit {
 	toggleNav() {
 		this.sidebarService.toggle(true, 'nav');
 	}
-	ngOnInit(): void {}
+	ngOnInit(): void {
+		this.usersService.usersFlow$.getOutput().subscribe((usersNode) => {
+      if (usersNode[1].length !== 0) return;
+      const userGroup = this.menu[0];
+      userGroup.title = usersNode[0].loginUser.name;
+			userGroup.children = usersNode[0].users.map(
+				(x): NbMenuItem => {
+					return {
+						title: x.name,
+						icon: 'person',
+						link: 'user/login',
+						queryParams: {
+							name: x.name,
+						},
+					};
+				}
+			);
+			userGroup.children.push({
+				title: 'Manage',
+				icon: 'grid-outline',
+				link: 'user',
+			});
+		});
+	}
 }

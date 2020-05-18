@@ -170,7 +170,7 @@ export class ConfigComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-    this.users$ = this.usersService.usersFlow$.getOutput();
+		this.users$ = this.usersService.usersFlow$.getOutput();
 		const outer = this;
 		this.editUser.pipe(withLatestFrom(this.users$)).subscribe(([pre, users]) => {
 			if (pre[1].length !== 0 || users[1].length !== 0) return;
@@ -189,6 +189,7 @@ export class ConfigComponent implements OnInit {
 						return [
 							{
 								users: usersNode[0].users.filter((x) => x.name !== prevNameNode[0]['prevName']),
+								loginUser: usersNode[0].loginUser,
 								currentName: curName,
 							},
 							[].concat(usersNode[1], prevNameNode[1]),
