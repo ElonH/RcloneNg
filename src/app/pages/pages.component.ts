@@ -20,7 +20,6 @@ import { UsersService } from './users.service';
 			<nb-sidebar right tag="detail"></nb-sidebar>
 
 			<nb-layout-column class="colored-column-basic">
-				Layout Content
 				<router-outlet></router-outlet>
 			</nb-layout-column>
 
@@ -57,9 +56,9 @@ export class PagesComponent implements OnInit {
 	}
 	ngOnInit(): void {
 		this.usersService.usersFlow$.getOutput().subscribe((usersNode) => {
-      if (usersNode[1].length !== 0) return;
-      const userGroup = this.menu[0];
-      userGroup.title = usersNode[0].loginUser.name;
+			if (usersNode[1].length !== 0) return;
+			const userGroup = this.menu[0];
+			userGroup.title = usersNode[0].loginUser.name;
 			userGroup.children = usersNode[0].users.map(
 				(x): NbMenuItem => {
 					return {
