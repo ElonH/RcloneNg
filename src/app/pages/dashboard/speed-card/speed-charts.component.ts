@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { ChartDataSets, ChartOptions, ChartPoint } from 'chart.js';
 import { Color, BaseChartDirective, Label } from 'ng2-charts';
 import * as moment from 'moment';
@@ -6,7 +6,7 @@ import { CoreStatsFlow, NoopAuthFlowSupNode } from 'src/app/@dataflow/rclone';
 import { Observable, interval } from 'rxjs';
 import { CombErr } from 'src/app/@dataflow/core';
 import { UsersService } from '../../users.service';
-import { map, withLatestFrom } from 'rxjs/operators';
+import { map, withLatestFrom, takeWhile } from 'rxjs/operators';
 import { IRcloneServer } from 'src/app/@dataflow/extra';
 import { CoreStatsService } from '../core-stats.service';
 
@@ -29,7 +29,7 @@ import { CoreStatsService } from '../core-stats.service';
 	`,
 	styles: [],
 })
-export class SpeedChartsComponent implements OnInit {
+export class SpeedChartsComponent implements OnInit, OnDestroy {
 	public lineChartData: ChartDataSets[] = [
 		{
 			data: [],
@@ -126,19 +126,28 @@ export class SpeedChartsComponent implements OnInit {
 	}
 
 	threadhold = 60;
+	visable = false;
 
 	ngOnInit() {
-		this.coreStatsService.coreStatsFlow$.getOutput().subscribe((node) => {
-			if (node[1].length !== 0) return;
-			const speed = node[0]['core-stats'].speed;
-			const data = this.lineChartData[0].data as ChartPoint[];
-			const speedNode = { x: moment(), y: speed };
-			const threadhold = speedNode.x.clone().subtract(this.threadhold, 'seconds');
-			while (data.length !== 0 && data[0].x < threadhold) {
-				data.shift();
-			}
-			data.push(speedNode);
-			this.chart.update();
-		});
+		this.visable = true;
+		this.coreStatsService.coreStatsFlow$
+			.getOutput()
+			.pipe(takeWhile(() => this.visable))
+			.subscribe((node) => {
+				if (node[1].length !== 0) return;
+				const speed = node[0]['core-stats'].speed;
+				const data = this.lineChartData[0].data as ChartPoint[];
+				const speedNode = { x: moment(), y: speed };
+				const threadhold = speedNode.x.clone().subtract(this.threadhold, 'seconds');
+				while (data.length !== 0 && data[0].x < threadhold) {
+					data.shift();
+				}
+				data.push(speedNode);
+				this.chart.update();
+			});
+	}
+
+	ngOnDestroy() {
+		this.visable = false;
 	}
 }
