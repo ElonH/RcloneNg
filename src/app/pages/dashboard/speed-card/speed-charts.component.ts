@@ -8,6 +8,7 @@ import { CombErr } from 'src/app/@dataflow/core';
 import { UsersService } from '../../users.service';
 import { map, withLatestFrom } from 'rxjs/operators';
 import { IRcloneServer } from 'src/app/@dataflow/extra';
+import { CoreStatsService } from '../core-stats.service';
 
 @Component({
 	selector: 'dashboard-speed-charts',
@@ -113,33 +114,21 @@ export class SpeedChartsComponent implements OnInit {
 
 	@ViewChild(BaseChartDirective, { static: true }) chart: BaseChartDirective;
 
-	constructor(private userService: UsersService) {
-		this.lineChartData[0].data = [...Array(Math.round(this.threadhold / this.period)).keys()].map(
-			(i) => {
-				return { x: moment().subtract(this.threadhold - i * this.period, 'seconds'), y: 0 };
-			}
-		);
+	constructor(private coreStatsService: CoreStatsService) {
+		this.lineChartData[0].data = [
+			...Array(Math.round(this.threadhold / this.coreStatsService.period)).keys(),
+		].map((i) => {
+			return {
+				x: moment().subtract(this.threadhold - i * this.coreStatsService.period, 'seconds'),
+				y: 0,
+			};
+		});
 	}
 
-	coreStatsFlow$: CoreStatsFlow;
 	threadhold = 60;
-	period = 3;
 
 	ngOnInit() {
-		const outer = this;
-		this.coreStatsFlow$ = new (class extends CoreStatsFlow {
-			public prerequest$ = interval(outer.period * 1000).pipe(
-				withLatestFrom(outer.userService.usersFlow$.getOutput()),
-				map(
-					([_, x]): CombErr<IRcloneServer> => {
-						if (x[1].length !== 0) return [{}, x[1]] as any;
-						return [x[0].loginUser, []];
-					}
-				)
-			);
-		})();
-		this.coreStatsFlow$.deploy();
-		this.coreStatsFlow$.getOutput().subscribe((node) => {
+		this.coreStatsService.coreStatsFlow$.getOutput().subscribe((node) => {
 			if (node[1].length !== 0) return;
 			const speed = node[0]['core-stats'].speed;
 			const data = this.lineChartData[0].data as ChartPoint[];
