@@ -15,6 +15,7 @@ export interface CoreStatsFlowOutNode extends FlowOutNode {
 		retryError: boolean;
 		speed: number;
 		transfers: number;
+		transferring?: [];
 	};
 }
 
