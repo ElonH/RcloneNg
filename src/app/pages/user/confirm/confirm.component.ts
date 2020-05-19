@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CombErr } from 'src/app/@dataflow/core';
-import { UsersFlowNode, IUser } from 'src/app/@dataflow/extra';
+import { UsersFlowOutNode, IUser } from 'src/app/@dataflow/extra';
 import { map, filter, withLatestFrom, startWith, tap } from 'rxjs/operators';
 import { UsersService } from '../../users.service';
 
@@ -37,7 +37,7 @@ export class ConfirmComponent implements OnInit {
 	@Output()
 	onDelete: EventEmitter<string> = new EventEmitter();
 	selectedUser$: Observable<IUser>;
-	users$: Observable<CombErr<UsersFlowNode>>;
+	users$: Observable<CombErr<UsersFlowOutNode>>;
 
 	constructor(private usersService: UsersService) {}
 

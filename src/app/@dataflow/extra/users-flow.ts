@@ -11,17 +11,17 @@ export interface IUser extends IRcloneServer {
 	name: string;
 }
 
-export interface UsersFlowNode extends FlowInNode {
+export interface UsersFlowOutNode extends FlowInNode {
 	users: IUser[];
 	loginUser: IUser;
 }
 
-export abstract class UsersFlow extends BareFlow<FlowInNode, UsersFlowNode> {
+export abstract class UsersFlow extends BareFlow<FlowInNode, UsersFlowOutNode> {
 	public static readonly defaultUser: IUser[] = [
 		{ name: 'localhost', url: 'http://localhost:5572' },
 	];
 	private static trigger$ = new Subject<number>();
-	protected request(pre: CombErr<FlowInNode>): Observable<CombErr<UsersFlowNode>> {
+	protected request(pre: CombErr<FlowInNode>): Observable<CombErr<UsersFlowOutNode>> {
 		return of([{ users: UsersFlow.getAll(), loginUser: UsersFlow.getLogin() }, []]);
 	}
 	public static getAll(): IUser[] {

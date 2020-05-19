@@ -11,7 +11,7 @@ import { Component, OnInit } from '@angular/core';
 			</div>
 			<div class="row">
 				<div class="col-sm-12 col-md-6 col-xl-6">
-					<nb-card><nb-card-body>speed</nb-card-body></nb-card>
+					<dashboard-speed-card> </dashboard-speed-card>
 				</div>
 				<div class="col-sm-12 col-md-6 col-xl-6">
 					<nb-card><nb-card-body>core/stats</nb-card-body></nb-card>

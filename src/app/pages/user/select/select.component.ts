@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs';
-import { UsersFlowNode } from 'src/app/@dataflow/extra';
+import { UsersFlowOutNode } from 'src/app/@dataflow/extra';
 import { map, startWith } from 'rxjs/operators';
 import { CombErr } from 'src/app/@dataflow/core';
 import { FormControl } from '@angular/forms';
@@ -42,7 +42,7 @@ export class SelectComponent implements OnInit {
 
 	constructor(private usersService: UsersService) {}
 
-	users$: Observable<CombErr<UsersFlowNode>>;
+	users$: Observable<CombErr<UsersFlowOutNode>>;
 	@Output()
 	onConfirm: EventEmitter<string> = new EventEmitter();
 

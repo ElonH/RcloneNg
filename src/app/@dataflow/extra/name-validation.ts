@@ -1,8 +1,8 @@
 import { SupersetFlow,  FlowInNode, CombErr } from '../core';
 import { Observable, of } from 'rxjs';
-import { IUser, UsersFlowNode } from './users-flow';
+import { IUser, UsersFlowOutNode } from './users-flow';
 
-export interface NameValidationPreNode extends UsersFlowNode {
+export interface NameValidationPreNode extends UsersFlowOutNode {
 	currentName: string;
 }
 

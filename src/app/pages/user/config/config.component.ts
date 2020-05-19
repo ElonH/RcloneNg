@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { Observable, Subject, of } from 'rxjs';
 import {
-	UsersFlowNode,
+	UsersFlowOutNode,
 	NameValidation,
 	NameValidationPreNode,
 	IRcloneServer,
@@ -139,7 +139,7 @@ export class ConfigComponent implements OnInit {
 
 	connectTrigger$ = new Subject<number>();
 
-	users$: Observable<CombErr<UsersFlowNode>>;
+	users$: Observable<CombErr<UsersFlowOutNode>>;
 	@Input()
 	editUser: Observable<CombErr<{ prevName: string }>> = of([{ prevName: '' }, []]);
 	@Output()
