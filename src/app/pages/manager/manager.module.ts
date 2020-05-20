@@ -5,11 +5,11 @@ import { ManagerRoutingModule } from './manager-routing.module';
 import { ManagerComponent } from './manager.component';
 import { NbActionsModule, NbCardModule, NbIconModule, NbProgressBarModule } from '@nebular/theme';
 import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
-import { HomeViewComponent } from './HomeView/HomeView.component';
-import { RemoteComponent } from './HomeView/remote.component';
+import { HomeModeComponent } from './homeMode/homeMode.component';
+import { RemoteComponent } from './homeMode/remote.component';
 
 @NgModule({
-	declarations: [ManagerComponent, BreadcrumbComponent, HomeViewComponent, RemoteComponent],
+	declarations: [ManagerComponent, BreadcrumbComponent, HomeModeComponent, RemoteComponent],
 	imports: [
 		CommonModule,
 		ManagerRoutingModule,

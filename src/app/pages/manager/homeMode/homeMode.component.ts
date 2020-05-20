@@ -7,7 +7,7 @@ import { IRcloneServer } from 'src/app/@dataflow/extra';
 import { Subject } from 'rxjs';
 
 @Component({
-	selector: 'dashboard-HomeView',
+	selector: 'dashboard-homeMode',
 	template: `
 		<div class="row justify-content-start">
 			<div class="cloud col-xl-4 col-lg-6 col-md-12" *ngFor="let remote of remotes">
@@ -15,9 +15,9 @@ import { Subject } from 'rxjs';
 			</div>
 		</div>
 	`,
-	styleUrls: ['./HomeView.component.scss'],
+	styleUrls: ['./homeMode.component.scss'],
 })
-export class HomeViewComponent implements OnInit {
+export class HomeModeComponent implements OnInit {
 	constructor(private usersService: UsersService) {}
 
 	remotesFlow$: ListRemotesFlow;
