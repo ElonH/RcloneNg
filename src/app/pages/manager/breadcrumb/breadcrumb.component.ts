@@ -29,6 +29,9 @@ import { Component, OnInit } from '@angular/core';
 	`,
 	styles: [
 		`
+			.breadcrumb {
+				margin-bottom: 0;
+			}
 			li > a {
 				background: white;
 				border-radius: 1rem;

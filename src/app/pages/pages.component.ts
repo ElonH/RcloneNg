@@ -11,19 +11,15 @@ import { UsersService } from './users.service';
 				<nb-actions>
 					<nb-action icon="menu-outline" (click)="toggleNav()"></nb-action>
 				</nb-actions>
-				<nb-actions class="pushToRight">
-					<nb-action icon="menu-outline" (click)="toggleDetail()"></nb-action>
-				</nb-actions>
 			</nb-layout-header>
 
 			<nb-sidebar tag="nav"><nb-menu [items]="menu"> </nb-menu></nb-sidebar>
-			<nb-sidebar right tag="detail"></nb-sidebar>
 
-			<nb-layout-column class="colored-column-basic">
+			<nb-layout-column class="colored-column-basic basic-contant" style="padding: 0;">
 				<router-outlet></router-outlet>
 			</nb-layout-column>
 
-			<nb-layout-footer subheader>
+			<nb-layout-footer>
 				<nb-actions>
 					<nb-action icon="copy"></nb-action>
 					<nb-action icon="move"></nb-action>
@@ -41,15 +37,16 @@ import { UsersService } from './users.service';
 			.pushToRight {
 				margin-left: auto;
 			}
+			nb-layout-footer {
+				bottom: 0;
+				position: sticky;
+			}
 		`,
 	],
 })
 export class PagesComponent implements OnInit {
 	menu = MENU_ITEMS;
 	constructor(private sidebarService: NbSidebarService, private usersService: UsersService) {}
-	toggleDetail() {
-		this.sidebarService.toggle(false, 'detail');
-	}
 
 	toggleNav() {
 		this.sidebarService.toggle(true, 'nav');
