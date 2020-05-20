@@ -2,6 +2,7 @@ import { AjaxRequest, AjaxResponse } from 'rxjs/ajax';
 import { FlowSupNode, FlowOutNode, CombErr } from '../core';
 import { AjaxFlow } from '../core/ajax-flow';
 import { IRcloneServer } from '../extra';
+import { Observable } from 'rxjs';
 
 export type AjaxFlowNode = [AjaxResponse | object, Error[]];
 
@@ -39,8 +40,10 @@ export abstract class PostFlow<
 			body: this.params,
 		};
 	}
-	public deploy() {
-		if (!this.cachePath) this.cachePath = JSON.stringify([this.cmd, this.params]);
-		super.deploy();
+	protected request(pre: CombErr<Tin>): Observable<CombErr<Tout>> {
+		if (pre[1].length === 0) {
+			this.cachePath = JSON.stringify([this.cmd, this.params, pre[0].url]);
+		}
+		return super.request(pre);
 	}
 }
