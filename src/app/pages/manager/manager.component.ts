@@ -5,12 +5,8 @@ import { Component, OnInit } from '@angular/core';
 	template: `
 		<nb-card>
 			<nb-card-body>
-				<div class="row">
-					<div class="col">
-						<manager-breadcrumb> </manager-breadcrumb>
-					</div>
-				</div>
-				<p>123</p>
+				<manager-breadcrumb> </manager-breadcrumb>
+				<dashboard-HomeView> </dashboard-HomeView>
 			</nb-card-body>
 		</nb-card>
 	`,
