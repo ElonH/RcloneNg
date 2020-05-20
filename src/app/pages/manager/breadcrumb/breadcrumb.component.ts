@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { NavServiceService } from '../nav-service.service';
 
 @Component({
 	selector: 'manager-breadcrumb',
@@ -6,21 +7,30 @@ import { Component, OnInit } from '@angular/core';
 		<nav>
 			<ol class="breadcrumb">
 				<li class="breadcrumb-item">
-					<a><nb-icon icon="home-outline"></nb-icon></a>
+					<a [routerLink]="['.']" routerLinkActive="router-link-active">
+						<nb-icon icon="home-outline"></nb-icon>
+					</a>
 				</li>
-				<li class="breadcrumb-item">
-					<a>
+				<li *ngIf="remote" class="breadcrumb-item">
+					<a
+						[routerLink]="['.']"
+						routerLinkActive="router-link-active"
+						[queryParams]="geneQueryParams(-1)"
+					>
 						<nb-icon icon="google-outline"></nb-icon>
 						<span class="breadcrumb-cloud">Cloud</span>
 					</a>
 				</li>
-				<li class="breadcrumb-item">
-					<a><span>path</span></a>
+				<li *ngFor="let dir of pathPrefix; index as i" class="breadcrumb-item">
+					<a
+						[routerLink]="['.']"
+						[queryParams]="geneQueryParams(i)"
+						routerLinkActive="router-link-active"
+					>
+						<span>{{ dir }}</span>
+					</a>
 				</li>
-				<li class="breadcrumb-item">
-					<a><span>to</span></a>
-				</li>
-				<li class="breadcrumb-item active">Data</li>
+				<li *ngIf="pathSurfix" class="breadcrumb-item active">{{ pathSurfix }}</li>
 				<a class="right option"><nb-icon icon="refresh"></nb-icon></a>
 				<a class="option"><nb-icon [icon]="listView ? 'list' : 'grid'"></nb-icon></a>
 				<a class="option"><nb-icon icon="info"></nb-icon></a>
@@ -51,7 +61,33 @@ import { Component, OnInit } from '@angular/core';
 })
 export class BreadcrumbComponent implements OnInit {
 	listView = true;
-	constructor() {}
+	remote: string;
+	pathPrefix: string[];
+	pathSurfix: string;
 
-	ngOnInit() {}
+	constructor(private navService: NavServiceService) {}
+
+	geneQueryParams(i: number): object {
+		const path = this.pathPrefix.slice(0, i + 1).join('/');
+		if (path === '') return { remote: this.remote };
+		return {
+			remote: this.remote,
+			path: this.pathPrefix.slice(0, i + 1).join('/'),
+		};
+	}
+
+	splitPath(path: string): [string[], string] {
+		if (!path) return [[], undefined];
+		const data = path.split('/');
+		return [data.slice(0, -1), data[data.length - 1]];
+	}
+
+	ngOnInit() {
+		this.remote = this.navService.remote;
+		[this.pathPrefix, this.pathSurfix] = this.splitPath(this.navService.path);
+		this.navService.remoteAndPath$.subscribe((x) => {
+			this.remote = x[0];
+			[this.pathPrefix, this.pathSurfix] = this.splitPath(x[1]);
+		});
+	}
 }

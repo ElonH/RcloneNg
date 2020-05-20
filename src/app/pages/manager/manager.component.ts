@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { NavServiceService } from './nav-service.service';
 
 @Component({
 	selector: 'app-manager',
@@ -8,7 +9,7 @@ import { Component, OnInit } from '@angular/core';
 				<manager-breadcrumb> </manager-breadcrumb>
 				<div class="row">
 					<div class="view col-md-9 col-sm-8">
-						<dashboard-HomeView> </dashboard-HomeView>
+						<dashboard-HomeView *ngIf="homeMode"> </dashboard-HomeView>
 					</div>
 					<div class="sidebar col-md-3 col-sm-4">123</div>
 				</div>
@@ -36,7 +37,24 @@ import { Component, OnInit } from '@angular/core';
 	],
 })
 export class ManagerComponent implements OnInit {
-	constructor() {}
+	constructor(private navService: NavServiceService) {}
+	homeMode = false;
+	fileMode = false;
 
-	ngOnInit(): void {}
+	showPage(remote: string, path: string) {
+		if (!remote) {
+			this.homeMode = true;
+			this.fileMode = false;
+		} else {
+			this.homeMode = false;
+			this.fileMode = true;
+		}
+	}
+
+	ngOnInit(): void {
+		this.showPage(this.navService.remote, this.navService.path);
+		this.navService.remoteAndPath$.subscribe((x) => {
+			this.showPage(...x);
+		});
+	}
 }
