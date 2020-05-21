@@ -3,6 +3,7 @@ import { UsersService } from '../../users.service';
 import { ListRemotesFlow } from 'src/app/@dataflow/rclone';
 import { Subject } from 'rxjs';
 import { Router, ActivatedRoute } from '@angular/router';
+import { OperationsListService } from '../fileMode/operations-list.service';
 
 @Component({
 	selector: 'manager-homeMode',
@@ -19,6 +20,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 export class HomeModeComponent implements OnInit {
 	constructor(
 		private usersService: UsersService,
+		private listService: OperationsListService,
 		private route: ActivatedRoute,
 		private router: Router
 	) {}
@@ -29,6 +31,7 @@ export class HomeModeComponent implements OnInit {
 
 	click(remote: string) {
 		this.router.navigate(['.'], { relativeTo: this.route, queryParams: { remote: remote } });
+		this.listService.listTrigger.next(1);
 	}
 
 	ngOnInit() {
