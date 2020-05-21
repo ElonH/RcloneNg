@@ -1,9 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UsersService } from '../../users.service';
-import { ListRemotesFlow } from 'src/app/@dataflow/rclone/list-remotes-flow';
-import { map, combineLatest, tap } from 'rxjs/operators';
-import { CombErr } from 'src/app/@dataflow/core';
-import { IRcloneServer } from 'src/app/@dataflow/extra';
+import { ListRemotesFlow } from 'src/app/@dataflow/rclone';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -27,15 +24,7 @@ export class HomeModeComponent implements OnInit {
 	ngOnInit() {
 		const outer = this;
 		this.remotesFlow$ = new (class extends ListRemotesFlow {
-			public prerequest$ = outer.remotesTrigger.pipe(
-				combineLatest(outer.usersService.usersFlow$.getOutput()),
-				map(
-					([_, x]): CombErr<IRcloneServer> => {
-						if (x[1].length !== 0) return [{}, x[1]] as any;
-						return [x[0].loginUser, []];
-					}
-				)
-			);
+			public prerequest$ = outer.usersService.currentUserFlow$.getOutput();
 		})();
 		this.remotesFlow$.deploy();
 

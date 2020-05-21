@@ -77,3 +77,12 @@ export abstract class UsersFlow extends BareFlow<FlowInNode, UsersFlowOutNode> {
 		localStorage.removeItem('users');
 	}
 }
+
+export interface CurrentUserFlowOutNode extends IUser {}
+
+export abstract class CurrentUserFlow extends BareFlow<UsersFlowOutNode, CurrentUserFlowOutNode> {
+	// public prerequest$: Observable<CombErr<UsersFlowOutNode>>;
+	protected request(pre: CombErr<UsersFlowOutNode>): Observable<CombErr<CurrentUserFlowOutNode>> {
+		return of([{ ...pre[0].loginUser }, []]);
+	}
+}
