@@ -41,14 +41,17 @@ export abstract class UsersFlow extends BareFlow<FlowInNode, UsersFlowOutNode> {
 	public static getLogin(): IUser {
 		const dataRaw = localStorage.getItem('loginUser');
 		if (!dataRaw) {
+			// don't exist loginUser item
 			localStorage.setItem('loginUser', JSON.stringify(UsersFlow.defaultUser[0]));
 			return UsersFlow.defaultUser[0];
 		}
 		const data = JSON.parse(dataRaw);
 		const users = this.getAll();
-		if (users.some((x) => JSON.stringify(x) === dataRaw)) return data;
-		this.setLogin(users[0]);
-		return users[0];
+		// find newest user configuration in users by loginuser's name
+		let user = users.find((x) => x.name === data.name);
+    if (!user) user = users[0];
+		this.setLogin(user);
+		return user;
 	}
 
 	public static setLogin(user: IUser) {
