@@ -33,11 +33,15 @@ export abstract class PostFlow<
 		};
 		if (x[0]['user'] && x[0]['user'] !== '' && x[0]['password'] && x[0]['password'] !== '')
 			headers['Authorization'] = 'Basic ' + btoa(`${x[0]['user']}:${x[0]['password']}`);
+		let body: Tparms;
+		if (typeof this.params === 'object') body = this.params;
+		else if (typeof this.params === 'function') body = this.params(x);
+		else throw Error('params type is unknow.');
 		return {
 			url: x[0]['url'] + '/' + this.cmd,
 			method: 'POST',
 			headers: headers,
-			body: this.params,
+			body: body,
 		};
 	}
 	protected request(pre: CombErr<Tin>): Observable<CombErr<Tout>> {
