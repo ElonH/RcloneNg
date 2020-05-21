@@ -7,8 +7,8 @@ export type AjaxFlowNode = [AjaxResponse | object, Error[]];
 
 export abstract class PostFlow<
 	Tin extends IRcloneServer,
-  Tout extends FlowOutNode,
-  Tparms extends FlowInNode = Tin,
+	Tout extends FlowOutNode,
+	Tparms extends FlowInNode = FlowInNode,
 	Tsup extends FlowSupNode = Tin & Tout
 > extends AjaxFlow<Tin, Tout, Tsup> {
 	// protected cacheSupport: boolean;
