@@ -9,6 +9,7 @@ import { NavigationService } from './navigation.service';
 				<manager-breadcrumb> </manager-breadcrumb>
 				<div class="row">
 					<div class="view col-md-9 col-sm-8">
+						<manager-homeMode *ngIf="homeMode"> </manager-homeMode>
 						<dashboard-homeMode *ngIf="homeMode"> </dashboard-homeMode>
 					</div>
 					<div class="sidebar col-md-3 col-sm-4">123</div>

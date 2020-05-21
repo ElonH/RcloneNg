@@ -4,7 +4,7 @@ import { ListRemotesFlow } from 'src/app/@dataflow/rclone';
 import { Subject } from 'rxjs';
 
 @Component({
-	selector: 'dashboard-homeMode',
+	selector: 'manager-homeMode',
 	template: `
 		<div class="row justify-content-start">
 			<div class="cloud col-xl-4 col-lg-6 col-md-12" *ngFor="let remote of remotes">
