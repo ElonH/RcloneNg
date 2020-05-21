@@ -1,5 +1,5 @@
 import { AjaxRequest, AjaxResponse } from 'rxjs/ajax';
-import { FlowSupNode, FlowOutNode, CombErr, AjaxFlow } from '../core';
+import { FlowSupNode, FlowOutNode, CombErr, AjaxFlow, FlowInNode } from '../core';
 import { IRcloneServer } from '../extra';
 import { Observable } from 'rxjs';
 
@@ -7,7 +7,8 @@ export type AjaxFlowNode = [AjaxResponse | object, Error[]];
 
 export abstract class PostFlow<
 	Tin extends IRcloneServer,
-	Tout extends FlowOutNode,
+  Tout extends FlowOutNode,
+  Tparms extends FlowInNode = Tin,
 	Tsup extends FlowSupNode = Tin & Tout
 > extends AjaxFlow<Tin, Tout, Tsup> {
 	// protected cacheSupport: boolean;
@@ -16,7 +17,7 @@ export abstract class PostFlow<
 	// 	throw new Error('Method not implemented.');
 	// }
 	protected abstract cmd: string;
-	protected abstract params: object | ((pre: CombErr<Tin>) => object);
+	protected abstract params: Tparms | ((pre: CombErr<Tin>) => Tparms);
 	/**
 	 * auto-gen based on `cmd` and `params`
 	 *
