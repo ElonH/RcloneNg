@@ -1,14 +1,6 @@
 import { BareFlow, FlowInNode, FlowOutNode, CombErr } from './bare-flow';
 import { Observable } from 'rxjs';
-import {
-	tap,
-	take,
-	startWith,
-	distinctUntilChanged,
-	skip,
-	withLatestFrom,
-	map,
-} from 'rxjs/operators';
+import { take, distinctUntilChanged, withLatestFrom, map, shareReplay } from 'rxjs/operators';
 
 export interface FlowSupNode {}
 
@@ -18,10 +10,9 @@ export abstract class SupersetFlow<
 	Tsup extends FlowSupNode = Tin & Tout
 > extends BareFlow<Tin, Tout> {
 	private boostrapPrerequest$: Observable<CombErr<Tin>>;
-	private boostrapPrerequest: CombErr<Tin>;
 	public deploy() {
 		super.deploy();
-		this.boostrapPrerequest$ = this.prerequest$.pipe(tap((x) => (this.boostrapPrerequest = x)));
+		this.boostrapPrerequest$ = this.prerequest$.pipe(distinctUntilChanged(), shareReplay());
 		this.boostrapPrerequest$.pipe(take(1)).subscribe();
 	}
 	protected generateSuperset(current: CombErr<Tout>, previous: CombErr<Tin>): CombErr<Tsup> {
@@ -32,13 +23,7 @@ export abstract class SupersetFlow<
 	}
 	public getSupersetOutput(): Observable<CombErr<Tsup>> {
 		return this.getOutput().pipe(
-			withLatestFrom(
-				this.boostrapPrerequest$.pipe(
-					startWith(this.boostrapPrerequest),
-					distinctUntilChanged(),
-					skip(1)
-				)
-			),
+			withLatestFrom(this.boostrapPrerequest$),
 			map(([cur, pre]) => this.generateSuperset(cur, pre))
 		);
 	}
