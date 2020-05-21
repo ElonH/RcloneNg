@@ -17,7 +17,7 @@ export abstract class PostFlow<
 	// 	throw new Error('Method not implemented.');
 	// }
 	protected abstract cmd: string;
-	protected abstract params: object;
+	protected abstract params: object | ((pre: CombErr<Tin>) => object);
 	/**
 	 * auto-gen based on `cmd` and `params`
 	 *
@@ -42,7 +42,11 @@ export abstract class PostFlow<
 	}
 	protected request(pre: CombErr<Tin>): Observable<CombErr<Tout>> {
 		if (pre[1].length === 0) {
-			this.cachePath = JSON.stringify([this.cmd, this.params, pre[0].url]);
+			if (typeof this.params === 'object')
+				this.cachePath = JSON.stringify([this.cmd, this.params, pre[0].url]);
+			else if (typeof this.params === 'function')
+				this.cachePath = JSON.stringify([this.cmd, this.params(pre), pre[0].url]);
+			else throw Error('params type is unknow.');
 		}
 		return super.request(pre);
 	}
