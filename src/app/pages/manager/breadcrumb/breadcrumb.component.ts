@@ -18,7 +18,7 @@ import { NavigationService } from '../navigation.service';
 						[queryParams]="geneQueryParams(-1)"
 					>
 						<nb-icon icon="google-outline"></nb-icon>
-						<span class="breadcrumb-cloud">Cloud</span>
+						<span class="breadcrumb-cloud">{{ remote }}</span>
 					</a>
 				</li>
 				<li *ngFor="let dir of pathPrefix; index as i" class="breadcrumb-item">
