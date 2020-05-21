@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Columns, Config, DefaultConfig } from 'ngx-easy-table';
 import { OperationsListFlowOutItemNode } from 'src/app/@dataflow/rclone';
 import { OperationsListService } from '../operations-list.service';
-import { filter } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -20,12 +19,11 @@ export class ListViewComponent implements OnInit, OnDestroy {
 
 	constructor(private listService: OperationsListService) {}
 
-	visable = false;
 	ngOnInit() {
-		this.visable = true;
-		this.listScrb = this.listService.list$.pipe(filter(() => this.visable)).subscribe((x) => {
-			this.data = x.list;
+		this.listScrb = this.listService.listFlow$.getOutput().subscribe((x) => {
 			this.configuration.isLoading = false;
+			if (x[1].length !== 0) return;
+			this.data = x[0].list;
 		});
 		this.listService.listTrigger.next(1);
 
@@ -43,7 +41,6 @@ export class ListViewComponent implements OnInit, OnDestroy {
 
 	private listScrb: Subscription;
 	ngOnDestroy() {
-		this.visable = false;
 		this.listScrb.unsubscribe();
 	}
 }
