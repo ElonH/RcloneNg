@@ -43,10 +43,10 @@ export class OperationsListService {
 				return {
 					fs: `${pre[0].remote}:`,
 					remote: pre[0].path ? pre[0].path : '',
-					opt: {
-						showOrigIDs: false, // TODO: depends on remote type(local, not support)
-						showHash: false,
-					},
+					// opt: {
+					// 	showOrigIDs: false, // TODO: depends on remote type(local, not support)
+					// 	showHash: false,
+					// },
 				};
 			};
 		})();
