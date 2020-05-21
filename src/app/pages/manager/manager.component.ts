@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NavServiceService } from './nav-service.service';
+import { NavigationService } from './navigation.service';
 
 @Component({
 	selector: 'app-manager',
@@ -37,24 +37,20 @@ import { NavServiceService } from './nav-service.service';
 	],
 })
 export class ManagerComponent implements OnInit {
-	constructor(private navService: NavServiceService) {}
+	constructor(private navService: NavigationService) {}
 	homeMode = false;
 	fileMode = false;
 
-	showPage(remote: string, path: string) {
-		if (!remote) {
-			this.homeMode = true;
-			this.fileMode = false;
-		} else {
-			this.homeMode = false;
-			this.fileMode = true;
-		}
-	}
-
 	ngOnInit(): void {
-		this.showPage(this.navService.remote, this.navService.path);
-		this.navService.remoteAndPath$.subscribe((x) => {
-			this.showPage(...x);
+		this.navService.navFlow$.getOutput().subscribe((node) => {
+			const x = node[0];
+			if (!x.remote) {
+				this.homeMode = true;
+				this.fileMode = false;
+			} else {
+				this.homeMode = false;
+				this.fileMode = true;
+			}
 		});
 	}
 }

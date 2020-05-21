@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NavServiceService } from '../nav-service.service';
+import { NavigationService } from '../navigation.service';
 
 @Component({
 	selector: 'manager-breadcrumb',
@@ -65,7 +65,7 @@ export class BreadcrumbComponent implements OnInit {
 	pathPrefix: string[];
 	pathSurfix: string;
 
-	constructor(private navService: NavServiceService) {}
+	constructor(private navService: NavigationService) {}
 
 	geneQueryParams(i: number): object {
 		const path = this.pathPrefix.slice(0, i + 1).join('/');
@@ -83,11 +83,10 @@ export class BreadcrumbComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		this.remote = this.navService.remote;
-		[this.pathPrefix, this.pathSurfix] = this.splitPath(this.navService.path);
-		this.navService.remoteAndPath$.subscribe((x) => {
-			this.remote = x[0];
-			[this.pathPrefix, this.pathSurfix] = this.splitPath(x[1]);
+		// [this.pathPrefix, this.pathSurfix] = this.splitPath(this.navService.path);
+		this.navService.navFlow$.getOutput().subscribe((x) => {
+			this.remote = x[0].remote;
+			[this.pathPrefix, this.pathSurfix] = this.splitPath(x[0].path);
 		});
 	}
 }
