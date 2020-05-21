@@ -17,13 +17,8 @@ export class CoreStatsService {
 		const outer = this;
 		this.coreStatsFlow$ = new (class extends CoreStatsFlow {
 			public prerequest$ = interval(outer.period * 1000).pipe(
-				withLatestFrom(outer.userService.usersFlow$.getOutput()),
-				map(
-					([_, x]): CombErr<IRcloneServer> => {
-						if (x[1].length !== 0) return [{}, x[1]] as any;
-						return [x[0].loginUser, []];
-					}
-				)
+				withLatestFrom(outer.userService.currentUserFlow$.getOutput()),
+				map(([_, x]): CombErr<IRcloneServer> => x)
 			);
 		})();
 		this.coreStatsFlow$.deploy();
