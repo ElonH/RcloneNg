@@ -1,8 +1,7 @@
 import { PostFlow } from './post-flow';
 import { NoopAuthFlowSupNode } from './noop-auth-flow';
 import { CurrentUserFlowOutNode } from '../extra';
-import { AjaxFlowInteralNode } from '../core/ajax-flow';
-import { CombErr } from '../core';
+import { CombErr, AjaxFlowInteralNode } from '../core';
 
 export interface ListRemotesOutNode {
 	remotes: string[];

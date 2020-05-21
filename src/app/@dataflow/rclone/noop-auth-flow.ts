@@ -1,7 +1,6 @@
 import { PostFlow } from './post-flow';
 import { IRcloneServer } from '../extra';
-import { AjaxFlowInteralNode } from '../core/ajax-flow';
-import { CombErr } from '../core';
+import { CombErr, AjaxFlowInteralNode } from '../core';
 import { AjaxRequest } from 'rxjs/ajax';
 
 export interface NoopAuthFlowOutNode {

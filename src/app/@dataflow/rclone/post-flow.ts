@@ -1,6 +1,5 @@
 import { AjaxRequest, AjaxResponse } from 'rxjs/ajax';
-import { FlowSupNode, FlowOutNode, CombErr } from '../core';
-import { AjaxFlow } from '../core/ajax-flow';
+import { FlowSupNode, FlowOutNode, CombErr, AjaxFlow } from '../core';
 import { IRcloneServer } from '../extra';
 import { Observable } from 'rxjs';
 
