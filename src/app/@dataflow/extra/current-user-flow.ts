@@ -11,7 +11,7 @@ export abstract class CurrentUserFlow extends SupersetFlow<
 	// public prerequest$: Observable<CombErr<UsersFlowOutNode>>;
 	protected request(pre: CombErr<UsersFlowOutNode>): Observable<CombErr<CurrentUserFlowOutNode>> {
 		if (pre[1].length !== 0) return of([{}, pre[1]]) as any;
-		const loginUser = localStorage.getItem('loginUser');
+		const loginUser = CurrentUserFlow.getLogin();
 		if (!loginUser) {
 			// initilazation
 			if (pre[0].users.length === 0)
@@ -27,5 +27,8 @@ export abstract class CurrentUserFlow extends SupersetFlow<
 
 	public static setLogin(name: string) {
 		localStorage.setItem('loginUser', JSON.stringify(name));
+	}
+	public static getLogin(): string {
+		return localStorage.getItem('loginUser');
 	}
 }

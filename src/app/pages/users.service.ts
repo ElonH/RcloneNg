@@ -8,9 +8,12 @@ import { map } from 'rxjs/operators';
 	providedIn: 'root',
 })
 export class UsersService {
-	public usersTrigger = new Subject<number>();
+	private usersTrigger = new Subject<number>();
 	public usersFlow$: UsersFlow;
-	public currentUserFlow$: CurrentUserFlow;
+
+	public update() {
+		this.usersTrigger.next(1);
+	}
 
 	constructor() {
 		const outer = this;
@@ -18,11 +21,6 @@ export class UsersService {
 			public prerequest$ = outer.usersTrigger.pipe(map((): CombErr<FlowInNode> => [{}, []]));
 		})();
 		this.usersFlow$.deploy();
-
-		this.currentUserFlow$ = new (class extends CurrentUserFlow {
-			public prerequest$ = outer.usersFlow$.getOutput();
-		})();
-		this.currentUserFlow$.deploy();
 
 		this.usersTrigger.next(1);
 	}
