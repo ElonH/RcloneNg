@@ -61,7 +61,7 @@ export abstract class UsersFlow extends BareFlow<FlowInNode, UsersFlowOutNode> {
 	public static setAll(data: IUser[]) {
 		localStorage.setItem('users', JSON.stringify(data));
 	}
-	public static set(user: IUser, preName: string = '') {
+	public static set(user: IUser, preName: string = user.name) {
 		const data = this.getAll();
 		for (let i = 0; i < data.length; i++) {
 			if (preName !== data[i].name) continue;
