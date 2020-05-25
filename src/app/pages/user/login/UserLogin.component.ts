@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UsersService } from 'src/app/pages/users.service';
 import { UsersFlow } from 'src/app/@dataflow/extra';
+import { CurrentUserService } from '../../current-user.service';
 
 @Component({
 	template: ``,
@@ -11,15 +11,14 @@ export class UserLoginComponent implements OnInit {
 	constructor(
 		private route: ActivatedRoute,
 		private router: Router,
-		private userService: UsersService
+		private currUserService: CurrentUserService
 	) {}
 
 	ngOnInit() {
-    const user = UsersFlow.get(this.route.snapshot.queryParams['name']);
+		const user = UsersFlow.get(this.route.snapshot.queryParams['name']);
 		if (user) {
-			UsersFlow.setLogin(user);
-    }
-		this.userService.usersTrigger.next(1);
-		this.router.navigate(['/dashboard'])
+			this.currUserService.switchUser(user.name);
+		}
+		this.router.navigate(['/dashboard']);
 	}
 }

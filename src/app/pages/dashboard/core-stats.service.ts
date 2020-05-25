@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { UsersService } from '../users.service';
 import { CoreStatsFlow } from 'src/app/@dataflow/rclone';
 import { interval } from 'rxjs';
-import { withLatestFrom, map } from 'rxjs/operators';
+import { map, combineLatest } from 'rxjs/operators';
 import { CombErr } from 'src/app/@dataflow/core';
 import { IRcloneServer } from 'src/app/@dataflow/extra';
+import { ConnectionService } from '../connection.service';
 
 @Injectable({
 	providedIn: 'root',
@@ -13,11 +13,11 @@ export class CoreStatsService {
 	public coreStatsFlow$: CoreStatsFlow;
 	readonly period = 3;
 
-	constructor(private userService: UsersService) {
+	constructor(connnectService: ConnectionService) {
 		const outer = this;
 		this.coreStatsFlow$ = new (class extends CoreStatsFlow {
 			public prerequest$ = interval(outer.period * 1000).pipe(
-				withLatestFrom(outer.userService.currentUserFlow$.getOutput()),
+				combineLatest(connnectService.listCmd$.verify(this.cmd)),
 				map(([_, x]): CombErr<IRcloneServer> => x)
 			);
 		})();

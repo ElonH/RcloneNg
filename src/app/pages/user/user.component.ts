@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { UsersFlow, IUser } from 'src/app/@dataflow/extra';
+import { UsersFlow, IUser, UsersFlowOutNode } from 'src/app/@dataflow/extra';
 import { Subject, Observable, of } from 'rxjs';
 import { map, withLatestFrom, filter, tap } from 'rxjs/operators';
 import { CombErr, FlowInNode, NothingFlow } from 'src/app/@dataflow/core';
@@ -30,18 +30,18 @@ import { UsersService } from '../users.service';
 					</nb-step>
 					<nb-step hidden label="Select">
 						<h4>Select User</h4>
-						<user-select (onConfirm)="onSelect($event)"> </user-select>
+						<user-select (onConfirm)="selectTrigger.next($event); realNext()"> </user-select>
 						<button nbButton (click)="realPrev()">prev</button>
 					</nb-step>
 					<nb-step hidden label="Config">
 						<h4>Configurate User</h4>
-						<user-config [editUser]="prevUserFlow$.getOutput()" (onSave)="onSave($event)">
+						<user-config [select$]="select$" (onSave)="saveTrigger.next($event); stepper.reset()">
 						</user-config>
 						<button nbButton (click)="realPrev()">prev</button>
 					</nb-step>
 					<nb-step hidden label="Confirm">
 						<h4>Delete Confirm</h4>
-						<user-confirm [selected$]="selectedTrigger" (onDelete)="onConfirm($event)">
+						<user-confirm [select$]="select$" (onDelete)="confirmTrigger.next(1); stepper.reset()">
 						</user-confirm>
 						<button nbButton (click)="realPrev()">prev</button>
 					</nb-step>
@@ -59,16 +59,22 @@ import { UsersService } from '../users.service';
 	],
 })
 export class UserComponent implements OnInit {
-	public usersFlow$: UsersFlow;
-	public selectedTrigger = new Subject<string>();
-	public prevUserFlow$: NothingFlow<{ prevName: string }>;
-	private saveUserTrigger = new Subject<IUser>();
+	public selectTrigger = new Subject<string>();
+	public select$: NothingFlow<IUser>;
+
+	public confirmTrigger = new Subject<number>();
+	public confirm$: NothingFlow<IUser>;
+
+	public saveTrigger = new Subject<IUser>();
+	public save$: NothingFlow<UsersFlowOutNode>;
+
+	constructor(private usersService: UsersService) {}
+
 	operation = [
 		{ request: [false, true, false], icon: 'plus-square', status: 'primary', text: 'Add user' },
 		{ request: [true, true, false], icon: 'edit', status: 'info', text: 'Edit user' },
 		{ request: [true, false, true], icon: 'trash', status: 'danger', text: 'Delete user' },
 	];
-	constructor(private usersService: UsersService) {}
 
 	@ViewChild(NbStepperComponent) stepper: NbStepperComponent;
 
@@ -78,10 +84,10 @@ export class UserComponent implements OnInit {
 		steps[2].hidden = !args[1];
 		steps[3].hidden = !args[2];
 		this.realNext();
-		this.selectedTrigger.next(''); // clear privious result or init value
+		this.selectTrigger.next(''); // clear privious result or init value
 	}
 
-	private realNext() {
+	public realNext() {
 		const current = this.stepper.selectedIndex;
 		const steps = this.stepper.steps.toArray();
 		for (let i = current + 1; i < steps.length; i++) {
@@ -107,41 +113,55 @@ export class UserComponent implements OnInit {
 
 	ngOnInit(): void {
 		const outer = this;
-		this.usersFlow$ = this.usersService.usersFlow$;
-
-		this.prevUserFlow$ = new (class extends NothingFlow<{ prevName: string }> {
-			public prerequest$ = outer.selectedTrigger.pipe(
-				map((x): CombErr<{ prevName: string }> => [{ prevName: x }, []])
+		this.select$ = new (class extends NothingFlow<IUser> {
+			public prerequest$: Observable<CombErr<IUser>> = outer.selectTrigger.pipe(
+				withLatestFrom(outer.usersService.usersFlow$.getOutput()),
+				map(
+					([name, usersNode]): CombErr<IUser> => {
+						if (usersNode[1].length !== 0) return [{}, usersNode[1]] as any;
+						if (name === '')
+							return [{ name: '', url: 'http://localhost:5572', user: '', password: '' }, []]; // default value, add new conf
+						const selected = usersNode[0].users.find((x) => x.name === name);
+						if (!selected) return [{}, [new Error(`user '${name}'not found`)]] as any;
+						return [selected, []];
+					}
+				)
 			);
 		})();
-		this.prevUserFlow$.deploy();
-		this.selectedTrigger.next('');
+		this.select$.deploy();
 
-		this.saveUserTrigger
-			.pipe(
-				withLatestFrom(this.prevUserFlow$.getOutput()),
-				filter(([x, y]) => y[1].length === 0)
-			)
-			.subscribe(([x, y]) => {
-				UsersFlow.set(x, y[0].prevName);
-				this.usersService.usersTrigger.next(1); // update users
-			});
-	}
+		this.confirm$ = new (class extends NothingFlow<IUser> {
+			public prerequest$: Observable<CombErr<IUser>> = outer.confirmTrigger.pipe(
+				withLatestFrom(outer.select$.getOutput()),
+				map(([, secNode]): CombErr<IUser> => secNode)
+			);
+		})();
+		this.confirm$.deploy();
+		this.confirm$.getOutput().subscribe(([x, err]) => {
+			if (err.length !== 0) return;
+			UsersFlow.del(x.name);
+			this.usersService.update();
+		});
 
-	onSelect(item: string) {
-		console.log(item);
-		this.selectedTrigger.next(item);
-		this.realNext();
-	}
-
-	onSave(user: IUser) {
-		this.saveUserTrigger.next(user);
-		this.stepper.reset();
-	}
-
-	onConfirm(name: string) {
-		UsersFlow.del(name);
-		this.usersService.usersTrigger.next(1); // update users
-		this.stepper.reset();
+		this.save$ = new (class extends NothingFlow<UsersFlowOutNode> {
+			public prerequest$: Observable<CombErr<UsersFlowOutNode>> = outer.saveTrigger.pipe(
+				withLatestFrom(outer.select$.getOutput(), outer.usersService.usersFlow$.getOutput()),
+				map(
+					([curUser, secNode, usersNode]): CombErr<UsersFlowOutNode> => {
+						if (secNode[1].length !== 0 || usersNode[1].length !== 0)
+							return [{}, [].concat(secNode[1], usersNode[1])] as any;
+						const rst = usersNode[0].users.filter((x) => x.name !== secNode[0].name);
+						rst.push(curUser);
+						return [{ users: rst }, []];
+					}
+				)
+			);
+		})();
+		this.save$.deploy();
+		this.save$.getOutput().subscribe(([x, err]) => {
+			if (err.length !== 0) return;
+			UsersFlow.setAll(x.users);
+			this.usersService.update();
+		});
 	}
 }

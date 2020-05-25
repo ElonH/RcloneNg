@@ -1,22 +1,19 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Observable } from 'rxjs';
-import { CombErr } from 'src/app/@dataflow/core';
-import { UsersFlowOutNode, IUser } from 'src/app/@dataflow/extra';
-import { map, filter, withLatestFrom, startWith, tap } from 'rxjs/operators';
-import { UsersService } from '../../users.service';
+import { NothingFlow } from 'src/app/@dataflow/core';
+import { IUser } from 'src/app/@dataflow/extra';
 
 @Component({
 	selector: 'user-confirm',
 	template: `
 		<nb-card>
 			<nb-list>
-				<nb-list-item> name : {{ (selectedUser$ | async).name }} </nb-list-item>
-				<nb-list-item> url : {{ (selectedUser$ | async).url }} </nb-list-item>
-				<nb-list-item> user : {{ (selectedUser$ | async).user }} </nb-list-item>
+				<nb-list-item> name : {{ user?.name }} </nb-list-item>
+				<nb-list-item> url : {{ user?.url }} </nb-list-item>
+				<nb-list-item> user : {{ user?.user }} </nb-list-item>
 				<nb-list-item> pass : ***** </nb-list-item>
 			</nb-list>
 			<nb-card-footer>
-				<button nbButton status="primary" (click)="onDelete.emit(name)">
+				<button nbButton status="primary" (click)="onDelete.emit()">
 					Confirm
 				</button>
 			</nb-card-footer>
@@ -31,26 +28,18 @@ import { UsersService } from '../../users.service';
 	],
 })
 export class ConfirmComponent implements OnInit {
-	name: string = '';
+	user: IUser;
 	@Input()
-	selected$: Observable<string>;
+	select$: NothingFlow<IUser>;
 	@Output()
-	onDelete: EventEmitter<string> = new EventEmitter();
-	selectedUser$: Observable<IUser>;
-	users$: Observable<CombErr<UsersFlowOutNode>>;
+	onDelete = new EventEmitter();
 
-	constructor(private usersService: UsersService) {}
+	constructor() {}
 
 	ngOnInit(): void {
-    this.users$ = this.usersService.usersFlow$.getOutput();
-		this.selectedUser$ = this.selected$.pipe(
-			withLatestFrom(this.users$),
-			filter(([x, y]) => y[1].length === 0 && y[0].users.some((i) => x === i.name)),
-			map(([x, y]) => {
-				return y[0].users.find((i) => i.name === x);
-			}),
-			startWith({ name: '', url: '', user: '' }),
-			tap((x) => (this.name = x.name))
-		);
+		this.select$.getOutput().subscribe((x) => {
+			if (x[1].length !== 0) return;
+			this.user = x[0];
+		});
 	}
 }

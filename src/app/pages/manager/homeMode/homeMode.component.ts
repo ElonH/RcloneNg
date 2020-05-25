@@ -1,9 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { UsersService } from '../../users.service';
-import { ListRemotesFlow } from 'src/app/@dataflow/rclone';
-import { Subject } from 'rxjs';
-import { Router, ActivatedRoute } from '@angular/router';
-import { OperationsListService } from '../fileMode/operations-list.service';
+import { RemotesService } from '../remotes.service';
+import { NavigationService } from '../navigation.service';
 
 @Component({
 	selector: 'manager-homeMode',
@@ -18,33 +15,18 @@ import { OperationsListService } from '../fileMode/operations-list.service';
 	styleUrls: ['./homeMode.component.scss'],
 })
 export class HomeModeComponent implements OnInit {
-	constructor(
-		private usersService: UsersService,
-		private listService: OperationsListService,
-		private route: ActivatedRoute,
-		private router: Router
-	) {}
+	constructor(private remotesService: RemotesService, private navService: NavigationService) {}
 
-	remotesFlow$: ListRemotesFlow;
-	remotesTrigger = new Subject<number>();
 	remotes: string[] = [];
 
 	click(remote: string) {
-		this.router.navigate(['.'], { relativeTo: this.route, queryParams: { remote: remote } });
-		this.listService.listTrigger.next(1);
+		this.navService.navigate(remote);
 	}
 
 	ngOnInit() {
-		const outer = this;
-		this.remotesFlow$ = new (class extends ListRemotesFlow {
-			public prerequest$ = outer.usersService.currentUserFlow$.getOutput();
-		})();
-		this.remotesFlow$.deploy();
-
-		this.remotesFlow$.getOutput().subscribe((x) => {
+		this.remotesService.remotes$.getOutput().subscribe((x) => {
 			if (x[1].length !== 0) return;
 			this.remotes = x[0].remotes;
 		});
-		this.remotesTrigger.next(1);
 	}
 }

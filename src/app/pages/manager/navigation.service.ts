@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { CombErr } from 'src/app/@dataflow/core';
 import { NavigationFlow, NavigationFLowOutNode } from 'src/app/@dataflow/extra';
@@ -8,13 +8,28 @@ import { NavigationFlow, NavigationFLowOutNode } from 'src/app/@dataflow/extra';
 	providedIn: 'root',
 })
 export class NavigationService {
-	navFlow$: NavigationFlow;
+	public navFlow$: NavigationFlow;
 
-	constructor(private route: ActivatedRoute) {
+	private readonly managerPath = ['pages', 'manager'];
+	navigate(remote: string = undefined, path: string = undefined) {
+		if (!remote) this.router.navigate(this.managerPath);
+		else if (!path) this.router.navigate(this.managerPath, { queryParams: { remote: remote } });
+		else this.router.navigate(this.managerPath, { queryParams: { remote: remote, path: path } });
+	}
+
+	constructor(private route: ActivatedRoute, private router: Router) {
 		const outer = this;
 		this.navFlow$ = new (class extends NavigationFlow {
 			public prerequest$ = outer.route.queryParams.pipe(
-				map((x): CombErr<NavigationFLowOutNode> => [{ remote: x['remote'], path: x['path'] }, []])
+				map(
+					(x): CombErr<NavigationFLowOutNode> => {
+						let remote = x['remote'];
+						if (remote && remote === '') remote = undefined;
+						let path = x['path'];
+						if (path && path === '') path = undefined;
+						return [{ remote: remote, path: path }, []];
+					}
+				)
 			);
 		})();
 		this.navFlow$.deploy();

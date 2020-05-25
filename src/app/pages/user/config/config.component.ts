@@ -6,18 +6,11 @@ import {
 	Output,
 	EventEmitter,
 } from '@angular/core';
-import { Observable, Subject, of } from 'rxjs';
-import {
-	UsersFlowOutNode,
-	NameValidation,
-	NameValidationPreNode,
-	IRcloneServer,
-	UsersFlow,
-	IUser,
-} from 'src/app/@dataflow/extra';
+import { Observable, Subject } from 'rxjs';
+import { IRcloneServer, IUser } from 'src/app/@dataflow/extra';
 import { FormControl } from '@angular/forms';
-import { withLatestFrom, map, startWith, filter } from 'rxjs/operators';
-import { CombErr } from 'src/app/@dataflow/core';
+import { withLatestFrom, map } from 'rxjs/operators';
+import { CombErr, NothingFlow } from 'src/app/@dataflow/core';
 import { NoopAuthFlow } from 'src/app/@dataflow/rclone';
 import { UsersService } from '../../users.service';
 
@@ -31,14 +24,14 @@ import { UsersService } from '../../users.service';
 					<nb-icon nbPrefix icon="pricetags-outline"></nb-icon>
 					<input
 						[formControl]="name"
-						[status]="(disableSave$ | async) ? 'danger' : 'basic'"
+						[status]="nameErr !== '' ? 'danger' : 'basic'"
 						type="text"
 						nbInput
 						fullWidth
 						placeholder="Enter Name"
 					/>
 					<nb-icon
-						*ngIf="disableSave$ | async; else elseBlock"
+						*ngIf="nameErr !== ''; else elseBlock"
 						nbSuffix
 						icon="close-outline"
 						status="danger"
@@ -54,7 +47,7 @@ import { UsersService } from '../../users.service';
 					<nb-icon nbPrefix icon="monitor-outline"></nb-icon>
 					<input
 						[formControl]="url"
-						[status]="(urlValidation$ | async) ? 'basic' : 'danger'"
+						[status]="urlErr === '' ? 'basic' : 'danger'"
 						type="text"
 						nbInput
 						fullWidth
@@ -94,7 +87,7 @@ import { UsersService } from '../../users.service';
 					outline
 					[status]="authPass === null ? 'info' : authPass === true ? 'success' : 'warning'"
 					(click)="connectTrigger$.next(1)"
-					[disabled]="(urlValidation$ | async) == false"
+					[disabled]="urlErr !== ''"
 				>
 					Connect
 					<nb-icon
@@ -102,13 +95,7 @@ import { UsersService } from '../../users.service';
 						[status]="authPass === null ? 'info' : authPass === true ? 'success' : 'warning'"
 					></nb-icon>
 				</button>
-				<button
-					nbButton
-					outline
-					status="primary"
-					[disabled]="disableSave$ | async"
-					(click)="save()"
-				>
+				<button nbButton outline status="primary" [disabled]="nameErr !== ''" (click)="save()">
 					save
 				</button>
 			</nb-card-footer>
@@ -139,17 +126,12 @@ export class ConfigComponent implements OnInit {
 
 	connectTrigger$ = new Subject<number>();
 
-	users$: Observable<CombErr<UsersFlowOutNode>>;
 	@Input()
-	editUser: Observable<CombErr<{ prevName: string }>> = of([{ prevName: '' }, []]);
+	select$: NothingFlow<IUser>;
 	@Output()
 	onSave: EventEmitter<IUser> = new EventEmitter();
 
-	nameValidation$: NameValidation;
-	authPass$: Observable<boolean | null>;
-	authPass: boolean | null;
-	disableSave$: Observable<boolean>;
-	urlValidation$: Observable<boolean>;
+	authPass: boolean = null;
 
 	constructor(private usersService: UsersService) {}
 
@@ -163,60 +145,40 @@ export class ConfigComponent implements OnInit {
 	}
 
 	private setUser(...args: string[]) {
-		this.name.setValue(args[0]);
+		this.name.setValue(args[0], { emitEvent: true });
 		this.url.setValue(args[1]);
 		this.user.setValue(args[2]);
 		this.password.setValue(args[3]);
 	}
 
 	ngOnInit(): void {
-		this.users$ = this.usersService.usersFlow$.getOutput();
 		const outer = this;
-		this.editUser.pipe(withLatestFrom(this.users$)).subscribe(([pre, users]) => {
-			if (pre[1].length !== 0 || users[1].length !== 0) return;
-			for (const it of users[0].users) {
-				if (it.name !== pre[0].prevName) continue;
-				this.setUser(it.name, it.url, it.user, it.password);
-				return;
-			}
-			this.setUser('', 'http://localhost:5572', '', '');
+		const sec$ = this.select$.getOutput();
+		const users$ = this.usersService.usersFlow$.getOutput();
+		// init input value
+		sec$.subscribe((node) => {
+			if (node[1].length !== 0) return;
+			const user = node[0];
+			this.setUser(user.name, user.url, user.user, user.password);
 		});
-		this.nameValidation$ = new (class extends NameValidation {
-			public prerequest$ = outer.name.valueChanges.pipe(
-				withLatestFrom(outer.users$, outer.editUser),
-				map(
-					([curName, usersNode, prevNameNode]): CombErr<NameValidationPreNode> => {
-						return [
-							{
-								users: usersNode[0].users.filter((x) => x.name !== prevNameNode[0]['prevName']),
-								loginUser: usersNode[0].loginUser,
-								currentName: curName,
-							},
-							[].concat(usersNode[1], prevNameNode[1]),
-						];
-					}
-				)
-			);
-		})();
-		this.nameValidation$.deploy();
-		this.nameValidation$.getOutput().subscribe((x) => {
-			if (x[1].length !== 0) this.nameErr = x[1][0].message;
-			else this.nameErr = '';
-			if (x[1].length > 1) throw new Error('more than one erros in NameValidation');
-		});
-		this.disableSave$ = this.nameValidation$.getOutput().pipe(map(([x, err]) => err.length !== 0));
+		this.name.valueChanges
+			.pipe(
+				withLatestFrom(users$, sec$) // TODO: some wrong in users$
+			)
+			.subscribe(([name, usersNode, secNode]) => {
+				if (usersNode[1].length !== 0 || secNode[1].length !== 0)
+					this.nameErr = usersNode[1][0].message;
+				else if (name === '') this.nameErr = 'You must enter a value';
+				else if (usersNode[0].users.find((x) => x.name !== secNode[0].name && x.name === name))
+					this.nameErr = 'This name already exists';
+				else this.nameErr = '';
+				// this.disableSave = this.nameErr !== '';
+			});
 
-		this.urlValidation$ = this.url.valueChanges.pipe(
-			startWith('http://localhost:5572'),
-			map((x) => {
-				if (x === '') {
-					this.urlErr = 'You must enter a value';
-					return false;
-				}
-				this.urlErr = '';
-				return true;
-			})
-		);
+		this.url.valueChanges.subscribe((x) => {
+			if (x === '') this.urlErr = 'You must enter a value';
+			else this.urlErr = '';
+		});
 
 		const authFlow$ = new (class extends NoopAuthFlow {
 			public prerequest$: Observable<CombErr<IRcloneServer>> = outer.connectTrigger$.pipe(
@@ -231,10 +193,6 @@ export class ConfigComponent implements OnInit {
 			);
 		})();
 		authFlow$.deploy();
-		this.authPass$ = authFlow$.getOutput().pipe(
-			map((x) => x[1].length === 0),
-			startWith(null)
-		);
-		this.authPass$.subscribe((x) => (this.authPass = x));
+		authFlow$.getOutput().subscribe(() => (this.authPass = [1].length === 0));
 	}
 }

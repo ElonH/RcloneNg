@@ -1,60 +1,79 @@
 import { Injectable } from '@angular/core';
 import {
 	OperationsListFlow,
-	OperationsListFlowParmsNode,
 	OperationsListFlowInNode,
-	OperationsListFlowOutNode,
+	OperationsListFlowOutItemNode,
 } from 'src/app/@dataflow/rclone';
 import { CombErr } from 'src/app/@dataflow/core';
 import { Observable, Subject } from 'rxjs';
 import { NavigationService } from '../navigation.service';
-import { UsersService } from '../../users.service';
-import { withLatestFrom, map, filter } from 'rxjs/operators';
+import { withLatestFrom, map, combineLatest } from 'rxjs/operators';
+import { RemotesService } from '../remotes.service';
+import { ConnectionService } from '../../connection.service';
+import { NavigationFLowOutNode } from 'src/app/@dataflow/extra';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class OperationsListService {
 	listFlow$: OperationsListFlow;
-	list$: Observable<OperationsListFlowOutNode>;
-	listTrigger = new Subject<number>();
+	detail1$: Observable<CombErr<OperationsListFlowOutItemNode>>;
+	private listTrigger = new Subject<number>();
+	private detailtrigger = new Subject<string>();
 
-	constructor(private navService: NavigationService, private usersService: UsersService) {
+	refreshList() {
+		this.listTrigger.next(1);
+	}
+
+	getDetail(path: string) {
+		this.detailtrigger.next(path);
+	}
+
+	constructor(
+		private remotesService: RemotesService,
+		private navService: NavigationService,
+		private cmdService: ConnectionService
+	) {
 		const outer = this;
 		this.listFlow$ = new (class extends OperationsListFlow {
 			public prerequest$ = outer.listTrigger.pipe(
-				withLatestFrom(
+				combineLatest(
 					outer.navService.navFlow$.getOutput(),
-					outer.usersService.currentUserFlow$.getOutput()
+					outer.remotesService.remotes$.getOutput()
 				),
 				map(
-					([_, navNode, userNode]): CombErr<OperationsListFlowInNode> => {
-						if (navNode[1].length !== 0 || userNode[1].length !== 0)
-							return [{}, [].concat(navNode[1], userNode[1])] as any;
-						return [{ ...userNode[0], ...navNode[0] }, []];
+					([, navNode, remotesNode]): CombErr<NavigationFLowOutNode> => {
+						if (navNode[1].length !== 0 || remotesNode[1].length !== 0)
+							return [{}, [].concat(navNode[1], remotesNode[1])] as CombErr<any>;
+						// check if remote exist
+						if (remotesNode[0].remotes.findIndex((x) => x === navNode[0].remote) !== -1)
+							return navNode;
+						return [{}, [new Error(`remote ${navNode[0].remote} not exist!`)]] as CombErr<any>;
 					}
+				),
+				withLatestFrom(outer.cmdService.listCmd$.verify(this.cmd)),
+				map(
+					([x, y]): CombErr<OperationsListFlowInNode> => [
+						{ ...x[0], ...y[0] },
+						[].concat(x[1], y[1]),
+					]
 				)
 			);
-			protected params = function (
-				pre: CombErr<OperationsListFlowInNode>
-			): OperationsListFlowParmsNode {
-				if (pre[1].length !== 0) return {} as any;
-				if (!pre[0].remote) throw new Error('not provide remote');
-				return {
-					fs: `${pre[0].remote}:`,
-					remote: pre[0].path ? pre[0].path : '',
-					// opt: {
-					// 	showOrigIDs: false, // TODO: depends on remote type(local, not support)
-					// 	showHash: false,
-					// },
-				};
-			};
 		})();
 		this.listFlow$.deploy();
-		this.list$ = this.listFlow$.getOutput().pipe(
-			filter((node) => node[1].length === 0),
-			map((node) => node[0])
+
+		this.detail1$ = this.detailtrigger.pipe(
+			combineLatest(this.listFlow$.getOutput(), this.navService.navFlow$.getOutput()),
+			map(
+				([path, dataNode]): CombErr<OperationsListFlowOutItemNode> => {
+					if (dataNode[1].length !== 0) return [{}, dataNode[1]] as any;
+					const idx = dataNode[0].list.findIndex((x) => x.Path === path);
+					if (idx !== -1) return [{ ...dataNode[0].list[idx] }, []];
+					return [{}, [new Error(`path ${path} not exist`)]] as any;
+				}
+			)
 		);
+
 		this.listTrigger.next(1);
 	}
 }

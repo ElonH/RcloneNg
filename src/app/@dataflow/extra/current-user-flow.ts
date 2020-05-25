@@ -26,7 +26,7 @@ export abstract class CurrentUserFlow extends SupersetFlow<
 	}
 
 	public static setLogin(name: string) {
-		localStorage.setItem('loginUser', JSON.stringify(name));
+		localStorage.setItem('loginUser', name);
 	}
 	public static getLogin(): string {
 		return localStorage.getItem('loginUser');

@@ -40,8 +40,21 @@ export abstract class OperationsListFlow extends PostFlow<
 	OperationsListFlowParmsNode
 > {
 	// public prerequest$: Observable<CombErr<OperationsListFlowInNode>>;
-	// protected params: OperationsListFlowParmsNode | ((pre: CombErr<OperationsListFlowInNode>) => OperationsListFlowParmsNode);
 	protected cmd: string = 'operations/list';
+	protected params = function (
+		pre: CombErr<OperationsListFlowInNode>
+	): OperationsListFlowParmsNode {
+		if (pre[1].length !== 0) return {} as any;
+		if (!pre[0].remote) throw new Error('not provide remote');
+		return {
+			fs: `${pre[0].remote}:`,
+			remote: pre[0].path ? pre[0].path : '',
+			// opt: {
+			// 	showOrigIDs: false, // TODO: depends on remote type(local, not support)
+			// 	showHash: false,
+			// },
+		};
+	};
 	protected cacheSupport: boolean = true;
 	protected reconstructAjaxResult(x: AjaxFlowInteralNode): CombErr<OperationsListFlowOutNode> {
 		if (x[1].length !== 0) return [{}, x[1]] as any;

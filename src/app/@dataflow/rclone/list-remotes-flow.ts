@@ -1,6 +1,6 @@
 import { PostFlow } from './post-flow';
 import { NoopAuthFlowSupNode } from './noop-auth-flow';
-import { CurrentUserFlowOutNode } from '../extra';
+import { IRcloneServer } from '../extra';
 import { CombErr, AjaxFlowInteralNode } from '../core';
 
 export interface ListRemotesOutNode {
@@ -9,7 +9,7 @@ export interface ListRemotesOutNode {
 
 export interface ListRemotesSupNode extends ListRemotesOutNode, NoopAuthFlowSupNode {}
 
-export abstract class ListRemotesFlow extends PostFlow<CurrentUserFlowOutNode, ListRemotesOutNode> {
+export abstract class ListRemotesFlow extends PostFlow<IRcloneServer, ListRemotesOutNode> {
 	// public prerequest$: Observable<CombErr<IRcloneServer>>;
 	protected cmd: string = 'config/listremotes';
 	protected params: object = {};

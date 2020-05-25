@@ -25,7 +25,6 @@ export class ListViewComponent implements OnInit, OnDestroy {
 			if (x[1].length !== 0) return;
 			this.data = x[0].list;
 		});
-		this.listService.listTrigger.next(1);
 
 		this.configuration = { ...DefaultConfig };
 		this.configuration.searchEnabled = true;

@@ -1,7 +1,7 @@
 import { CombErr, SupersetFlow } from '../core';
 import { IRcloneServer } from '../extra';
 import { NoopAuthFlowSupNode } from '.';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 
 export abstract class ConnectionFlow extends SupersetFlow<
@@ -11,7 +11,11 @@ export abstract class ConnectionFlow extends SupersetFlow<
 > {
 	// public prerequest$: Observable<CombErr<NoopAuthFlowOutNode>>;
 	protected request(pre: CombErr<NoopAuthFlowSupNode>): Observable<CombErr<IRcloneServer>> {
-		throw new Error('Method not implemented.');
+		if (pre[1].length !== 0) return of([{} as any, pre[1]]);
+		const data: IRcloneServer = { url: pre[0].url };
+		if (pre[0].user) data.user = pre[0].user;
+		if (pre[0].password) data.password = pre[0].password;
+		return of([data, []]);
 	}
 	protected generateSuperset(
 		current: CombErr<IRcloneServer>,
