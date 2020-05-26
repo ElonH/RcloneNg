@@ -9,6 +9,17 @@ export interface CoreStatsFlowParamsNode {
 
 export interface CoreStatsFlowInNode extends CoreStatsFlowParamsNode, IRcloneServer {}
 
+export interface ITransferring {
+	bytes: number;
+	eta: number;
+	group: string;
+	name: string;
+	percentage: number;
+	size: number;
+	speed: number;
+	speedAvg: number;
+}
+
 export interface CoreStatsFlowOutItemNode {
 	bytes: number;
 	checks: number;
@@ -19,7 +30,7 @@ export interface CoreStatsFlowOutItemNode {
 	retryError: boolean;
 	speed: number;
 	transfers: number;
-	transferring?: [];
+	transferring?: ITransferring[];
 }
 
 export interface CoreStatsFlowOutNode extends FlowOutNode {
