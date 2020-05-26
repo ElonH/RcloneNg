@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Columns } from 'ngx-easy-table';
-import { ListGroupFlow } from 'src/app/@dataflow/rclone';
-import { Subject } from 'rxjs';
+import { ListGroupFlow, CoreStatsFlow, CoreStatsFlowInNode } from 'src/app/@dataflow/rclone';
+import { Subject, interval } from 'rxjs';
 import { combineLatest, map } from 'rxjs/operators';
-import { CurrentUserService } from '../current-user.service';
+import { ConnectionService } from '../connection.service';
+import { CombErr } from 'src/app/@dataflow/core';
 
 @Component({
 	selector: 'app-jobs',
@@ -38,16 +38,15 @@ import { CurrentUserService } from '../current-user.service';
 							<nb-card>
 								<nb-card-header> Speed </nb-card-header>
 								<nb-card-body>
-									<canvas baseChart width="200" height="100"></canvas>
+									<jobs-speed-chart [stats$]="stats$"> </jobs-speed-chart>
 								</nb-card-body>
 							</nb-card>
 						</div>
 						<div class="col-6">
 							<nb-card>
-								<nb-card-header> Core Status </nb-card-header>
-								<nb-card-body class="row">
-									<div class="col-4">123</div>
-									<div class="col-8">234</div>
+								<nb-card-header> Summary </nb-card-header>
+								<nb-card-body>
+									<jobs-summary [stats$]="stats$"> </jobs-summary>
 								</nb-card-body>
 							</nb-card>
 						</div>
@@ -55,9 +54,9 @@ import { CurrentUserService } from '../current-user.service';
 					<div class="row">
 						<div class="col">
 							<nb-card>
-								<nb-card-header> Transfers Status </nb-card-header>
+								<nb-card-header> Transferring </nb-card-header>
 								<nb-card-body>
-									<ngx-table [columns]="columns"> </ngx-table>
+									<jobs-transferring [stats$]="stats$"> </jobs-transferring>
 								</nb-card-body>
 							</nb-card>
 						</div>
@@ -100,24 +99,21 @@ export class JobsComponent implements OnInit {
 
 	public activateGroup(group: string) {
 		this.activeGroup = group;
+		this.statsTrigger.next(group);
 	}
 
-	public columns: Columns[] = [
-		{ key: 'Name', title: 'Name' },
-		{ key: 'Size', title: 'Size' },
-		{ key: 'percentage', title: 'Percentage' },
-		{ key: 'speed', title: 'Speed' },
-		{ key: 'eta', title: 'eta' },
-	];
-	constructor(private currUserService: CurrentUserService) {}
+	constructor(private cmdService: ConnectionService) {}
 
 	private listTrigger = new Subject<number>();
 	public listGroup$: ListGroupFlow;
+
+	private statsTrigger = new Subject<string>();
+	public stats$: CoreStatsFlow;
 	ngOnInit(): void {
 		const outer = this;
 		this.listGroup$ = new (class extends ListGroupFlow {
 			public prerequest$ = outer.listTrigger.pipe(
-				combineLatest(outer.currUserService.currentUserFlow$.getOutput()),
+				combineLatest(outer.cmdService.listCmd$.verify(this.cmd)),
 				map(([, node]) => node)
 			);
 		})();
@@ -127,6 +123,21 @@ export class JobsComponent implements OnInit {
 			this.groups = x[0].groups;
 		});
 		this.listTrigger.next(1);
+
+		this.stats$ = new (class extends CoreStatsFlow {
+			public prerequest$ = outer.cmdService.rst$.getOutput().pipe(
+				combineLatest(outer.statsTrigger, outer.cmdService.listCmd$.verify(this.cmd)),
+				map(
+					([, group, node]): CombErr<CoreStatsFlowInNode> => {
+						if (node[1].length !== 0) return [{}, node[1]] as any;
+						if (group === '') return node;
+						return [{ ...node[0], group: group }, []];
+					}
+				)
+			);
+		})();
+		this.stats$.deploy();
+		this.statsTrigger.next('');
 	}
 
 	public refreshList() {

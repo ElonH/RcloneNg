@@ -6,19 +6,24 @@ import { IRcloneServer } from '../extra';
 export interface CoreStatsFlowParamsNode {
 	group?: string;
 }
+
+export interface CoreStatsFlowInNode extends CoreStatsFlowParamsNode, IRcloneServer {}
+
+export interface CoreStatsFlowOutItemNode {
+	bytes: number;
+	checks: number;
+	deletes: number;
+	elapsedTime: number;
+	errors: number;
+	fatalError: boolean;
+	retryError: boolean;
+	speed: number;
+	transfers: number;
+	transferring?: [];
+}
+
 export interface CoreStatsFlowOutNode extends FlowOutNode {
-	'core-stats': {
-		bytes: number;
-		checks: number;
-		deletes: number;
-		elapsedTime: number;
-		errors: number;
-		fatalError: boolean;
-		retryError: boolean;
-		speed: number;
-		transfers: number;
-		transferring?: [];
-	};
+	'core-stats': CoreStatsFlowOutItemNode;
 }
 
 export interface CoreStatsFlowSupNode extends CoreStatsFlowOutNode, NoopAuthFlowSupNode {}
