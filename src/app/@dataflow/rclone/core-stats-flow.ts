@@ -3,6 +3,9 @@ import { NoopAuthFlowSupNode } from './noop-auth-flow';
 import { FlowOutNode, CombErr, AjaxFlowInteralNode } from '../core';
 import { IRcloneServer } from '../extra';
 
+export interface CoreStatsFlowParamsNode {
+	group?: string;
+}
 export interface CoreStatsFlowOutNode extends FlowOutNode {
 	'core-stats': {
 		bytes: number;
@@ -20,10 +23,17 @@ export interface CoreStatsFlowOutNode extends FlowOutNode {
 
 export interface CoreStatsFlowSupNode extends CoreStatsFlowOutNode, NoopAuthFlowSupNode {}
 
-export abstract class CoreStatsFlow extends PostFlow<IRcloneServer, CoreStatsFlowOutNode> {
-	// public prerequest$: Observable<CombErr<IRcloneServer>>;
+export abstract class CoreStatsFlow extends PostFlow<
+	CoreStatsFlowInNode,
+	CoreStatsFlowOutNode,
+	CoreStatsFlowParamsNode
+> {
+	// public prerequest$: Observable<CombErr<CoreStatsFlowInNode>>;
 	protected cmd: string = 'core/stats';
-	protected params: object = {};
+	protected params = (pre: CombErr<CoreStatsFlowInNode>): CoreStatsFlowParamsNode => {
+		if (pre[1].length !== 0 || !pre[0].group) return {};
+		return { group: pre[0].group };
+	};
 	protected cacheSupport: boolean = false;
 	protected reconstructAjaxResult(x: AjaxFlowInteralNode): CombErr<CoreStatsFlowOutNode> {
 		if (x[1].length !== 0) return [{}, x[1]] as any;
