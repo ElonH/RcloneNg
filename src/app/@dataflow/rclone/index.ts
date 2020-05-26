@@ -5,3 +5,4 @@ export * from './list-remotes-flow';
 export * from './operations-list-flow';
 export * from './connection-flow';
 export * from './list-cmd-flow';
+export * from './list-group-flow';
