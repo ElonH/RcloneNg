@@ -1,15 +1,34 @@
 import { Component, OnInit } from '@angular/core';
 import { Columns } from 'ngx-easy-table';
+import { ListGroupFlow } from 'src/app/@dataflow/rclone';
+import { Subject } from 'rxjs';
+import { combineLatest, map } from 'rxjs/operators';
+import { CurrentUserService } from '../current-user.service';
 
 @Component({
 	selector: 'app-jobs',
 	template: `
 		<nb-layout>
 			<nb-sidebar>
-				<nb-card-header> Groups </nb-card-header>
-				<nb-card-body>
-					123
-				</nb-card-body>
+				<nb-card-header>
+					Groups
+					<nb-icon icon="refresh" (click)="refreshList()"></nb-icon>
+				</nb-card-header>
+				<nb-list>
+					<nb-list-item
+						(click)="activateGroup('')"
+						[ngClass]="{ 'active-group': activeGroup === '' }"
+					>
+						[all]
+					</nb-list-item>
+					<nb-list-item
+						*ngFor="let item of groups"
+						(click)="activateGroup(item)"
+						[ngClass]="{ 'active-group': activeGroup === item }"
+					>
+						{{ item }}
+					</nb-list-item>
+				</nb-list>
 			</nb-sidebar>
 
 			<nb-layout-column style="padding: 0;">
@@ -69,10 +88,20 @@ import { Columns } from 'ngx-easy-table';
 			nb-card {
 				height: 100%;
 			}
+			.active-group {
+				background-color: lightcoral;
+			}
 		`,
 	],
 })
 export class JobsComponent implements OnInit {
+	public activeGroup: string = '';
+	public groups: string[] = [];
+
+	public activateGroup(group: string) {
+		this.activeGroup = group;
+	}
+
 	public columns: Columns[] = [
 		{ key: 'Name', title: 'Name' },
 		{ key: 'Size', title: 'Size' },
@@ -80,7 +109,27 @@ export class JobsComponent implements OnInit {
 		{ key: 'speed', title: 'Speed' },
 		{ key: 'eta', title: 'eta' },
 	];
-	constructor() {}
+	constructor(private currUserService: CurrentUserService) {}
 
-	ngOnInit(): void {}
+	private listTrigger = new Subject<number>();
+	public listGroup$: ListGroupFlow;
+	ngOnInit(): void {
+		const outer = this;
+		this.listGroup$ = new (class extends ListGroupFlow {
+			public prerequest$ = outer.listTrigger.pipe(
+				combineLatest(outer.currUserService.currentUserFlow$.getOutput()),
+				map(([, node]) => node)
+			);
+		})();
+		this.listGroup$.deploy();
+		this.listGroup$.getOutput().subscribe((x) => {
+			if (x[1].length !== 0) return;
+			this.groups = x[0].groups;
+		});
+		this.listTrigger.next(1);
+	}
+
+	public refreshList() {
+		this.listTrigger.next(1);
+	}
 }

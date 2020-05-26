@@ -3,7 +3,13 @@ import { CommonModule } from '@angular/common';
 
 import { JobsRoutingModule } from './jobs-routing.module';
 import { JobsComponent } from './jobs.component';
-import { NbSidebarModule, NbLayoutModule, NbCardModule } from '@nebular/theme';
+import {
+	NbSidebarModule,
+	NbLayoutModule,
+	NbCardModule,
+	NbListModule,
+	NbIconModule,
+} from '@nebular/theme';
 import { TableModule } from 'ngx-easy-table';
 
 @NgModule({
@@ -15,6 +21,8 @@ import { TableModule } from 'ngx-easy-table';
 		NbSidebarModule,
 		NbCardModule,
 		TableModule,
+		NbListModule,
+		NbIconModule,
 	],
 })
 export class JobsModule {}
