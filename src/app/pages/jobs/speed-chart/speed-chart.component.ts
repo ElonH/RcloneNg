@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { CoreStatsFlow } from 'src/app/@dataflow/rclone';
-import { ChartDataSets, ChartOptions } from 'chart.js';
+import { ChartDataSets, ChartOptions, ChartPoint } from 'chart.js';
 import { Color, BaseChartDirective } from 'ng2-charts';
 import * as moment from 'moment';
 
@@ -22,7 +22,7 @@ import * as moment from 'moment';
 			.chart-container {
 				position: relative;
 				width: 100%;
-				height: calc(100% + 1.3rem);
+				height: calc(100% + 1.15rem);
 			}
 			canvas {
 				width: 100%;
@@ -32,32 +32,29 @@ import * as moment from 'moment';
 	],
 })
 export class SpeedChartComponent implements OnInit {
-	@Input()
-	stats$: CoreStatsFlow;
-
 	constructor() {}
 	public lineChartData: ChartDataSets[] = [
 		{
 			data: [
-				{ x: moment().add(11, 'second'), y: 380 },
-				{ x: moment().add(22, 'second'), y: 110 },
-				{ x: moment().add(33, 'second'), y: 400 },
-				{ x: moment().add(44, 'second'), y: 300 },
-				{ x: moment().add(55, 'second'), y: 800 },
-				{ x: moment().add(57, 'second'), y: 350 },
-				{ x: moment().add(1, 'minute'), y: 320 },
+				// { x: moment().subtract(1, 'minute'), y: 320 },
+				// { x: moment().subtract(57, 'second'), y: 350 },
+				// { x: moment().subtract(55, 'second'), y: 800 },
+				// { x: moment().subtract(44, 'second'), y: 300 },
+				// { x: moment().subtract(33, 'second'), y: 400 },
+				// { x: moment().subtract(22, 'second'), y: 110 },
+				// { x: moment().subtract(11, 'second'), y: 380 },
 			],
 			label: 'Speed',
 		},
 		{
 			data: [
-				{ x: moment().add(11, 'second'), y: 246 },
-				{ x: moment().add(22, 'second'), y: 104 },
-				{ x: moment().add(33, 'second'), y: 624 },
-				{ x: moment().add(44, 'second'), y: 428 },
-				{ x: moment().add(55, 'second'), y: 301 },
-				{ x: moment().add(57, 'second'), y: 134 },
-				{ x: moment().add(1, 'minute'), y: 642 },
+				// { x: moment().subtract(1, 'minute'), y: 642 },
+				// { x: moment().subtract(57, 'second'), y: 134 },
+				// { x: moment().subtract(55, 'second'), y: 301 },
+				// { x: moment().subtract(44, 'second'), y: 428 },
+				// { x: moment().subtract(33, 'second'), y: 624 },
+				// { x: moment().subtract(22, 'second'), y: 104 },
+				// { x: moment().subtract(11, 'second'), y: 246 },
 			],
 			label: 'Avg',
 		},
@@ -113,7 +110,7 @@ export class SpeedChartComponent implements OnInit {
 					},
 					ticks: {
 						labelOffset: -10, // sit on gridline
-						padding: -40, // moving label into dataset
+						padding: -65, // moving label into dataset
 						// min: 0,
 						beginAtZero: true,
 					},
@@ -136,17 +133,41 @@ export class SpeedChartComponent implements OnInit {
 			pointHoverBorderColor: 'rgb(89,139,255)',
 		},
 		{
-			// info
-			backgroundColor: 'rgba(0,149,255,0.3)',
-			borderColor: '#0095ff',
+			// warning
+			backgroundColor: 'rgba(255,170,0,0.3)',
+			borderColor: '#ffaa00',
 			pointBorderColor: 'rgba(0,0,0,0)',
 			pointBackgroundColor: 'rgba(0,0,0,0)',
-			pointHoverBackgroundColor: 'rgba(0,149,255,0.3)',
-			pointHoverBorderColor: '#0095ff',
+			pointHoverBackgroundColor: 'rgba(255,170,0,0.3)',
+			pointHoverBorderColor: '#ffaa00',
 		},
 	];
 
 	@ViewChild(BaseChartDirective, { static: true }) chart: BaseChartDirective;
 
-	ngOnInit() {}
+	@Input()
+	stats$: CoreStatsFlow;
+	@Input()
+	treadhold = 60;
+
+	ngOnInit() {
+		this.stats$.getOutput().subscribe((node) => {
+			if (node[1].length !== 0) return;
+			const time = moment();
+			const speed = node[0]['core-stats'].speed;
+			let avg = 0;
+			if (node[0]['core-stats'].transferring)
+				node[0]['core-stats'].transferring.forEach((x) => (avg += x.speedAvg));
+			const speedData = this.lineChartData[0].data as ChartPoint[];
+			const avgData = this.lineChartData[1].data as ChartPoint[];
+			const threadhold = time.clone().subtract(this.treadhold, 'seconds');
+			while (speedData.length !== 0 && speedData[0].x < threadhold) {
+				speedData.shift();
+				avgData.shift();
+			}
+			speedData.push({ x: time, y: speed });
+			avgData.push({ x: time, y: avg });
+			this.chart.update();
+		});
+	}
 }
