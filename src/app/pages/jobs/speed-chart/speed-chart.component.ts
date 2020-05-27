@@ -165,10 +165,12 @@ export class SpeedChartComponent implements OnInit {
 		statsOut.subscribe((node) => {
 			if (node[1].length !== 0) return;
 			const time = moment();
-			const speed = node[0]['core-stats'].speed;
-			let avg = 0;
-			if (node[0]['core-stats'].transferring)
+			let speed = 0,
+				avg = 0;
+			if (node[0]['core-stats'].transferring) {
 				node[0]['core-stats'].transferring.forEach((x) => (avg += x.speedAvg));
+				node[0]['core-stats'].transferring.forEach((x) => (speed += x.speed));
+			}
 			const speedData = this.lineChartData[0].data as ChartPoint[];
 			const avgData = this.lineChartData[1].data as ChartPoint[];
 			const threadhold = time.clone().subtract(this.treadhold, 'seconds');
