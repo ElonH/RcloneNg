@@ -88,7 +88,7 @@ import { CombErr } from 'src/app/@dataflow/core';
 				background-color: lightcoral;
 			}
 			.speed-body {
-				padding: 1rem 0 0 0;
+				padding: 0;
 				min-height: 10rem;
 				overflow-y: hidden;
 			}

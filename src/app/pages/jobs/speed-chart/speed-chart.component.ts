@@ -22,7 +22,7 @@ import * as moment from 'moment';
 			.chart-container {
 				position: relative;
 				width: 100%;
-				height: 287px;
+				height: calc(100% + 1.3rem);
 			}
 			canvas {
 				width: 100%;
@@ -74,7 +74,7 @@ export class SpeedChartComponent implements OnInit {
 			},
 		},
 		legend: {
-			display: false,
+			display: true,
 		},
 		hover: {
 			intersect: false,
