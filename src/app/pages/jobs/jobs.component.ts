@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ListGroupFlow, CoreStatsFlow, CoreStatsFlowInNode } from 'src/app/@dataflow/rclone';
-import { Subject, interval } from 'rxjs';
-import { combineLatest, map } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { combineLatest, map, takeWhile } from 'rxjs/operators';
 import { ConnectionService } from '../connection.service';
 import { CombErr } from 'src/app/@dataflow/core';
 
@@ -95,7 +95,7 @@ import { CombErr } from 'src/app/@dataflow/core';
 		`,
 	],
 })
-export class JobsComponent implements OnInit {
+export class JobsComponent implements OnInit, OnDestroy {
 	public activeGroup: string = '';
 	public groups: string[] = [];
 
@@ -113,6 +113,7 @@ export class JobsComponent implements OnInit {
 	public stats$: CoreStatsFlow;
 	ngOnInit(): void {
 		const outer = this;
+		this.visable = true;
 		this.listGroup$ = new (class extends ListGroupFlow {
 			public prerequest$ = outer.listTrigger.pipe(
 				combineLatest(outer.cmdService.listCmd$.verify(this.cmd)),
@@ -128,6 +129,7 @@ export class JobsComponent implements OnInit {
 
 		this.stats$ = new (class extends CoreStatsFlow {
 			public prerequest$ = outer.cmdService.rst$.getOutput().pipe(
+				takeWhile(() => outer.visable),
 				combineLatest(outer.statsTrigger, outer.cmdService.listCmd$.verify(this.cmd)),
 				map(
 					([, group, node]): CombErr<CoreStatsFlowInNode> => {
@@ -144,5 +146,10 @@ export class JobsComponent implements OnInit {
 
 	public refreshList() {
 		this.listTrigger.next(1);
+	}
+
+	private visable = false;
+	ngOnDestroy() {
+		this.visable = false;
 	}
 }
