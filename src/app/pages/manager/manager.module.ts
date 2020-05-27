@@ -3,7 +3,14 @@ import { CommonModule } from '@angular/common';
 
 import { ManagerRoutingModule } from './manager-routing.module';
 import { ManagerComponent } from './manager.component';
-import { NbActionsModule, NbCardModule, NbIconModule, NbProgressBarModule } from '@nebular/theme';
+import {
+	NbActionsModule,
+	NbCardModule,
+	NbIconModule,
+	NbProgressBarModule,
+	NbLayoutModule,
+	NbSidebarModule,
+} from '@nebular/theme';
 import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
 import { HomeModeComponent } from './homeMode/homeMode.component';
 import { RemoteComponent } from './homeMode/remote.component';
@@ -28,6 +35,8 @@ import { ListViewComponent } from './fileMode/listView/listView.component';
 		NbIconModule,
 		NbProgressBarModule,
 		TableModule,
+		NbLayoutModule,
+		NbSidebarModule,
 	],
 })
 export class ManagerModule {}

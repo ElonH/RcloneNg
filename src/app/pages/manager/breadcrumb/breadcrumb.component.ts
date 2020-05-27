@@ -4,7 +4,7 @@ import { NavigationService } from '../navigation.service';
 @Component({
 	selector: 'manager-breadcrumb',
 	template: `
-		<nav>
+		<!-- <nav> -->
 			<ol class="breadcrumb">
 				<li class="breadcrumb-item">
 					<a [routerLink]="['.']" routerLinkActive="router-link-active">
@@ -35,7 +35,7 @@ import { NavigationService } from '../navigation.service';
 				<a class="option"><nb-icon [icon]="listView ? 'list' : 'grid'"></nb-icon></a>
 				<a class="option"><nb-icon icon="info"></nb-icon></a>
 			</ol>
-		</nav>
+		<!-- </nav> -->
 	`,
 	styles: [
 		`

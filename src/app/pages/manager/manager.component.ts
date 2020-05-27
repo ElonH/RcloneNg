@@ -4,35 +4,53 @@ import { NavigationService } from './navigation.service';
 @Component({
 	selector: 'app-manager',
 	template: `
-		<nb-card>
-			<nb-card-body>
-				<manager-breadcrumb> </manager-breadcrumb>
-				<div class="row">
-					<div class="view col-md-9 col-sm-8">
-						<manager-homeMode *ngIf="homeMode"> </manager-homeMode>
-						<manager-fileMode *ngIf="fileMode"> </manager-fileMode>
-					</div>
-					<div class="sidebar col-md-3 col-sm-4">123</div>
-				</div>
-			</nb-card-body>
-		</nb-card>
+		<nb-layout-header fixed style="width: calc(100% - 16rem); left: inherit;">
+			<manager-breadcrumb> </manager-breadcrumb>
+		</nb-layout-header>
+		<div class="subcolumn container">
+			<nb-card>
+				<nb-card-body>
+					<manager-homeMode *ngIf="homeMode"> </manager-homeMode>
+					<manager-fileMode *ngIf="fileMode"> </manager-fileMode>
+				</nb-card-body>
+			</nb-card>
+		</div>
+		<nb-layout-header subheader>
+			<nb-actions>
+				<nb-action icon="copy"></nb-action>
+				<nb-action icon="move"></nb-action>
+				<nb-action icon="trash-2"></nb-action>
+				<nb-action icon="clipboard"></nb-action>
+			</nb-actions>
+			<nb-actions class="pushToRight">
+				<nb-action icon="inbox"></nb-action>
+			</nb-actions>
+		</nb-layout-header>
+		<!-- <nb-sidebar fixed right>
+			<div>123</div>
+		</nb-sidebar> -->
 	`,
 	styles: [
 		`
-			.view {
-				padding-top: 1rem;
-				padding-bottom: 1rem;
+			nb-layout-header ::ng-deep nav.fixed {
+				box-shadow: none;
 			}
-			.sidebar {
-				border-left: solid;
-				border-color: #e9ecef;
-				border-left-width: 0.25rem;
-				width: 16rem;
-				overflow-y: auto;
-				overflow-x: hidden;
+			manager-breadcrumb {
+				width: 100%;
 			}
-			nb-card-body {
-				padding-bottom: 0;
+			.subcolumn {
+				height: calc(100vh - 2 * 4.75rem);
+				padding: 2.25rem 2.25rem 0.75rem;
+			}
+			/* nb-sidebar.right ::ng-deep .scrollable {
+				padding-top: 5rem;
+			} */
+			.pushToRight {
+				margin-left: auto;
+				/* margin-right: 16rem; */
+			}
+			nb-card {
+				/* margin-top: 1.25rem; */
 			}
 		`,
 	],
