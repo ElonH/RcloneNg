@@ -36,5 +36,6 @@ import { SpeedDiffComponent } from './speed-chart/speed-diff.component';
 		NbIconModule,
 		ChartsModule,
 	],
+	exports: [SpeedChartComponent, SummaryComponent],
 })
 export class JobsModule {}
