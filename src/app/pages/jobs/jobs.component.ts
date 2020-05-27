@@ -35,9 +35,9 @@ import { CombErr } from 'src/app/@dataflow/core';
 				<div class="container">
 					<div class="row">
 						<div class="col-6">
-							<nb-card>
+							<nb-card size="small">
 								<nb-card-header> Speed </nb-card-header>
-								<nb-card-body>
+								<nb-card-body class="speed-body">
 									<jobs-speed-chart [stats$]="stats$"> </jobs-speed-chart>
 								</nb-card-body>
 							</nb-card>
@@ -84,11 +84,13 @@ import { CombErr } from 'src/app/@dataflow/core';
 			div.row {
 				padding-top: 1rem;
 			}
-			nb-card {
-				height: 100%;
-			}
 			.active-group {
 				background-color: lightcoral;
+			}
+			.speed-body {
+				padding: 1rem 0 0 0;
+				min-height: 10rem;
+				overflow-y: hidden;
 			}
 		`,
 	],

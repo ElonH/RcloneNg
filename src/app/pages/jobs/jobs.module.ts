@@ -14,6 +14,7 @@ import { TableModule } from 'ngx-easy-table';
 import { SpeedChartComponent } from './speed-chart/speed-chart.component';
 import { SummaryComponent } from './summary/summary.component';
 import { TransfersComponent } from './transferring/transferring.component';
+import { ChartsModule } from 'ng2-charts';
 
 @NgModule({
 	declarations: [JobsComponent, SpeedChartComponent, SummaryComponent, TransfersComponent],
@@ -26,6 +27,7 @@ import { TransfersComponent } from './transferring/transferring.component';
 		TableModule,
 		NbListModule,
 		NbIconModule,
+		ChartsModule,
 	],
 })
 export class JobsModule {}
