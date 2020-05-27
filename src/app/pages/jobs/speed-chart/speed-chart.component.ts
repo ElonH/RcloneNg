@@ -3,6 +3,7 @@ import { CoreStatsFlow } from 'src/app/@dataflow/rclone';
 import { ChartDataSets, ChartOptions, ChartPoint } from 'chart.js';
 import { Color, BaseChartDirective } from 'ng2-charts';
 import * as moment from 'moment';
+import { pairwise } from 'rxjs/operators';
 
 @Component({
 	selector: 'jobs-speed-chart',
@@ -15,6 +16,7 @@ import * as moment from 'moment';
 				[colors]="lineChartColors"
 				chartType="line"
 			></canvas>
+			<jobs-speed-diff [val]="speedDiff"> </jobs-speed-diff>
 		</div>
 	`,
 	styles: [
@@ -27,6 +29,11 @@ import * as moment from 'moment';
 			canvas {
 				width: 100%;
 				height: 100%;
+			}
+			.chart-container jobs-speed-diff {
+				position: absolute;
+				right: 1rem;
+				top: 0.25rem;
 			}
 		`,
 	],
@@ -72,6 +79,7 @@ export class SpeedChartComponent implements OnInit {
 		},
 		legend: {
 			display: true,
+			align: 'start',
 		},
 		hover: {
 			intersect: false,
@@ -150,8 +158,11 @@ export class SpeedChartComponent implements OnInit {
 	@Input()
 	treadhold = 60;
 
+	speedDiff = 0;
+
 	ngOnInit() {
-		this.stats$.getOutput().subscribe((node) => {
+		const statsOut = this.stats$.getOutput();
+		statsOut.subscribe((node) => {
 			if (node[1].length !== 0) return;
 			const time = moment();
 			const speed = node[0]['core-stats'].speed;
@@ -168,6 +179,10 @@ export class SpeedChartComponent implements OnInit {
 			speedData.push({ x: time, y: speed });
 			avgData.push({ x: time, y: avg });
 			this.chart.update();
+		});
+		statsOut.pipe(pairwise()).subscribe(([pre, cur]) => {
+			if (pre[1].length !== 0 || cur[1].length !== 0) return;
+			this.speedDiff = Math.round(cur[0]['core-stats'].speed - pre[0]['core-stats'].speed);
 		});
 	}
 }

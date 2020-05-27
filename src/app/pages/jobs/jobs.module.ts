@@ -15,9 +15,16 @@ import { SpeedChartComponent } from './speed-chart/speed-chart.component';
 import { SummaryComponent } from './summary/summary.component';
 import { TransfersComponent } from './transferring/transferring.component';
 import { ChartsModule } from 'ng2-charts';
+import { SpeedDiffComponent } from './speed-chart/speed-diff.component';
 
 @NgModule({
-	declarations: [JobsComponent, SpeedChartComponent, SummaryComponent, TransfersComponent],
+	declarations: [
+		JobsComponent,
+		SpeedChartComponent,
+		SummaryComponent,
+		TransfersComponent,
+		SpeedDiffComponent,
+	],
 	imports: [
 		CommonModule,
 		JobsRoutingModule,
