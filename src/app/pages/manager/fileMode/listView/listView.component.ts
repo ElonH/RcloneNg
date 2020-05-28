@@ -32,6 +32,12 @@ import { API, APIDefinition } from 'ngx-easy-table';
 					<nb-checkbox> </nb-checkbox>
 					<!-- todo: disable double click event here-->
 				</td>
+				<td>
+					<nb-icon
+						status="info"
+						[icon]="index % 3 !== 0 ? (index % 3 !== 1 ? 'trash-2' : 'move') : 'copy'"
+					></nb-icon>
+				</td>
 				<td>{{ row.Name }}</td>
 				<td>{{ row.Size }}</td>
 				<td>{{ row.ModTime }}</td>
@@ -39,15 +45,27 @@ import { API, APIDefinition } from 'ngx-easy-table';
 			</ng-template>
 		</ngx-table>
 	`,
-	styles: [],
+	styles: [
+		`
+			nb-icon {
+				/* nbButton size="tiny" */
+				font-size: 0.625rem;
+				height: 0.75rem;
+				width: 0.75rem;
+				margin-top: -0.125rem;
+				margin-bottom: -0.125rem;
+			}
+		`,
+	],
 })
 export class ListViewComponent implements OnInit, OnDestroy {
 	public configuration: Config;
 	public columns: Columns[] = [
+		{ key: 'manipulation', title: '', width: '3%', searchEnabled: false, orderEnabled: false },
 		{ key: 'Name', title: 'Name', width: '50%' },
 		{ key: 'Size', title: 'Size', width: '10%' },
 		{ key: 'ModTime', title: 'Modified Time', width: '20%' },
-		{ key: 'MimeType', title: 'MIME Type', width: '20%' },
+		{ key: 'MimeType', title: 'MIME Type', width: '17%' },
 	];
 
 	public data: OperationsListFlowOutItemNode[];
