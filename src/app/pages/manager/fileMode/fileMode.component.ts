@@ -1,5 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { NavigationFlow } from 'src/app/@dataflow/extra';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { NavigationFlow, NavigationFlowOutNode } from 'src/app/@dataflow/extra';
 import { ConnectionService } from '../../connection.service';
 import { Subject } from 'rxjs';
 import { OperationsListFlow, OperationsListFlowInNode } from 'src/app/@dataflow/rclone';
@@ -8,13 +8,15 @@ import { CombErr } from 'src/app/@dataflow/core';
 
 @Component({
 	selector: 'manager-fileMode',
-	template: ` <manager-listView [list$]="list$"> </manager-listView> `,
+	template: ` <manager-listView [list$]="list$" (jump)="jump.emit($event)"> </manager-listView> `,
 	styles: [],
 })
 export class FileModeComponent implements OnInit {
 	constructor(private connectService: ConnectionService) {}
 
 	@Input() nav$: NavigationFlow;
+
+	@Output() jump = new EventEmitter<NavigationFlowOutNode>();
 
 	private listTrigger = new Subject<number>();
 	list$: OperationsListFlow;
@@ -35,7 +37,7 @@ export class FileModeComponent implements OnInit {
 						return [{ ...navNode[0], ...cmdNode[0] }, []];
 					}
 				),
-				filter(x=>x[1].length !==0 || !!x[0].remote)
+				filter((x) => x[1].length !== 0 || !!x[0].remote)
 			);
 		})();
 		this.list$.deploy();

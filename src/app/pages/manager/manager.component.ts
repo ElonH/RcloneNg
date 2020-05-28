@@ -19,7 +19,8 @@ import { HomeModeComponent } from './homeMode/homeMode.component';
 			<nb-card>
 				<nb-card-body>
 					<manager-homeMode *ngIf="homeMode" (jump)="addrJump($event)"> </manager-homeMode>
-					<manager-fileMode *ngIf="fileMode" [nav$]="nav$"> </manager-fileMode>
+					<manager-fileMode *ngIf="fileMode" [nav$]="nav$" (jump)="addrJump($event)">
+					</manager-fileMode>
 				</nb-card-body>
 			</nb-card>
 		</div>
