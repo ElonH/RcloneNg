@@ -19,6 +19,7 @@ import { HomeModeComponent } from './homeMode/homeMode.component';
 			<nb-card>
 				<nb-card-body>
 					<manager-homeMode *ngIf="homeMode" (jump)="addrJump($event)"> </manager-homeMode>
+					<manager-fileMode *ngIf="fileMode" [nav$]="nav$"> </manager-fileMode>
 				</nb-card-body>
 			</nb-card>
 		</div>
@@ -79,7 +80,6 @@ export class ManagerComponent implements OnInit {
 	nav$: NavigationFlow;
 
 	addrJump(addr: NavigationFlowOutNode) {
-		console.log(addr);
 		this.navTrigger.next(addr);
 	}
 
