@@ -1,7 +1,9 @@
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { NavigationFlowOutNode, NavigationFlow } from 'src/app/@dataflow/extra';
 import { Subject } from 'rxjs';
 import { CombErr } from 'src/app/@dataflow/core';
 import { map } from 'rxjs/operators';
+import { HomeModeComponent } from './homeMode/homeMode.component';
 
 @Component({
 	selector: 'app-manager',
@@ -16,8 +18,7 @@ import { map } from 'rxjs/operators';
 		<div class="subcolumn container">
 			<nb-card>
 				<nb-card-body>
-					<manager-homeMode *ngIf="homeMode"> </manager-homeMode>
-					<manager-fileMode *ngIf="fileMode"> </manager-fileMode>
+					<manager-homeMode *ngIf="homeMode" (jump)="addrJump($event)"> </manager-homeMode>
 				</nb-card-body>
 			</nb-card>
 		</div>
@@ -69,6 +70,10 @@ export class ManagerComponent implements OnInit {
 	homeMode = false;
 	fileMode = false;
 
+	@ViewChild(HomeModeComponent) home: HomeModeComponent;
+	refresh() {
+		if (this.homeMode) this.home.refresh();
+	}
 
 	navTrigger = new Subject<NavigationFlowOutNode>();
 	nav$: NavigationFlow;
