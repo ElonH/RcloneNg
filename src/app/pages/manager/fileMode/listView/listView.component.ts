@@ -1,13 +1,23 @@
-import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
+import {
+	Component,
+	OnInit,
+	OnDestroy,
+	Input,
+	Output,
+	EventEmitter,
+	ViewChild,
+} from '@angular/core';
 import { Columns, Config, DefaultConfig } from 'ngx-easy-table';
 import { OperationsListFlowOutItemNode, OperationsListFlow } from 'src/app/@dataflow/rclone';
 import { Subscription } from 'rxjs';
 import { NavigationFlowOutNode } from 'src/app/@dataflow/extra';
+import { API, APIDefinition } from 'ngx-easy-table';
 
 @Component({
 	selector: 'manager-listView',
 	template: `
 		<ngx-table
+			#table
 			[configuration]="configuration"
 			[data]="data"
 			[columns]="columns"
@@ -23,6 +33,14 @@ export class ListViewComponent implements OnInit, OnDestroy {
 
 	public data: OperationsListFlowOutItemNode[];
 
+	@ViewChild('table') table: APIDefinition;
+	resetCurrentPage() {
+		this.table.apiEvent({
+			type: API.setPaginationCurrentPage,
+			value: 1,
+		});
+	}
+
 	constructor() {}
 
 	@Output() jump = new EventEmitter<NavigationFlowOutNode>();
@@ -34,6 +52,7 @@ export class ListViewComponent implements OnInit, OnDestroy {
 			const item = $event.value.row;
 			if (item.IsDir) {
 				this.jump.emit({ remote: this.remote, path: item.Path });
+				this.resetCurrentPage();
 			}
 		}
 	}
@@ -64,5 +83,6 @@ export class ListViewComponent implements OnInit, OnDestroy {
 	private listScrb: Subscription;
 	ngOnDestroy() {
 		this.listScrb.unsubscribe();
+		this.resetCurrentPage();
 	}
 }
