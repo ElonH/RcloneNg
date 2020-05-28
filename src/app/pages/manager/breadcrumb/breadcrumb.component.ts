@@ -1,40 +1,28 @@
-import { Component, OnInit } from '@angular/core';
-import { NavigationService } from '../navigation.service';
+import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
+import { NavigationFlow, NavigationFlowOutNode } from 'src/app/@dataflow/extra';
 
 @Component({
 	selector: 'manager-breadcrumb',
 	template: `
 		<!-- <nav> -->
-			<ol class="breadcrumb">
-				<li class="breadcrumb-item">
-					<a [routerLink]="['.']" routerLinkActive="router-link-active">
-						<nb-icon icon="home-outline"></nb-icon>
-					</a>
-				</li>
-				<li *ngIf="remote" class="breadcrumb-item">
-					<a
-						[routerLink]="['.']"
-						routerLinkActive="router-link-active"
-						[queryParams]="geneQueryParams(-1)"
-					>
-						<nb-icon icon="google-outline"></nb-icon>
-						<span class="breadcrumb-cloud">{{ remote }}</span>
-					</a>
-				</li>
-				<li *ngFor="let dir of pathPrefix; index as i" class="breadcrumb-item">
-					<a
-						[routerLink]="['.']"
-						[queryParams]="geneQueryParams(i)"
-						routerLinkActive="router-link-active"
-					>
-						<span>{{ dir }}</span>
-					</a>
-				</li>
-				<li *ngIf="pathSurfix" class="breadcrumb-item active">{{ pathSurfix }}</li>
-				<a class="right option"><nb-icon icon="refresh"></nb-icon></a>
-				<a class="option"><nb-icon [icon]="listView ? 'list' : 'grid'"></nb-icon></a>
-				<a class="option"><nb-icon icon="info"></nb-icon></a>
-			</ol>
+		<ol class="breadcrumb">
+			<li class="breadcrumb-item">
+				<a (click)="jump.emit({})"> <nb-icon icon="home-outline"></nb-icon> </a>
+			</li>
+			<li *ngIf="remote" class="breadcrumb-item">
+				<a (click)="jump.emit(genAddr(-1))">
+					<nb-icon icon="google-outline"></nb-icon>
+					<span class="breadcrumb-cloud">{{ remote }}</span>
+				</a>
+			</li>
+			<li *ngFor="let dir of pathPrefix; index as i" class="breadcrumb-item">
+				<a (click)="jump.emit(genAddr(i))">
+					<span>{{ dir }}</span>
+				</a>
+			</li>
+			<li *ngIf="pathSurfix" class="breadcrumb-item active">{{ pathSurfix }}</li>
+			<ng-content> </ng-content>
+		</ol>
 		<!-- </nav> -->
 	`,
 	styles: [
@@ -50,24 +38,22 @@ import { NavigationService } from '../navigation.service';
 			.breadcrumb-cloud {
 				padding-left: 0.5rem;
 			}
-			.right {
-				margin-left: auto;
-			}
-			.option {
-				padding: 0 0.3rem;
-			}
 		`,
 	],
 })
 export class BreadcrumbComponent implements OnInit {
-	listView = true;
 	remote: string;
 	pathPrefix: string[];
 	pathSurfix: string;
 
-	constructor(private navService: NavigationService) {}
+	@Input()
+	nav$: NavigationFlow;
 
-	geneQueryParams(i: number): object {
+	@Output() jump = new EventEmitter<NavigationFlowOutNode>();
+
+	constructor() {}
+
+	genAddr(i: number): NavigationFlowOutNode {
 		const path = this.pathPrefix.slice(0, i + 1).join('/');
 		if (path === '') return { remote: this.remote };
 		return {
@@ -83,8 +69,7 @@ export class BreadcrumbComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		// [this.pathPrefix, this.pathSurfix] = this.splitPath(this.navService.path);
-		this.navService.navFlow$.getOutput().subscribe((x) => {
+		this.nav$.getOutput().subscribe((x) => {
 			this.remote = x[0].remote;
 			[this.pathPrefix, this.pathSurfix] = this.splitPath(x[0].path);
 		});

@@ -1,11 +1,17 @@
-import { Component, OnInit } from '@angular/core';
-import { NavigationService } from './navigation.service';
+import { NavigationFlowOutNode, NavigationFlow } from 'src/app/@dataflow/extra';
+import { Subject } from 'rxjs';
+import { CombErr } from 'src/app/@dataflow/core';
+import { map } from 'rxjs/operators';
 
 @Component({
 	selector: 'app-manager',
 	template: `
 		<nb-layout-header fixed style="width: calc(100% - 16rem); left: inherit;">
-			<manager-breadcrumb> </manager-breadcrumb>
+			<manager-breadcrumb [nav$]="nav$" (jump)="addrJump($event)">
+				<a class="pushToRight option" (click)="refresh()"><nb-icon icon="refresh"></nb-icon></a>
+				<a class="option"><nb-icon icon="list"></nb-icon></a>
+				<a class="option"><nb-icon icon="info"></nb-icon></a>
+			</manager-breadcrumb>
 		</nb-layout-header>
 		<div class="subcolumn container">
 			<nb-card>
@@ -38,6 +44,9 @@ import { NavigationService } from './navigation.service';
 			manager-breadcrumb {
 				width: 100%;
 			}
+			.option {
+				padding: 0 0.3rem;
+			}
 			.subcolumn {
 				height: calc(100vh - 2 * 4.75rem);
 				padding: 2.25rem 2.25rem 0.75rem;
@@ -56,20 +65,38 @@ import { NavigationService } from './navigation.service';
 	],
 })
 export class ManagerComponent implements OnInit {
-	constructor(private navService: NavigationService) {}
+	constructor() {}
 	homeMode = false;
 	fileMode = false;
 
+
+	navTrigger = new Subject<NavigationFlowOutNode>();
+	nav$: NavigationFlow;
+
+	addrJump(addr: NavigationFlowOutNode) {
+		console.log(addr);
+		this.navTrigger.next(addr);
+	}
+
 	ngOnInit(): void {
-		this.navService.navFlow$.getOutput().subscribe((node) => {
-			const x = node[0];
-			if (!x.remote) {
-				this.homeMode = true;
-				this.fileMode = false;
-			} else {
-				this.homeMode = false;
-				this.fileMode = true;
-			}
-		});
+		const outer = this;
+		this.nav$ = new (class extends NavigationFlow {
+			public prerequest$ = outer.navTrigger.pipe(
+				map(
+					(x): CombErr<NavigationFlowOutNode> => {
+						let remote = x['remote'];
+						if (remote && remote === '') remote = undefined;
+						let path = x['path'];
+						if (path && path === '') path = undefined;
+
+						outer.homeMode = !remote;
+						outer.fileMode = !!remote;
+						return [{ remote: remote, path: path }, []];
+					}
+				)
+			);
+		})();
+		this.nav$.deploy();
+		this.navTrigger.next({});
 	}
 }
