@@ -44,10 +44,10 @@ import { API, APIDefinition } from 'ngx-easy-table';
 export class ListViewComponent implements OnInit, OnDestroy {
 	public configuration: Config;
 	public columns: Columns[] = [
-		{ key: 'Name', title: 'Name' },
-		{ key: 'Size', title: 'Size' },
-		{ key: 'ModTime', title: 'Modified Time' },
-		{ key: 'MimeType', title: 'MIME Type' },
+		{ key: 'Name', title: 'Name', width: '50%' },
+		{ key: 'Size', title: 'Size', width: '10%' },
+		{ key: 'ModTime', title: 'Modified Time', width: '20%' },
+		{ key: 'MimeType', title: 'MIME Type', width: '20%' },
 	];
 
 	public data: OperationsListFlowOutItemNode[];
