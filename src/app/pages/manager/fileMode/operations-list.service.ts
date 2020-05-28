@@ -10,7 +10,7 @@ import { NavigationService } from '../navigation.service';
 import { withLatestFrom, map, combineLatest } from 'rxjs/operators';
 import { RemotesService } from '../remotes.service';
 import { ConnectionService } from '../../connection.service';
-import { NavigationFLowOutNode } from 'src/app/@dataflow/extra';
+import { NavigationFlowOutNode } from 'src/app/@dataflow/extra';
 
 @Injectable({
 	providedIn: 'root',
@@ -42,7 +42,7 @@ export class OperationsListService {
 					outer.remotesService.remotes$.getOutput()
 				),
 				map(
-					([, navNode, remotesNode]): CombErr<NavigationFLowOutNode> => {
+					([, navNode, remotesNode]): CombErr<NavigationFlowOutNode> => {
 						if (navNode[1].length !== 0 || remotesNode[1].length !== 0)
 							return [{}, [].concat(navNode[1], remotesNode[1])] as CombErr<any>;
 						// check if remote exist

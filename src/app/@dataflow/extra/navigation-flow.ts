@@ -1,10 +1,10 @@
-import { NothingFlow, BareFlow } from '../core';
+import { NothingFlow } from '../core';
 
-export interface NavigationFLowOutNode {
+export interface NavigationFlowOutNode {
 	remote: string;
 	path: string;
 }
 
-export abstract class NavigationFlow extends NothingFlow<NavigationFLowOutNode> {
+export abstract class NavigationFlow extends NothingFlow<NavigationFlowOutNode> {
 	// public prerequest$: Observable<CombErr<NavFlowOutNode>>;
 }

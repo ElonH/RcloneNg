@@ -1,6 +1,6 @@
 import { PostFlow } from './post-flow';
 import { AjaxFlowInteralNode, CombErr } from '../core';
-import { NavigationFLowOutNode, IRcloneServer } from '../extra';
+import { NavigationFlowOutNode, IRcloneServer } from '../extra';
 
 export interface OperationsListFlowParmsNode {
 	fs: string;
@@ -14,7 +14,7 @@ export interface OperationsListFlowParmsNode {
 	};
 }
 
-export interface OperationsListFlowInNode extends NavigationFLowOutNode, IRcloneServer {}
+export interface OperationsListFlowInNode extends NavigationFlowOutNode, IRcloneServer {}
 
 export interface OperationsListFlowOutItemNode {
 	Path: string;

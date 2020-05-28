@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map } from 'rxjs/operators';
 import { CombErr } from 'src/app/@dataflow/core';
-import { NavigationFlow, NavigationFLowOutNode } from 'src/app/@dataflow/extra';
+import { NavigationFlow, NavigationFlowOutNode } from 'src/app/@dataflow/extra';
 
 @Injectable({
 	providedIn: 'root',
@@ -22,7 +22,7 @@ export class NavigationService {
 		this.navFlow$ = new (class extends NavigationFlow {
 			public prerequest$ = outer.route.queryParams.pipe(
 				map(
-					(x): CombErr<NavigationFLowOutNode> => {
+					(x): CombErr<NavigationFlowOutNode> => {
 						let remote = x['remote'];
 						if (remote && remote === '') remote = undefined;
 						let path = x['path'];
