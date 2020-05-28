@@ -23,13 +23,24 @@ import { API, APIDefinition } from 'ngx-easy-table';
 			[columns]="columns"
 			(event)="eventEmitted($event)"
 		>
+			<ng-template let-row let-index="index">
+				<td>{{ row.Name }}</td>
+				<td>{{ row.Size }}</td>
+				<td>{{ row.ModTime }}</td>
+				<td>{{ row.MimeType }}</td>
+			</ng-template>
 		</ngx-table>
 	`,
 	styles: [],
 })
 export class ListViewComponent implements OnInit, OnDestroy {
 	public configuration: Config;
-	public columns: Columns[];
+	public columns: Columns[] = [
+		{ key: 'Name', title: 'Name' },
+		{ key: 'Size', title: 'Size' },
+		{ key: 'ModTime', title: 'Modified Time' },
+		{ key: 'MimeType', title: 'MIME Type' },
+	];
 
 	public data: OperationsListFlowOutItemNode[];
 
@@ -72,12 +83,6 @@ export class ListViewComponent implements OnInit, OnDestroy {
 		this.configuration.searchEnabled = true;
 		// this.configuration.isLoading = true;
 		// ... etc.
-		this.columns = [
-			{ key: 'Name', title: 'Name' },
-			{ key: 'Size', title: 'Size' },
-			{ key: 'ModTime', title: 'Modified Time' },
-			{ key: 'MimeType', title: 'MIME Type' },
-		];
 	}
 
 	private listScrb: Subscription;
