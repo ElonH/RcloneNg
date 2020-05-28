@@ -3,7 +3,7 @@ import { NavigationFlow } from 'src/app/@dataflow/extra';
 import { ConnectionService } from '../../connection.service';
 import { Subject } from 'rxjs';
 import { OperationsListFlow, OperationsListFlowInNode } from 'src/app/@dataflow/rclone';
-import { combineLatest, map } from 'rxjs/operators';
+import { combineLatest, map, filter } from 'rxjs/operators';
 import { CombErr } from 'src/app/@dataflow/core';
 
 @Component({
@@ -34,7 +34,8 @@ export class FileModeComponent implements OnInit {
 							return [{}, [].concat(navNode[1], cmdNode[1])] as CombErr<any>;
 						return [{ ...navNode[0], ...cmdNode[0] }, []];
 					}
-				)
+				),
+				filter(x=>x[1].length !==0 || !!x[0].remote)
 			);
 		})();
 		this.list$.deploy();
