@@ -16,14 +16,22 @@ import { API, APIDefinition } from 'ngx-easy-table';
 @Component({
 	selector: 'manager-listView',
 	template: `
+		<ng-template #secAll>
+			<nb-checkbox> </nb-checkbox>
+		</ng-template>
 		<ngx-table
 			#table
 			[configuration]="configuration"
 			[data]="data"
 			[columns]="columns"
+			[selectAllTemplate]="secAll"
 			(event)="eventEmitted($event)"
 		>
 			<ng-template let-row let-index="index">
+				<td>
+					<nb-checkbox> </nb-checkbox>
+					<!-- todo: disable double click event here-->
+				</td>
 				<td>{{ row.Name }}</td>
 				<td>{{ row.Size }}</td>
 				<td>{{ row.ModTime }}</td>
@@ -81,6 +89,7 @@ export class ListViewComponent implements OnInit, OnDestroy {
 
 		this.configuration = { ...DefaultConfig };
 		this.configuration.searchEnabled = true;
+		this.configuration.checkboxes = true;
 		// this.configuration.isLoading = true;
 		// ... etc.
 	}

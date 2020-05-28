@@ -10,6 +10,7 @@ import {
 	NbProgressBarModule,
 	NbLayoutModule,
 	NbSidebarModule,
+	NbCheckboxModule,
 } from '@nebular/theme';
 import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
 import { HomeModeComponent } from './homeMode/homeMode.component';
@@ -37,6 +38,7 @@ import { ListViewComponent } from './fileMode/listView/listView.component';
 		TableModule,
 		NbLayoutModule,
 		NbSidebarModule,
+		NbCheckboxModule,
 	],
 })
 export class ManagerModule {}
