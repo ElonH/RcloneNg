@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.1](https://github.com/ElonH/RcloneNg/compare/v0.2.0...v0.2.1) (2020-05-29)
+
+
+### Features
+
+* **manager:** create directory ([22b59c9](https://github.com/ElonH/RcloneNg/commit/22b59c9fce541f9e5c76f384647b3a5d405e74c9))
+
+
+### Bug Fixes
+
+* **superset-flow:** timer workaround in superset flow ([ee1283c](https://github.com/ElonH/RcloneNg/commit/ee1283cd9564c3b70f7c7630214793b0d588c42a))
+
 ## [0.2.0](https://github.com/ElonH/RcloneNg/compare/v0.1.0...v0.2.0) (2020-05-29)
 
 
