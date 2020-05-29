@@ -3,6 +3,7 @@
  * License: MIT
  */
 export function FormatBytes(bytes: number, decimals = 2) {
+	if (bytes < 0) return '-';
 	if (bytes === 0) return '0 B';
 
 	const k = 1024;
