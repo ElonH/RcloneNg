@@ -14,6 +14,7 @@ import { NavigationFlowOutNode } from 'src/app/@dataflow/extra';
 import { API, APIDefinition } from 'ngx-easy-table';
 import { FormatBytes } from 'src/app/utils/format-bytes';
 import * as moment from 'moment';
+import { getIconForFile, getIconForFolder } from 'vscode-icons-js';
 
 @Component({
 	selector: 'manager-listView',
@@ -41,10 +42,12 @@ import * as moment from 'moment';
 				</td>
 				<td>
 					<nb-icon
+						class="manipulation"
 						status="info"
 						[icon]="index % 3 !== 0 ? (index % 3 !== 1 ? 'trash-2' : 'move') : 'copy'"
 					></nb-icon>
 				</td>
+				<td style="padding: 0;"><img [src]="'assets/icons/' + row.TypeIcon" /></td>
 				<td>{{ row.Name }}</td>
 				<td>{{ row.SizeHumanReadable }}</td>
 				<td>{{ row.ModTimeHumanReadable }}</td>
@@ -54,7 +57,7 @@ import * as moment from 'moment';
 	`,
 	styles: [
 		`
-			nb-icon {
+			nb-icon.manipulation {
 				/* nbButton size="tiny" */
 				font-size: 0.625rem;
 				height: 0.75rem;
@@ -69,15 +72,17 @@ export class ListViewComponent implements OnInit, OnDestroy {
 	public configuration: Config;
 	public columns: Columns[] = [
 		{ key: 'manipulation', title: '', width: '3%', searchEnabled: false, orderEnabled: false },
+		{ key: 'TypeIcon', title: '', width: '3%', searchEnabled: false },
 		{ key: 'Name', title: 'Name', width: '50%' },
 		{ key: 'SizeHumanReadable', title: 'Size', width: '10%' },
-		{ key: 'ModTimeHumanReadable', title: 'Modified Time', width: '20%' },
+		{ key: 'ModTimeHumanReadable', title: 'Modified Time', width: '17%' },
 		{ key: 'MimeType', title: 'MIME Type', width: '17%' },
 	];
 
 	public data: (OperationsListFlowOutItemNode & {
 		SizeHumanReadable: string;
 		ModTimeHumanReadable: string;
+		TypeIcon: string;
 	})[];
 	public check: boolean[];
 	public checkAll = false;
@@ -141,6 +146,8 @@ export class ListViewComponent implements OnInit, OnDestroy {
 			this.data.forEach((x) => {
 				x.SizeHumanReadable = FormatBytes(x.Size);
 				x.ModTimeHumanReadable = moment(x.ModTime).fromNow();
+				if (x.IsDir) x.TypeIcon = getIconForFolder(x.Name);
+				else x.TypeIcon = getIconForFile(x.Name);
 			});
 			this.check = x[0].list.map(() => false);
 			this.checkAll = false;

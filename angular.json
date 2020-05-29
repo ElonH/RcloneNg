@@ -26,7 +26,12 @@
             "aot": true,
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              {
+                "glob": "**/*",
+                "input": "./node_modules/vscode-icons/icons",
+                "output": "./assets/icons"
+              }
             ],
             "styles": [
               "src/styles.scss"
@@ -90,7 +95,12 @@
             "karmaConfig": "karma.conf.js",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              {
+                "glob": "**/*",
+                "input": "./node_modules/vscode-icons/icons",
+                "output": "./assets/icons"
+              }
             ],
             "styles": [
               "src/styles.scss"
@@ -124,6 +134,7 @@
           }
         }
       }
-    }},
+    }
+  },
   "defaultProject": "RcloneNg"
 }

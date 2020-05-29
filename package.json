@@ -52,6 +52,7 @@
     "popper.js": "^1.16.1",
     "rxjs": "~6.5.4",
     "tslib": "^1.10.0",
+    "vscode-icons-js": "^9.3.0",
     "zone.js": "~0.10.2"
   },
   "devDependencies": {
@@ -77,7 +78,8 @@
     "standard-version": "^8.0.0",
     "ts-node": "~8.3.0",
     "tslint": "~6.1.0",
-    "typescript": "~3.8.3"
+    "typescript": "~3.8.3",
+    "vscode-icons": "git+https://github.com/vscode-icons/vscode-icons.git#b40aa3dfff732920a76e49bd437284a49f972ac6"
   },
   "config": {
     "commitizen": {
