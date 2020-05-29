@@ -1,9 +1,10 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { FormatBytes } from 'src/app/utils/format-bytes';
 
 @Component({
 	selector: 'jobs-speed-diff',
 	template: `
-		<span> {{ val }} </span>
+		<span> {{ (val < 0 ? '-' + FormatBytes(-val) : FormatBytes(val)) + '/s' }} </span>
 		<nb-icon
 			[icon]="'arrow-' + (val < 0 ? 'down' : 'up')"
 			[status]="val < 0 ? 'danger' : 'success'"
@@ -22,6 +23,8 @@ import { Component, OnInit, Input } from '@angular/core';
 export class SpeedDiffComponent implements OnInit {
 	@Input()
 	val = 0;
+
+	FormatBytes = FormatBytes;
 
 	constructor() {}
 
