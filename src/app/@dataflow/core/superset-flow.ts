@@ -12,7 +12,6 @@ export abstract class SupersetFlow<
 	private supersetData$: Observable<CombErr<Tsup>>;
 	private supersetDeployed = false;
 	protected deployBefore() {
-		this.prerequest$ = this.prerequest$.pipe(distinctUntilChanged(), shareReplay());
 		super.deployBefore();
 		this.supersetData$ = this.getOutput().pipe(
 			withLatestFrom(this.prerequest$),
