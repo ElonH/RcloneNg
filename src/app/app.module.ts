@@ -7,7 +7,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
 	NbThemeModule,
 	NbLayoutModule,
-  NbMenuModule,
+	NbMenuModule,
+	NbToastrModule,
+	NbDialogModule,
 } from '@nebular/theme';
 
 @NgModule({
@@ -16,8 +18,10 @@ import {
 		BrowserModule,
 		AppRoutingModule,
 		BrowserAnimationsModule,
-    NbThemeModule.forRoot({ name: 'default' }),
-    NbMenuModule.forRoot(),
+		NbThemeModule.forRoot({ name: 'default' }),
+		NbMenuModule.forRoot(),
+		NbDialogModule.forRoot({ autoFocus: true, closeOnEsc: true }),
+		NbToastrModule.forRoot(),
 		NbLayoutModule,
 	],
 	providers: [],

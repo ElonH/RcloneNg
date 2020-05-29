@@ -1,9 +1,13 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
 import { NavigationFlowOutNode, NavigationFlow } from 'src/app/@dataflow/extra';
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 import { CombErr } from 'src/app/@dataflow/core';
-import { map } from 'rxjs/operators';
+import { map, withLatestFrom } from 'rxjs/operators';
 import { HomeModeComponent } from './homeMode/homeMode.component';
+import { NbDialogService } from '@nebular/theme';
+import { OperationsMkdirFlow, OperationsMkdirFlowInNode } from 'src/app/@dataflow/rclone';
+import { ConnectionService } from '../connection.service';
+import { NbToastrService } from '@nebular/theme';
 
 @Component({
 	selector: 'app-manager',
@@ -31,6 +35,33 @@ import { HomeModeComponent } from './homeMode/homeMode.component';
 				<nb-action icon="trash-2"></nb-action>
 				<nb-action icon="clipboard"></nb-action>
 			</nb-actions>
+			<nb-actions *ngIf="fileMode">
+				<ng-template #mkdirDialog let-ref="dialogRef">
+					<nb-card>
+						<nb-card-header>
+							Create Directory
+							<nb-icon
+								class="pushToRight"
+								icon="info-outline"
+								nbTooltip="support recursively create. (eg: a/b/c)"
+							></nb-icon>
+						</nb-card-header>
+						<nb-card-body><input #newDir nbInput /></nb-card-body>
+						<nb-card-footer>
+							<button nbButton (click)="ref.close()" status="danger">Close</button>
+							<button
+								class="pushToRight"
+								nbButton
+								(click)="mkdir(newDir.value); ref.close()"
+								status="success"
+							>
+								Confirm
+							</button>
+						</nb-card-footer>
+					</nb-card>
+				</ng-template>
+				<nb-action icon="folder-add" (click)="dialog(mkdirDialog)"></nb-action>
+			</nb-actions>
 			<nb-actions class="pushToRight">
 				<nb-action icon="inbox"></nb-action>
 			</nb-actions>
@@ -57,6 +88,10 @@ import { HomeModeComponent } from './homeMode/homeMode.component';
 			/* nb-sidebar.right ::ng-deep .scrollable {
 				padding-top: 5rem;
 			} */
+			nb-card-footer,
+			nb-card-header {
+				display: flex;
+			}
 			.pushToRight {
 				margin-left: auto;
 				/* margin-right: 16rem; */
@@ -68,7 +103,11 @@ import { HomeModeComponent } from './homeMode/homeMode.component';
 	],
 })
 export class ManagerComponent implements OnInit {
-	constructor() {}
+	constructor(
+		private dialogService: NbDialogService,
+		private connectService: ConnectionService,
+		private toastrService: NbToastrService
+	) {}
 	homeMode = false;
 	fileMode = false;
 
@@ -77,14 +116,14 @@ export class ManagerComponent implements OnInit {
 		if (this.homeMode) this.home.refresh();
 	}
 
-	navTrigger = new Subject<NavigationFlowOutNode>();
+	private navTrigger = new Subject<NavigationFlowOutNode>();
 	nav$: NavigationFlow;
 
 	addrJump(addr: NavigationFlowOutNode) {
 		this.navTrigger.next(addr);
 	}
 
-	ngOnInit(): void {
+	private navDeploy() {
 		const outer = this;
 		this.nav$ = new (class extends NavigationFlow {
 			public prerequest$ = outer.navTrigger.pipe(
@@ -104,5 +143,51 @@ export class ManagerComponent implements OnInit {
 		})();
 		this.nav$.deploy();
 		this.navTrigger.next({});
+	}
+
+	private mkdirTrigger = new Subject<string>();
+	mkdir$: OperationsMkdirFlow;
+
+	mkdir(name: string) {
+		this.mkdirTrigger.next(name);
+	}
+
+	private mkdirDeploy() {
+		const outer = this;
+		this.mkdir$ = new (class extends OperationsMkdirFlow {
+			public prerequest$: Observable<CombErr<OperationsMkdirFlowInNode>> = outer.mkdirTrigger.pipe(
+				withLatestFrom(outer.nav$.getOutput(), outer.connectService.listCmd$.verify(this.cmd)),
+				map(
+					([path, navNode, cmdNode]): CombErr<OperationsMkdirFlowInNode> => {
+						const err = [].concat(navNode[1], cmdNode[1]);
+						if (err.length !== 0) return [{}, err] as any;
+						// console.log({ ...cmdNode[0], remote: navNode[0].remote, path: path });
+						// return [{}, err] as any;
+						if (navNode[0].path) {
+							path = [navNode[0].path, path].join('/');
+						}
+						return [{ ...cmdNode[0], remote: navNode[0].remote, path: path }, []];
+					}
+				)
+			);
+		})();
+		this.mkdir$.deploy();
+		this.mkdir$.getOutput().subscribe((x) => {
+			if (x[1].length !== 0) {
+				this.toastrService.danger('create dir failure');
+				debugger;
+			} else {
+				this.toastrService.success('create dir success');
+			}
+		});
+	}
+
+	ngOnInit(): void {
+		this.navDeploy();
+		this.mkdirDeploy();
+	}
+
+	dialog(dialog: TemplateRef<any>) {
+		this.dialogService.open(dialog);
 	}
 }

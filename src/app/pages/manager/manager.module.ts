@@ -11,6 +11,10 @@ import {
 	NbLayoutModule,
 	NbSidebarModule,
 	NbCheckboxModule,
+	NbDialogModule,
+	NbButtonModule,
+	NbInputModule,
+	NbTooltipModule,
 } from '@nebular/theme';
 import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
 import { HomeModeComponent } from './homeMode/homeMode.component';
@@ -39,6 +43,10 @@ import { ListViewComponent } from './fileMode/listView/listView.component';
 		NbLayoutModule,
 		NbSidebarModule,
 		NbCheckboxModule,
+		NbButtonModule,
+		NbInputModule,
+		NbDialogModule.forChild({ autoFocus: true, closeOnEsc: true }), // lazy module need it
+		NbTooltipModule,
 	],
 })
 export class ManagerModule {}
