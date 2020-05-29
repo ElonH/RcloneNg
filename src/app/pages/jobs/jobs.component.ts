@@ -9,7 +9,7 @@ import { CombErr } from 'src/app/@dataflow/core';
 	selector: 'app-jobs',
 	template: `
 		<nb-layout>
-			<nb-sidebar>
+			<nb-sidebar tag="group">
 				<nb-card-header>
 					Groups
 					<nb-icon icon="refresh" (click)="refreshList()"></nb-icon>
