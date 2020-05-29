@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { CoreStatsFlow, CoreStatsFlowOutItemNode } from 'src/app/@dataflow/rclone';
+import { FormatBytes } from 'src/app/utils/format-bytes';
 
 @Component({
 	selector: 'jobs-summary',
@@ -32,8 +33,8 @@ export class SummaryComponent implements OnInit {
 	stats$: CoreStatsFlow;
 
 	keys: { key: string; title?: string }[] = [
-		{ key: 'bytes', title: 'Bytes' },
-		{ key: 'speed', title: 'Speed' },
+		{ key: 'bytesHumanReadable', title: 'Bytes' },
+		{ key: 'speedHumanReadable', title: 'Speed' },
 		{ key: 'transferring-count', title: 'Transferring' },
 		{ key: 'transfers', title: 'Transferred' },
 		{ key: 'checks', title: 'Checks' },
@@ -43,7 +44,10 @@ export class SummaryComponent implements OnInit {
 		{ key: 'fatalError', title: 'FatalError' },
 		{ key: 'retryError', title: 'RetryError' },
 	];
-	values: CoreStatsFlowOutItemNode = {} as any;
+	values: CoreStatsFlowOutItemNode & {
+		speedHumanReadable: string;
+		bytesHumanReadable: string;
+	} = {} as any;
 
 	constructor() {}
 	isDefine(val: any) {
@@ -54,6 +58,8 @@ export class SummaryComponent implements OnInit {
 		this.stats$.getOutput().subscribe(([x, err]) => {
 			if (err.length !== 0) return;
 			this.values = JSON.parse(JSON.stringify(x['core-stats']));
+			this.values.bytesHumanReadable = FormatBytes(this.values.bytes, 4);
+			this.values.speedHumanReadable = FormatBytes(this.values.speed, 4) + '/s';
 			this.values['transferring-count'] = this.values.transferring
 				? this.values.transferring.length
 				: 0;
