@@ -17,7 +17,12 @@ import { API, APIDefinition } from 'ngx-easy-table';
 	selector: 'manager-listView',
 	template: `
 		<ng-template #secAll>
-			<nb-checkbox> </nb-checkbox>
+			<nb-checkbox
+				[(indeterminate)]="checAllInteral"
+				[(checked)]="checkAll"
+				(checkedChange)="onToggleAll($event)"
+			>
+			</nb-checkbox>
 		</ng-template>
 		<ngx-table
 			#table
@@ -29,7 +34,7 @@ import { API, APIDefinition } from 'ngx-easy-table';
 		>
 			<ng-template let-row let-index="index">
 				<td>
-					<nb-checkbox> </nb-checkbox>
+					<nb-checkbox [(checked)]="check[index]" (checkedChange)="onToggle()"> </nb-checkbox>
 					<!-- todo: disable double click event here-->
 				</td>
 				<td>
@@ -69,9 +74,14 @@ export class ListViewComponent implements OnInit, OnDestroy {
 	];
 
 	public data: OperationsListFlowOutItemNode[];
+	public check: boolean[];
+	public checkAll = false;
+	public checAllInteral = false;
 
 	@ViewChild('table') table: APIDefinition;
 	resetCurrentPage() {
+		this.check = [];
+		this.checkAll = false;
 		this.table.apiEvent({
 			type: API.setPaginationCurrentPage,
 			value: 1,
@@ -94,14 +104,37 @@ export class ListViewComponent implements OnInit, OnDestroy {
 		}
 	}
 
+	onToggleAll(val: boolean) {
+		this.check = this.check.map(() => val);
+		this.checAllInteral = false;
+	}
+	onToggle() {
+		let sum = 0;
+		this.check.forEach((x) => (sum += x ? 1 : 0));
+		if (sum === this.check.length) {
+			this.checkAll = true;
+			this.checAllInteral = false;
+		} else if (sum === 0) {
+			this.checkAll = false;
+			this.checAllInteral = false;
+		} else {
+			this.checkAll = false;
+			this.checAllInteral = true;
+		}
+	}
+
 	@Input() list$: OperationsListFlow;
 
 	ngOnInit() {
 		this.listScrb = this.list$.getSupersetOutput().subscribe((x) => {
 			if (x[1].length !== 0) {
 				this.data = undefined;
+				this.check = [];
+				this.checkAll = false;
 			}
 			this.data = x[0].list;
+			this.check = x[0].list.map(() => false);
+			this.checkAll = false;
 			this.remote = x[0].remote;
 		});
 
