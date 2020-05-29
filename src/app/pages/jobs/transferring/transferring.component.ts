@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Columns, Config, DefaultConfig } from 'ngx-easy-table';
 import { CoreStatsFlow, ITransferring } from 'src/app/@dataflow/rclone';
+import { FormatBytes } from 'src/app/utils/format-bytes';
 
 @Component({
 	selector: 'jobs-transferring',
@@ -16,12 +17,12 @@ export class TransfersComponent implements OnInit {
 	public configuration: Config;
 	public columns: Columns[] = [
 		{ key: 'name', title: 'Name' },
-		{ key: 'size', title: 'Size' },
+		{ key: 'sizeHumanReadable', title: 'Size' },
 		{ key: 'percentage', title: 'Percentage' },
-		{ key: 'speed', title: 'Speed' },
+		{ key: 'speedHumanReadable', title: 'Speed' },
 		{ key: 'eta', title: 'eta' },
 	];
-	public data: ITransferring[] = [];
+	public data: (ITransferring & { sizeHumanReadable: string; speedHumanReadable: string })[] = [];
 
 	constructor() {}
 
@@ -29,7 +30,11 @@ export class TransfersComponent implements OnInit {
 		this.stats$.getOutput().subscribe(([x, err]) => {
 			if (err.length !== 0) return;
 			const data = x['core-stats'].transferring;
-			this.data = data ? data : [];
+			this.data = data ? data : ([] as any);
+			this.data.forEach((x) => {
+				x.sizeHumanReadable = FormatBytes(x.size, 3);
+				x.speedHumanReadable = FormatBytes(x.speed) + '/s';
+			});
 		});
 
 		this.configuration = { ...DefaultConfig };
