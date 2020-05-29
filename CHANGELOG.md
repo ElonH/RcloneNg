@@ -2,6 +2,54 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.2.0](https://github.com/ElonH/RcloneNg/compare/v0.1.0...v0.2.0) (2020-05-29)
+
+
+### ⚠ BREAKING CHANGES
+
+* most of flow instance is created in service
+
+### Features
+
+* **connection-flow:** privade a pure superset node output port ([3744893](https://github.com/ElonH/RcloneNg/commit/3744893ae83e3b4a52ebaa5be0d3126d88e032ef))
+* **connection-service:** add list cmd flow ([83d32bf](https://github.com/ElonH/RcloneNg/commit/83d32bf95c8ac083d89b9f61e0f1fcf1e6db4442))
+* **connection-service:** host connection check ([1617e5d](https://github.com/ElonH/RcloneNg/commit/1617e5dc146d7dfef53bee669f9c56f1405dbf86))
+* **core-stats-flow:** support group specification ([9a98a11](https://github.com/ElonH/RcloneNg/commit/9a98a1147029100e7d895f6456dcdd814f139e48))
+* **job-speed-chart:** basic framework ([5c0dd1f](https://github.com/ElonH/RcloneNg/commit/5c0dd1fb720c0193135131dfe12267b8b8b4c22e))
+* **jobs:** basic framework ([6b02399](https://github.com/ElonH/RcloneNg/commit/6b0239914257c31e469f1ca4c72613e79353d88b))
+* **jobs:** fetch group infomation and list it ([b6f4cb9](https://github.com/ElonH/RcloneNg/commit/b6f4cb9db697dec3d7e30c49aa8874a8944d6f29))
+* **jobs-speed-chart:** connect to stats flow ([e1d4b60](https://github.com/ElonH/RcloneNg/commit/e1d4b6004d78c3bf0f53df0f5742ca9a1104e792))
+* **jobs-speed-chart:** show legend ([d21db88](https://github.com/ElonH/RcloneNg/commit/d21db8860fb225d138d5847110bd52e5d0c4817b))
+* **list-cmd-flow:** check if server support some command ([8245b32](https://github.com/ElonH/RcloneNg/commit/8245b32e0388445d20471642f152b26552c7891f))
+* **list-view:** add checkbox to allow multi-select ([f5ac788](https://github.com/ElonH/RcloneNg/commit/f5ac788e31a743270dd842bb5f3b3edf452a6687))
+* **list-view:** add file formats icons and directory icon ([95cc25c](https://github.com/ElonH/RcloneNg/commit/95cc25cad53c42f33c005c24b1bdb8a056f641a3))
+* **list-view:** add manipulation idenity ([39c2c87](https://github.com/ElonH/RcloneNg/commit/39c2c875d2e16a9feb3e6b993cfb384b7b7b6ac9))
+* **list-view:** make size human-readable ([31c0919](https://github.com/ElonH/RcloneNg/commit/31c09190169fdada409945f7ebac2c70151dec77))
+* **list-view:** multi-select items ([c6efb4e](https://github.com/ElonH/RcloneNg/commit/c6efb4ecde328802dc6c6f9199974729932fe6c8))
+* **list-view:** recursively open directory ([38f8326](https://github.com/ElonH/RcloneNg/commit/38f83265b722b389b6e2269d674b0f8a95dffdb9))
+* **pages:** add logo ([62c7a0e](https://github.com/ElonH/RcloneNg/commit/62c7a0e52c2d2638fa00ef981cbdbc0426e05947))
+* **preloader:** a simple loading screen ([a2b9525](https://github.com/ElonH/RcloneNg/commit/a2b95258010e1df7cf05db6d1fdb4289a21a2720))
+* **speed-diff:** show acceleration ([e4c04e6](https://github.com/ElonH/RcloneNg/commit/e4c04e652d144b3aa3a5726dc90287771da20642))
+* **summary:** connect to stats flow ([23fecaf](https://github.com/ElonH/RcloneNg/commit/23fecaf30e6e38d5977c2c28368190b23e2e5d0c))
+* **transferring:** connect to stats flow ([5209203](https://github.com/ElonH/RcloneNg/commit/520920364eb9cb13f37947560dca5c32194fab7f))
+
+
+### Bug Fixes
+
+* **dashboard-module:** turn lazy-loading back to normal ([aefbb8a](https://github.com/ElonH/RcloneNg/commit/aefbb8a59dc890facbd5d4412299b07ce51c7981))
+* **file-mode:** disable forward data without remote ([08ee080](https://github.com/ElonH/RcloneNg/commit/08ee08024f95b5716179e6b0762e890b6570f054))
+* **format-bytes:** handle size less than 0 (directory) ([f3280b4](https://github.com/ElonH/RcloneNg/commit/f3280b4dd58a97e7073e999230abd65e04e2fba3))
+* **jobs:** disable toggle group sidebar ([f86b0fe](https://github.com/ElonH/RcloneNg/commit/f86b0feba5039e1a9ae7cead86e45deb5fa1e451))
+* **list-view:** assign more space for name ([f4d4ad2](https://github.com/ElonH/RcloneNg/commit/f4d4ad28932c73f8517d06244e93f9f360bab338))
+* **list-view:** let table back to first page after jump ([5f3e51b](https://github.com/ElonH/RcloneNg/commit/5f3e51b80fe02fdffb16eda0bc87a67275751e0a))
+* **list-view:** turn modified time to time ago ([6d2d78e](https://github.com/ElonH/RcloneNg/commit/6d2d78ec216ddbf4664f3fe5831f96489af450ff))
+* **speed:** more accurate in speed statistics ([324134d](https://github.com/ElonH/RcloneNg/commit/324134d40b635f046d91b8ba61f94035fcdd4702))
+* **superset-flow:** prerequest of superset is alway previous result ([40b0a90](https://github.com/ElonH/RcloneNg/commit/40b0a90cd86b5527f98a3ebc2d9b4607b79f03b4))
+* **users-flow:** extract preName from user in default ([38f7482](https://github.com/ElonH/RcloneNg/commit/38f7482e45fd9d6ae4362b356bf86a7f461ffe26))
+
+
+* move most of flow instance to service ([1bc2a36](https://github.com/ElonH/RcloneNg/commit/1bc2a3621e66f4d5e0a21240e81205581e89a0a5))
+
 ## 0.1.0 (2020-05-24)
 
 
