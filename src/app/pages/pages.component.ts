@@ -10,6 +10,7 @@ import { CurrentUserService } from './current-user.service';
 			<nb-layout-header fixed>
 				<nb-actions>
 					<nb-action icon="menu-outline" (click)="toggleNav()"></nb-action>
+					<nb-action> <img src="./assets/favicon.svg" style="height: 3rem;" /> </nb-action>
 				</nb-actions>
 			</nb-layout-header>
 
