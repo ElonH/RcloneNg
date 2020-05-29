@@ -9,11 +9,21 @@ export abstract class SupersetFlow<
 	Tout extends FlowOutNode,
 	Tsup extends FlowSupNode = Tin & Tout
 > extends BareFlow<Tin, Tout> {
-	private boostrapPrerequest$: Observable<CombErr<Tin>>;
-	public deploy() {
-		super.deploy();
-		this.boostrapPrerequest$ = this.prerequest$.pipe(distinctUntilChanged(), shareReplay());
-		this.boostrapPrerequest$.pipe(take(1)).subscribe();
+	private supersetData$: Observable<CombErr<Tsup>>;
+	private supersetDeployed = false;
+	protected deployBefore() {
+		this.prerequest$ = this.prerequest$.pipe(distinctUntilChanged(), shareReplay());
+		super.deployBefore();
+		this.supersetData$ = this.getOutput().pipe(
+			withLatestFrom(this.prerequest$),
+			map(([cur, pre]) => this.generateSuperset(cur, pre)),
+			distinctUntilChanged(),
+			shareReplay()
+		);
+		this.supersetDeployed = true;
+	}
+	protected deployAfter() {
+		this.supersetData$.pipe(take(1)).subscribe();
 	}
 	protected generateSuperset(current: CombErr<Tout>, previous: CombErr<Tin>): CombErr<Tsup> {
 		return [
@@ -22,9 +32,7 @@ export abstract class SupersetFlow<
 		];
 	}
 	public getSupersetOutput(): Observable<CombErr<Tsup>> {
-		return this.getOutput().pipe(
-			withLatestFrom(this.boostrapPrerequest$),
-			map(([cur, pre]) => this.generateSuperset(cur, pre))
-		);
+		if (!this.supersetDeployed) throw new Error('run deploy before getSupersetOutput');
+		return this.supersetData$;
 	}
 }

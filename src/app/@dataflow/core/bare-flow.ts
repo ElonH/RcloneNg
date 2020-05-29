@@ -1,13 +1,5 @@
 import { Observable, of } from 'rxjs';
-import {
-	switchMap,
-	take,
-	tap,
-	startWith,
-	distinctUntilChanged,
-	skipWhile,
-	shareReplay,
-} from 'rxjs/operators';
+import { switchMap, take, distinctUntilChanged, shareReplay } from 'rxjs/operators';
 
 export interface FlowInNode {}
 export interface FlowOutNode {}
@@ -18,7 +10,7 @@ export abstract class BareFlow<Tin extends FlowInNode, Tout extends FlowOutNode>
 	protected abstract request(pre: CombErr<Tin>): Observable<CombErr<Tout>>;
 	private bareData$: Observable<CombErr<Tout>>;
 	private deployed = false;
-	public deploy() {
+	protected deployBefore() {
 		this.bareData$ = this.prerequest$.pipe(
 			switchMap(
 				(pre): Observable<CombErr<Tout>> => {
@@ -30,8 +22,14 @@ export abstract class BareFlow<Tin extends FlowInNode, Tout extends FlowOutNode>
 			distinctUntilChanged(),
 			shareReplay()
 		);
-		this.bareData$.pipe(take(1)).subscribe();
 		this.deployed = true;
+	}
+	protected deployAfter() {
+		this.bareData$.pipe(take(1)).subscribe();
+	}
+	public deploy() {
+		this.deployBefore();
+		this.deployAfter();
 	}
 	public getOutput(): Observable<CombErr<Tout>> {
 		if (!this.deployed) throw new Error('run deploy before getOutput');
