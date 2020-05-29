@@ -13,6 +13,7 @@ import { Subscription } from 'rxjs';
 import { NavigationFlowOutNode } from 'src/app/@dataflow/extra';
 import { API, APIDefinition } from 'ngx-easy-table';
 import { FormatBytes } from 'src/app/utils/format-bytes';
+import * as moment from 'moment';
 
 @Component({
 	selector: 'manager-listView',
@@ -46,7 +47,7 @@ import { FormatBytes } from 'src/app/utils/format-bytes';
 				</td>
 				<td>{{ row.Name }}</td>
 				<td>{{ row.SizeHumanReadable }}</td>
-				<td>{{ row.ModTime }}</td>
+				<td>{{ row.ModTimeHumanReadable }}</td>
 				<td>{{ row.MimeType }}</td>
 			</ng-template>
 		</ngx-table>
@@ -70,11 +71,14 @@ export class ListViewComponent implements OnInit, OnDestroy {
 		{ key: 'manipulation', title: '', width: '3%', searchEnabled: false, orderEnabled: false },
 		{ key: 'Name', title: 'Name', width: '50%' },
 		{ key: 'SizeHumanReadable', title: 'Size', width: '10%' },
-		{ key: 'ModTime', title: 'Modified Time', width: '20%' },
+		{ key: 'ModTimeHumanReadable', title: 'Modified Time', width: '20%' },
 		{ key: 'MimeType', title: 'MIME Type', width: '17%' },
 	];
 
-	public data: (OperationsListFlowOutItemNode & { SizeHumanReadable: string })[];
+	public data: (OperationsListFlowOutItemNode & {
+		SizeHumanReadable: string;
+		ModTimeHumanReadable: string;
+	})[];
 	public check: boolean[];
 	public checkAll = false;
 	public checAllInteral = false;
@@ -134,7 +138,10 @@ export class ListViewComponent implements OnInit, OnDestroy {
 				this.checkAll = false;
 			}
 			this.data = x[0].list as any;
-			this.data.forEach((x) => (x.SizeHumanReadable = FormatBytes(x.Size)));
+			this.data.forEach((x) => {
+				x.SizeHumanReadable = FormatBytes(x.Size);
+				x.ModTimeHumanReadable = moment(x.ModTime).fromNow();
+			});
 			this.check = x[0].list.map(() => false);
 			this.checkAll = false;
 			this.remote = x[0].remote;
