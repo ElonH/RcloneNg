@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { CoreStatsFlow, CoreStatsFlowOutItemNode } from 'src/app/@dataflow/rclone';
 import { FormatBytes } from 'src/app/utils/format-bytes';
+import { HumanizeDurationLanguage, HumanizeDuration } from 'humanize-duration-ts';
 
 @Component({
 	selector: 'jobs-summary',
@@ -39,7 +40,7 @@ export class SummaryComponent implements OnInit {
 		{ key: 'transfers', title: 'Transferred' },
 		{ key: 'checks', title: 'Checks' },
 		{ key: 'deletes', title: 'Delete' },
-		{ key: 'elapsedTime', title: 'Elapsed Time' },
+		{ key: 'durationHumanReadable', title: 'Duration' },
 		{ key: 'errors', title: 'Errors' },
 		{ key: 'fatalError', title: 'FatalError' },
 		{ key: 'retryError', title: 'RetryError' },
@@ -47,9 +48,25 @@ export class SummaryComponent implements OnInit {
 	values: CoreStatsFlowOutItemNode & {
 		speedHumanReadable: string;
 		bytesHumanReadable: string;
+		durationHumanReadable: string;
 	} = {} as any;
 
-	constructor() {}
+	private langService: HumanizeDurationLanguage = new HumanizeDurationLanguage();
+	private Duration: HumanizeDuration;
+	constructor() {
+		this.langService.addLanguage('shortEn', {
+			y: () => 'y',
+			mo: () => 'mo',
+			w: () => 'w',
+			d: () => 'd',
+			h: () => 'h',
+			m: () => 'm',
+			s: () => 's',
+			ms: () => 'ms',
+			decimal: '',
+		});
+		this.Duration = new HumanizeDuration(this.langService);
+	}
 	isDefine(val: any) {
 		return typeof val !== 'undefined';
 	}
@@ -60,6 +77,10 @@ export class SummaryComponent implements OnInit {
 			this.values = JSON.parse(JSON.stringify(x['core-stats']));
 			this.values.bytesHumanReadable = FormatBytes(this.values.bytes, 4);
 			this.values.speedHumanReadable = FormatBytes(this.values.speed, 4) + '/s';
+			this.values.durationHumanReadable = this.Duration.humanize(this.values.elapsedTime * 1000, {
+				language: 'shortEn',
+				round: true,
+			});
 			this.values['transferring-count'] = this.values.transferring
 				? this.values.transferring.length
 				: 0;

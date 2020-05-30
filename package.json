@@ -45,6 +45,7 @@
     "bootstrap": "^4.5.0",
     "chart.js": "^2.9.3",
     "eva-icons": "^1.1.3",
+    "humanize-duration-ts": "^2.1.1",
     "jquery": "^3.5.1",
     "nebular-icons": "^1.1.0",
     "ng2-charts": "^2.3.2",
