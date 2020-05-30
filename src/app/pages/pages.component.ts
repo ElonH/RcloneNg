@@ -24,7 +24,7 @@ import { CurrentUserService } from './current-user.service';
 	styles: [
 		`
 			.main-sidebar {
-				z-index: 1536;
+				z-index: 1039;
 			}
 		`,
 	],
