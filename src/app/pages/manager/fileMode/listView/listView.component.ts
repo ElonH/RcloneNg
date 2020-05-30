@@ -74,14 +74,15 @@ export class ListViewComponent implements OnInit, OnDestroy {
 		{ key: 'manipulation', title: '', width: '3%', searchEnabled: false, orderEnabled: false },
 		{ key: 'TypeIcon', title: '', width: '3%', searchEnabled: false },
 		{ key: 'Name', title: 'Name', width: '50%' },
-		{ key: 'SizeHumanReadable', title: 'Size', width: '10%' },
-		{ key: 'ModTimeHumanReadable', title: 'Modified Time', width: '17%' },
+		{ key: 'Size', title: 'Size', width: '10%' },
+		{ key: 'ModTimeMoment', title: 'Modified Time', width: '17%' },
 		{ key: 'MimeType', title: 'MIME Type', width: '17%' },
 	];
 
 	public data: (OperationsListFlowOutItemNode & {
 		SizeHumanReadable: string;
 		ModTimeHumanReadable: string;
+		ModTimeMoment: moment.Moment;
 		TypeIcon: string;
 	})[];
 	public check: boolean[];
@@ -145,7 +146,8 @@ export class ListViewComponent implements OnInit, OnDestroy {
 			this.data = x[0].list as any;
 			this.data.forEach((x) => {
 				x.SizeHumanReadable = FormatBytes(x.Size);
-				x.ModTimeHumanReadable = moment(x.ModTime).fromNow();
+				x.ModTimeMoment = moment(x.ModTime);
+				x.ModTimeHumanReadable = x.ModTimeMoment.fromNow();
 				if (x.IsDir) x.TypeIcon = getIconForFolder(x.Name);
 				else x.TypeIcon = getIconForFile(x.Name);
 			});
