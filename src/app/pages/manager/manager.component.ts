@@ -8,6 +8,8 @@ import { NbDialogService } from '@nebular/theme';
 import { OperationsMkdirFlow, OperationsMkdirFlowInNode } from 'src/app/@dataflow/rclone';
 import { ConnectionService } from '../connection.service';
 import { NbToastrService } from '@nebular/theme';
+import { FileModeComponent } from './fileMode/fileMode.component';
+import { ClipboardService } from './clipboard/clipboard.service';
 
 @Component({
 	selector: 'app-manager',
@@ -29,10 +31,10 @@ import { NbToastrService } from '@nebular/theme';
 			</nb-card>
 		</div>
 		<nb-layout-header subheader>
-			<nb-actions>
-				<nb-action icon="copy"></nb-action>
-				<nb-action icon="move"></nb-action>
-				<nb-action icon="trash-2"></nb-action>
+			<nb-actions *ngIf="fileMode">
+				<nb-action icon="copy" (click)="file.manipulate('copy')"></nb-action>
+				<nb-action icon="move" (click)="file.manipulate('move')"></nb-action>
+				<nb-action icon="trash-2" (click)="file.manipulate('del')"></nb-action>
 				<nb-action icon="clipboard"></nb-action>
 			</nb-actions>
 			<nb-actions *ngIf="fileMode">
@@ -64,7 +66,26 @@ import { NbToastrService } from '@nebular/theme';
 				<nb-action icon="folder-add" (click)="dialog(mkdirDialog)"></nb-action>
 			</nb-actions>
 			<nb-actions class="pushToRight">
-				<nb-action icon="inbox"></nb-action>
+				<nb-action
+					style="padding-right: 1.5rem;padding-left: 0.5rem;"
+					(click)="dialog(clipboardDialog)"
+				>
+					<nb-icon icon="inbox" style="font-size: 1.5rem"> </nb-icon>
+					<nb-badge [text]="clipboardSize" status="info" position="top end"></nb-badge>
+				</nb-action>
+				<ng-template #clipboardDialog>
+					<nb-card class="clipboard">
+						<nb-card-header>
+							<nb-action>
+								<nb-icon icon="shopping-bag" class="clipboard-icon"></nb-icon>
+							</nb-action>
+							Clipboard
+						</nb-card-header>
+						<nb-card-body>
+							<manager-clipboard> </manager-clipboard>
+						</nb-card-body>
+					</nb-card>
+				</ng-template>
 			</nb-actions>
 		</nb-layout-header>
 		<!-- <nb-sidebar fixed right>
@@ -100,6 +121,15 @@ import { NbToastrService } from '@nebular/theme';
 			nb-card {
 				/* margin-top: 1.25rem; */
 			}
+			.clipboard {
+				height: 80vh;
+				width: 53vw;
+				min-width: 26rem;
+			}
+			.clipboard-icon {
+				font-size: 1.5rem;
+				margin-right: 0.5rem;
+			}
 		`,
 	],
 })
@@ -107,11 +137,13 @@ export class ManagerComponent implements OnInit {
 	constructor(
 		private dialogService: NbDialogService,
 		private connectService: ConnectionService,
-		private toastrService: NbToastrService
+		private toastrService: NbToastrService,
+		private clipboard: ClipboardService
 	) {}
 	homeMode = false;
 	fileMode = false;
 
+	@ViewChild(FileModeComponent) file: FileModeComponent;
 	@ViewChild(HomeModeComponent) home: HomeModeComponent;
 	refresh() {
 		if (this.homeMode) this.home.refresh();
@@ -183,9 +215,18 @@ export class ManagerComponent implements OnInit {
 		});
 	}
 
+	clipboardSize: number = 0;
+	private clipboardDeploy() {
+		this.clipboard.update$.getOutput().subscribe((node) => {
+			if (node[1].length !== 0) return;
+			this.clipboardSize = node[0].copy.size + node[0].move.size + node[0].del.size;
+		});
+	}
+
 	ngOnInit(): void {
 		this.navDeploy();
 		this.mkdirDeploy();
+		this.clipboardDeploy();
 	}
 
 	dialog(dialog: TemplateRef<any>) {

@@ -15,6 +15,8 @@ import { API, APIDefinition } from 'ngx-easy-table';
 import { FormatBytes } from 'src/app/utils/format-bytes';
 import * as moment from 'moment';
 import { getIconForFile, getIconForFolder } from 'vscode-icons-js';
+import { ClipboardService, IManipulate } from '../../clipboard/clipboard.service';
+import { combineLatest } from 'rxjs/operators';
 
 @Component({
 	selector: 'manager-listView',
@@ -42,9 +44,10 @@ import { getIconForFile, getIconForFolder } from 'vscode-icons-js';
 				</td>
 				<td>
 					<nb-icon
+						*ngIf="row.ManipulateIcon"
 						class="manipulation"
 						status="info"
-						[icon]="index % 3 !== 0 ? (index % 3 !== 1 ? 'trash-2' : 'move') : 'copy'"
+						[icon]="row.ManipulateIcon"
 					></nb-icon>
 				</td>
 				<td style="padding: 0;"><img [src]="'assets/icons/' + row.TypeIcon" /></td>
@@ -84,6 +87,7 @@ export class ListViewComponent implements OnInit, OnDestroy {
 		ModTimeHumanReadable: string;
 		ModTimeMoment: moment.Moment;
 		TypeIcon: string;
+		ManipulateIcon: string;
 	})[];
 	public check: boolean[];
 	public checkAll = false;
@@ -99,7 +103,7 @@ export class ListViewComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	constructor() {}
+	constructor(private clipboard: ClipboardService) {}
 
 	@Output() jump = new EventEmitter<NavigationFlowOutNode>();
 	private remote: string;
@@ -134,27 +138,47 @@ export class ListViewComponent implements OnInit, OnDestroy {
 		}
 	}
 
+	manipulate(o: IManipulate) {
+		this.check.forEach((x, i) => {
+			if (!x) return;
+			this.clipboard.manipulate(o, this.remote, this.data[i].Path);
+			this.check[i] = false;
+			this.data[i].ManipulateIcon = this.manipulate2Icon(o);
+		});
+		this.onToggle();
+	}
+	private manipulate2Icon(o: IManipulate): string {
+		if (o === 'del') return 'trash-2';
+		return o;
+	}
+
 	@Input() list$: OperationsListFlow;
 
 	ngOnInit() {
-		this.listScrb = this.list$.getSupersetOutput().subscribe((x) => {
-			if (x[1].length !== 0) {
-				this.data = undefined;
-				this.check = [];
+		this.listScrb = this.list$
+			.getSupersetOutput()
+			.pipe(combineLatest(this.clipboard.update$.getOutput()))
+			.subscribe(([listNode, poolsNode]) => {
+				if (listNode[1].length !== 0 || poolsNode[1].length !== 0) {
+					this.data = undefined;
+					this.check = [];
+					this.checkAll = false;
+				}
+				this.data = listNode[0].list as any;
+				this.data.forEach((item) => {
+					item.SizeHumanReadable = FormatBytes(item.Size);
+					item.ModTimeMoment = moment(item.ModTime);
+					item.ModTimeHumanReadable = item.ModTimeMoment.fromNow();
+					item.ManipulateIcon = this.manipulate2Icon(
+						ClipboardService.query(poolsNode[0], listNode[0].remote, item.Path)
+					);
+					if (item.IsDir) item.TypeIcon = getIconForFolder(item.Name);
+					else item.TypeIcon = getIconForFile(item.Name);
+				});
+				this.check = listNode[0].list.map(() => false);
 				this.checkAll = false;
-			}
-			this.data = x[0].list as any;
-			this.data.forEach((x) => {
-				x.SizeHumanReadable = FormatBytes(x.Size);
-				x.ModTimeMoment = moment(x.ModTime);
-				x.ModTimeHumanReadable = x.ModTimeMoment.fromNow();
-				if (x.IsDir) x.TypeIcon = getIconForFolder(x.Name);
-				else x.TypeIcon = getIconForFile(x.Name);
+				this.remote = listNode[0].remote;
 			});
-			this.check = x[0].list.map(() => false);
-			this.checkAll = false;
-			this.remote = x[0].remote;
-		});
 
 		this.configuration = { ...DefaultConfig };
 		this.configuration.searchEnabled = true;

@@ -1,10 +1,12 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { NavigationFlow, NavigationFlowOutNode } from 'src/app/@dataflow/extra';
 import { ConnectionService } from '../../connection.service';
 import { Subject } from 'rxjs';
 import { OperationsListFlow, OperationsListFlowInNode } from 'src/app/@dataflow/rclone';
 import { combineLatest, map, filter } from 'rxjs/operators';
 import { CombErr } from 'src/app/@dataflow/core';
+import { ListViewComponent } from './listView/listView.component';
+import { IManipulate, ClipboardService } from '../clipboard/clipboard.service';
 
 @Component({
 	selector: 'manager-fileMode',
@@ -12,7 +14,7 @@ import { CombErr } from 'src/app/@dataflow/core';
 	styles: [],
 })
 export class FileModeComponent implements OnInit {
-	constructor(private connectService: ConnectionService) {}
+	constructor(private connectService: ConnectionService, private clipboard: ClipboardService) {}
 
 	@Input() nav$: NavigationFlow;
 
@@ -23,6 +25,12 @@ export class FileModeComponent implements OnInit {
 
 	refresh() {
 		this.listTrigger.next(1);
+	}
+
+	@ViewChild(ListViewComponent) listView: ListViewComponent;
+	manipulate(o: IManipulate) {
+		this.listView.manipulate(o);
+		this.clipboard.commit();
 	}
 
 	ngOnInit() {

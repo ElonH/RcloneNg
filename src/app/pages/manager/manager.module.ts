@@ -15,6 +15,8 @@ import {
 	NbButtonModule,
 	NbInputModule,
 	NbTooltipModule,
+	NbBadgeModule,
+	NbTabsetModule,
 } from '@nebular/theme';
 import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
 import { HomeModeComponent } from './homeMode/homeMode.component';
@@ -22,6 +24,8 @@ import { RemoteComponent } from './homeMode/remote.component';
 import { FileModeComponent } from './fileMode/fileMode.component';
 import { TableModule } from 'ngx-easy-table';
 import { ListViewComponent } from './fileMode/listView/listView.component';
+import { ClipboardComponent } from './clipboard/clipboard.component';
+import { ClipboardRemotesTableComponent } from './clipboard/clipboard-remotes-table/clipboard-remotes-table.component';
 
 @NgModule({
 	declarations: [
@@ -31,6 +35,8 @@ import { ListViewComponent } from './fileMode/listView/listView.component';
 		RemoteComponent,
 		FileModeComponent,
 		ListViewComponent,
+		ClipboardComponent,
+		ClipboardRemotesTableComponent,
 	],
 	imports: [
 		CommonModule,
@@ -47,6 +53,8 @@ import { ListViewComponent } from './fileMode/listView/listView.component';
 		NbInputModule,
 		NbDialogModule.forChild({ autoFocus: true, closeOnEsc: true }), // lazy module need it
 		NbTooltipModule,
+		NbBadgeModule,
+		NbTabsetModule,
 	],
 })
 export class ManagerModule {}
