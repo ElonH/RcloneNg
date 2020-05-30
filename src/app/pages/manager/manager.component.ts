@@ -43,6 +43,7 @@ import { NbToastrService } from '@nebular/theme';
 							<nb-icon
 								class="pushToRight"
 								icon="info-outline"
+								style="font-size: 1.5rem;"
 								nbTooltip="support recursively create. (eg: a/b/c)"
 							></nb-icon>
 						</nb-card-header>
