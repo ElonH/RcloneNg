@@ -16,7 +16,6 @@ export abstract class SupersetFlow<
 		this.supersetData$ = this.getOutput().pipe(
 			withLatestFrom(this.prerequest$),
 			map(([cur, pre]) => this.generateSuperset(cur, pre)),
-			distinctUntilChanged(),
 			shareReplay()
 		);
 		this.supersetDeployed = true;

@@ -19,7 +19,6 @@ export abstract class BareFlow<Tin extends FlowInNode, Tout extends FlowOutNode>
 					// Just make sure that checking Error[] at first in subscription
 				}
 			),
-			distinctUntilChanged(),
 			shareReplay()
 		);
 		this.deployed = true;
