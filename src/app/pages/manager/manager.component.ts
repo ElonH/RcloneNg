@@ -217,9 +217,9 @@ export class ManagerComponent implements OnInit {
 
 	clipboardSize: number = 0;
 	private clipboardDeploy() {
-		this.clipboard.update$.getOutput().subscribe((node) => {
+		this.clipboard.clipboard$.getOutput().subscribe((node) => {
 			if (node[1].length !== 0) return;
-			this.clipboardSize = node[0].copy.size + node[0].move.size + node[0].del.size;
+			this.clipboardSize = node[0].clipboard.values.length;
 		});
 	}
 

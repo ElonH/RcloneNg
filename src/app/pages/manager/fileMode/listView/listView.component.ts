@@ -103,7 +103,7 @@ export class ListViewComponent implements OnInit, OnDestroy {
 		});
 	}
 
-	constructor(private clipboard: ClipboardService) {}
+	constructor(private clipboardService: ClipboardService) {}
 
 	@Output() jump = new EventEmitter<NavigationFlowOutNode>();
 	private remote: string;
@@ -141,7 +141,7 @@ export class ListViewComponent implements OnInit, OnDestroy {
 	manipulate(o: IManipulate) {
 		this.check.forEach((x, i) => {
 			if (!x) return;
-			this.clipboard.manipulate(o, this.remote, this.data[i].Path);
+			this.clipboardService.add(o, this.remote, this.data[i]);
 			this.check[i] = false;
 			this.data[i].ManipulateIcon = this.manipulate2Icon(o);
 		});
@@ -157,27 +157,27 @@ export class ListViewComponent implements OnInit, OnDestroy {
 	ngOnInit() {
 		this.listScrb = this.list$
 			.getSupersetOutput()
-			.pipe(combineLatest(this.clipboard.update$.getOutput()))
-			.subscribe(([listNode, poolsNode]) => {
-				if (listNode[1].length !== 0 || poolsNode[1].length !== 0) {
+			.pipe(combineLatest(this.clipboardService.clipboard$.getOutput()))
+			.subscribe(([listNode, cbNode]) => {
+				if (listNode[1].length !== 0 || cbNode[1].length !== 0) {
 					this.data = undefined;
 					this.check = [];
 					this.checkAll = false;
 				}
+				this.remote = listNode[0].remote;
 				this.data = listNode[0].list as any;
 				this.data.forEach((item) => {
 					item.SizeHumanReadable = FormatBytes(item.Size);
 					item.ModTimeMoment = moment(item.ModTime);
 					item.ModTimeHumanReadable = item.ModTimeMoment.fromNow();
 					item.ManipulateIcon = this.manipulate2Icon(
-						ClipboardService.query(poolsNode[0], listNode[0].remote, item.Path)
+						cbNode[0].clipboard.getManipulation(this.remote, item.Path)
 					);
 					if (item.IsDir) item.TypeIcon = getIconForFolder(item.Name);
 					else item.TypeIcon = getIconForFile(item.Name);
 				});
 				this.check = listNode[0].list.map(() => false);
 				this.checkAll = false;
-				this.remote = listNode[0].remote;
 			});
 
 		this.configuration = { ...DefaultConfig };

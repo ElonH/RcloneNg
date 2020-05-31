@@ -1,71 +1,84 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { NothingFlow, CombErr } from 'src/app/@dataflow/core';
-import { map } from 'rxjs/operators';
+import { mapTo } from 'rxjs/operators';
+import { NavigationFlowOutNode } from 'src/app/@dataflow/extra';
+import { OperationsListFlowOutItemNode } from 'src/app/@dataflow/rclone';
 
 export type IManipulate = 'copy' | 'move' | 'del';
 
-export interface ClipboardNode {
-	copy: Set<string>;
-	move: Set<string>;
-	del: Set<string>;
+export interface ClipboardItem {
+	oper: IManipulate;
+	key: string;
+	srcRemote: string;
+	srcItem: OperationsListFlowOutItemNode;
+	dst?: NavigationFlowOutNode;
 }
+
+export class Clipboard {
+	private data = new Map<string, ClipboardItem>();
+
+	public add(
+		o: IManipulate,
+		remote: string,
+		row: OperationsListFlowOutItemNode,
+		dst?: NavigationFlowOutNode
+	) {
+		const key = Clipboard.genKey(remote, row.Path);
+		this.data.set(key, { oper: o, key: key, srcItem: { ...row }, srcRemote: remote, dst: dst });
+	}
+
+	public pop(remote: string, path: string): ClipboardItem {
+		const key = Clipboard.genKey(remote, path);
+		if (!this.data.has(key)) return undefined;
+		const ans = this.data.get(key);
+		this.data.delete(key);
+		return ans;
+	}
+
+	public getManipulation(remote: string, path: string): IManipulate {
+		const key = Clipboard.genKey(remote, path);
+		if (!this.data.has(key)) return undefined;
+		return this.data.get(key).oper;
+	}
+
+	public countManipulation(o: IManipulate): number {
+		let cnt = 0;
+		this.data.forEach((x) => (x.oper === o ? cnt++ : null));
+		return cnt;
+	}
+
+	public get values(): ClipboardItem[] {
+		return Array.from(this.data.values());
+	}
+
+	public static genKey(remote: string, path: string) {
+		return JSON.stringify({ r: remote, p: path });
+	}
+}
+
+export abstract class ClipboardFlow extends NothingFlow<{ clipboard: Clipboard }> {}
 
 @Injectable({
 	providedIn: 'root',
 })
-export class ClipboardService {
-	private sourcePool = [1, 2, 3].map(() => new Set<string>());
-	static readonly mapper: { [index: string]: number } = {
-		copy: 0,
-		move: 1,
-		del: 2,
-	};
-
-	static query(pools: ClipboardNode, remote: string, path: string): IManipulate {
-		const item = JSON.stringify({ remote: remote, path: path });
-		if (pools.copy.has(item)) return 'copy';
-		if (pools.move.has(item)) return 'move';
-		if (pools.del.has(item)) return 'del';
-	}
-
-	private excusiveAdd(pool: number, remote: string, path: string) {
-		const item = JSON.stringify({ remote: remote, path: path });
-		this.sourcePool[pool].add(item);
-		this.sourcePool.forEach((x, i) => {
-			if (i === pool) return;
-			if (x.has(item)) x.delete(item);
-		});
-	}
-	public manipulate(o: IManipulate, remote: string, path: string) {
-		const idx = ClipboardService.mapper[o];
-		if (typeof idx !== 'undefined') this.excusiveAdd(idx, remote, path);
-	}
-
+export class ClipboardService extends Clipboard {
 	private trigger = new Subject<number>();
-	update$: NothingFlow<ClipboardNode>;
+	clipboard$: ClipboardFlow;
 	public commit() {
 		this.trigger.next(1);
 	}
 
 	constructor() {
+		super();
 		const outer = this;
-		this.update$ = new (class extends NothingFlow<ClipboardNode> {
+		this.clipboard$ = new (class extends ClipboardFlow {
 			public prerequest$ = outer.trigger.pipe(
-				map(
-					(): CombErr<ClipboardNode> => [
-						{
-							copy: outer.sourcePool[ClipboardService.mapper.copy],
-							move: outer.sourcePool[ClipboardService.mapper.move],
-							del: outer.sourcePool[ClipboardService.mapper.del],
-						},
-						[],
-					]
-				)
+				mapTo<number, CombErr<{ clipboard: Clipboard }>>([{ clipboard: outer }, []])
 			);
 		})();
-		this.update$.deploy();
-		this.update$.getOutput().subscribe();
+		this.clipboard$.deploy();
+		this.clipboard$.getOutput().subscribe();
 		this.trigger.next(1);
 	}
 }

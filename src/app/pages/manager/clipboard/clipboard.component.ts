@@ -27,11 +27,9 @@ export class ClipboardComponent implements OnInit {
 	constructor(private service: ClipboardService) {}
 
 	ngOnInit() {
-		this.service.update$.getOutput().subscribe((node) => {
+		this.service.clipboard$.getOutput().subscribe((node) => {
 			if (node[1].length !== 0) return;
-			this.data[ClipboardService.mapper['copy']].len = node[0].copy.size;
-			this.data[ClipboardService.mapper['move']].len = node[0].move.size;
-			this.data[ClipboardService.mapper['del']].len = node[0].del.size;
+			this.data.forEach((x) => (x.len = node[0].clipboard.countManipulation(x.oper)));
 		});
 	}
 }
