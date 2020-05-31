@@ -2,6 +2,7 @@ import { Component, OnInit, Input } from '@angular/core';
 import { Columns, Config, DefaultConfig } from 'ngx-easy-table';
 import { CoreStatsFlow, ITransferring } from 'src/app/@dataflow/rclone';
 import { FormatBytes } from 'src/app/utils/format-bytes';
+import { ForamtDuration } from 'src/app/utils/format-duration';
 
 @Component({
 	selector: 'jobs-transferring',
@@ -20,9 +21,13 @@ export class TransfersComponent implements OnInit {
 		{ key: 'sizeHumanReadable', title: 'Size' },
 		{ key: 'percentage', title: 'Percentage' },
 		{ key: 'speedHumanReadable', title: 'Speed' },
-		{ key: 'eta', title: 'eta' },
+		{ key: 'etaHumanReadable', title: 'eta' },
 	];
-	public data: (ITransferring & { sizeHumanReadable: string; speedHumanReadable: string })[] = [];
+	public data: (ITransferring & {
+		sizeHumanReadable: string;
+		speedHumanReadable: string;
+		etaHumanReadable: string;
+	})[] = [];
 
 	constructor() {}
 
@@ -34,6 +39,9 @@ export class TransfersComponent implements OnInit {
 			this.data.forEach((x) => {
 				x.sizeHumanReadable = FormatBytes(x.size, 3);
 				x.speedHumanReadable = FormatBytes(x.speed) + '/s';
+				if (typeof x.eta === 'number')
+					x.etaHumanReadable = ForamtDuration.humanize(x.eta * 1000, { largest: 3 });
+				else x.etaHumanReadable = '-';
 			});
 		});
 

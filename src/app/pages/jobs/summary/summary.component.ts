@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { CoreStatsFlow, CoreStatsFlowOutItemNode } from 'src/app/@dataflow/rclone';
 import { FormatBytes } from 'src/app/utils/format-bytes';
-import { HumanizeDurationLanguage, HumanizeDuration } from 'humanize-duration-ts';
+import { ForamtDuration } from 'src/app/utils/format-duration';
 
 @Component({
 	selector: 'jobs-summary',
@@ -51,22 +51,7 @@ export class SummaryComponent implements OnInit {
 		durationHumanReadable: string;
 	} = {} as any;
 
-	private langService: HumanizeDurationLanguage = new HumanizeDurationLanguage();
-	private Duration: HumanizeDuration;
-	constructor() {
-		this.langService.addLanguage('shortEn', {
-			y: () => 'y',
-			mo: () => 'mo',
-			w: () => 'w',
-			d: () => 'd',
-			h: () => 'h',
-			m: () => 'm',
-			s: () => 's',
-			ms: () => 'ms',
-			decimal: '',
-		});
-		this.Duration = new HumanizeDuration(this.langService);
-	}
+	constructor() {}
 	isDefine(val: any) {
 		return typeof val !== 'undefined';
 	}
@@ -77,7 +62,7 @@ export class SummaryComponent implements OnInit {
 			this.values = JSON.parse(JSON.stringify(x['core-stats']));
 			this.values.bytesHumanReadable = FormatBytes(this.values.bytes, 4);
 			this.values.speedHumanReadable = FormatBytes(this.values.speed, 4) + '/s';
-			this.values.durationHumanReadable = this.Duration.humanize(this.values.elapsedTime * 1000, {
+			this.values.durationHumanReadable = ForamtDuration.humanize(this.values.elapsedTime * 1000, {
 				language: 'shortEn',
 				round: true,
 			});
