@@ -5,16 +5,12 @@ import { CombErr } from 'src/app/@dataflow/core';
 import { map, withLatestFrom } from 'rxjs/operators';
 import { HomeModeComponent } from './homeMode/homeMode.component';
 import { NbDialogService } from '@nebular/theme';
-import {
-	OperationsMkdirFlow,
-	OperationsMkdirFlowInNode,
-	OperationsCopyfileFlow,
-} from 'src/app/@dataflow/rclone';
+import { OperationsMkdirFlow, OperationsMkdirFlowInNode } from 'src/app/@dataflow/rclone';
 import { ConnectionService } from '../connection.service';
 import { NbToastrService } from '@nebular/theme';
 import { FileModeComponent } from './fileMode/fileMode.component';
 import { ClipboardService } from './clipboard/clipboard.service';
-import { TaskService } from './task.service';
+import { TaskService } from './tasks/task.service';
 
 @Component({
 	selector: 'app-manager',
@@ -88,6 +84,27 @@ import { TaskService } from './task.service';
 						</nb-card-header>
 						<nb-card-body>
 							<manager-clipboard> </manager-clipboard>
+						</nb-card-body>
+					</nb-card>
+				</ng-template>
+				<nb-action
+					*ngIf="orderCnt !== 0"
+					style="padding-right: 1.5rem;padding-left: 0.5rem;"
+					(click)="dialog(tasksDialog)"
+				>
+					<nb-icon icon="email-outline" style="font-size: 1.5rem"> </nb-icon>
+					<nb-badge [text]="orderCnt" status="info" position="top end"></nb-badge>
+				</nb-action>
+				<ng-template #tasksDialog>
+					<nb-card class="clipboard">
+						<nb-card-header>
+							<nb-action>
+								<nb-icon icon="email-outline" class="clipboard-icon"></nb-icon>
+							</nb-action>
+							Tasks
+						</nb-card-header>
+						<nb-card-body>
+							<manager-tasks> </manager-tasks>
 						</nb-card-body>
 					</nb-card>
 				</ng-template>
@@ -241,11 +258,20 @@ export class ManagerComponent implements OnInit {
 		this.pasteTrigger.next(1);
 	}
 
+	public orderCnt = 0;
+	private tasksDeploy() {
+		this.taskService.detail$.getOutput().subscribe((x) => {
+			if (x[1].length !== 0) return;
+			this.orderCnt = x[0].order.size + x[0].failure.size;
+		});
+	}
+
 	ngOnInit(): void {
 		this.navDeploy();
 		this.mkdirDeploy();
 		this.clipboardDeploy();
 		this.pasteDeploy();
+		this.tasksDeploy();
 	}
 
 	dialog(dialog: TemplateRef<any>) {

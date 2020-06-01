@@ -17,6 +17,7 @@ import {
 	NbTooltipModule,
 	NbBadgeModule,
 	NbTabsetModule,
+	NbAccordionModule,
 } from '@nebular/theme';
 import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
 import { HomeModeComponent } from './homeMode/homeMode.component';
@@ -26,6 +27,7 @@ import { TableModule } from 'ngx-easy-table';
 import { ListViewComponent } from './fileMode/listView/listView.component';
 import { ClipboardComponent } from './clipboard/clipboard.component';
 import { ClipboardRemotesTableComponent } from './clipboard/clipboard-remotes-table/clipboard-remotes-table.component';
+import { TasksComponent } from './tasks/tasks.component';
 
 @NgModule({
 	declarations: [
@@ -37,6 +39,7 @@ import { ClipboardRemotesTableComponent } from './clipboard/clipboard-remotes-ta
 		ListViewComponent,
 		ClipboardComponent,
 		ClipboardRemotesTableComponent,
+		TasksComponent,
 	],
 	imports: [
 		CommonModule,
@@ -55,6 +58,7 @@ import { ClipboardRemotesTableComponent } from './clipboard/clipboard-remotes-ta
 		NbTooltipModule,
 		NbBadgeModule,
 		NbTabsetModule,
+		NbAccordionModule,
 	],
 })
 export class ManagerModule {}

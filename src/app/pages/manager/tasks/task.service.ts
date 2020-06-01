@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { OperationsCopyfileFlow, OperationsCopyfileFlowInNode } from 'src/app/@dataflow/rclone';
-import { ClipboardService, Clipboard, ClipboardItem } from './clipboard/clipboard.service';
+import { ClipboardService, Clipboard, ClipboardItem } from '../clipboard/clipboard.service';
 import { Subject, from, Observable } from 'rxjs';
 import {
 	withLatestFrom,
@@ -10,12 +10,18 @@ import {
 	filter,
 	map,
 	zip,
-	debounceTime,
 	mapTo,
+	sampleTime,
 } from 'rxjs/operators';
-import { ConnectionService } from '../connection.service';
+import { ConnectionService } from '../../connection.service';
 import { CombErr, NothingFlow } from 'src/app/@dataflow/core';
 import { NavigationFlowOutNode } from 'src/app/@dataflow/extra';
+
+export interface TasksPoolNode {
+	failure: Clipboard;
+	order: Clipboard;
+}
+export abstract class TasksPoolFlow extends NothingFlow<TasksPoolNode> {}
 
 @Injectable({
 	providedIn: 'root',
@@ -92,13 +98,47 @@ export class TaskService {
 				this.tasksPool.pop(y.srcRemote, y.srcItem.Path); // TODO: replase as del rather pop, for perf
 				this.emptySlot++;
 				if (x[1].length !== 0) this.tasksFailure.add(y.oper, y.srcRemote, y.srcItem, y.dst);
+				this.detailTrigger.next(1);
 				this.postTrigger.next(1);
 			});
+	}
+
+	private detailTrigger = new Subject<number>();
+	public detail$: TasksPoolFlow;
+	private deployDetail() {
+		const outer = this;
+		this.detail$ = new (class extends TasksPoolFlow {
+			public prerequest$: Observable<CombErr<TasksPoolNode>> = outer.detailTrigger.pipe(
+				sampleTime(1000),
+				mapTo<number, CombErr<TasksPoolNode>>([
+					{
+						order: outer.tasksPool,
+						failure: outer.tasksFailure,
+					},
+					[],
+				])
+			);
+		})();
+		this.detail$.deploy();
+	}
+
+	public retryFailureTasks() {
+		this.tasksFailure.values.forEach((v) => {
+			this.tasksPool.add(v.oper, v.srcRemote, v.srcItem, v.dst);
+		});
+		this.removeFailureTasks();
+		this.postTrigger.next(1);
+	}
+
+	public removeFailureTasks() {
+		this.tasksPool.clear();
+		this.detailTrigger.next(1);
 	}
 
 	constructor(private cbService: ClipboardService, private connectService: ConnectionService) {
 		this.deployCreate();
 		this.deployPost();
 		this.deployCopyFile();
+		this.deployDetail();
 	}
 }
