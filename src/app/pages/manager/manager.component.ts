@@ -250,7 +250,7 @@ export class ManagerComponent implements OnInit {
 	private pasteDeploy() {
 		this.pasteTrigger.pipe(withLatestFrom(this.nav$.getOutput())).subscribe(([, dstNode]) => {
 			if (dstNode[1].length !== 0) throw Error("can't not get destination.");
-			this.taskService.createTask(dstNode[0]);
+			this.taskService.createTask(dstNode[0], 'copy', 'move');
 		});
 	}
 

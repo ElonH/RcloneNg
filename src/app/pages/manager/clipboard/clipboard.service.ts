@@ -62,8 +62,14 @@ export class Clipboard {
 		return this.data.size;
 	}
 
-	public clear() {
-		this.data.clear();
+	public clear(...opers: IManipulate[]) {
+		if (opers.length === 0) this.data.clear();
+		else
+			this.values
+				.filter((x) => opers.some((y) => x.oper === y))
+				.forEach((x) => {
+					this.data.delete(x.key);
+				});
 	}
 
 	public static genKey(remote: string, path: string) {

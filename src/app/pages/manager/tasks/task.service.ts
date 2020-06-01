@@ -6,7 +6,12 @@ import {
 	OperationsMovefileFlow,
   OperationsMovefileFlowInNode,
 } from 'src/app/@dataflow/rclone';
-import { ClipboardService, Clipboard, ClipboardItem } from '../clipboard/clipboard.service';
+import {
+	ClipboardService,
+	Clipboard,
+	ClipboardItem,
+	IManipulate,
+} from '../clipboard/clipboard.service';
 import { Subject, from, Observable } from 'rxjs';
 import {
 	withLatestFrom,
@@ -33,20 +38,20 @@ export abstract class TasksPoolFlow extends NothingFlow<TasksPoolNode> {}
 	providedIn: 'root',
 })
 export class TaskService {
-	private createTrigger = new Subject<NavigationFlowOutNode>();
-	public createTask(dst: NavigationFlowOutNode) {
-		this.createTrigger.next(dst);
+	private createTrigger = new Subject<[NavigationFlowOutNode, IManipulate[]]>();
+	public createTask(dst: NavigationFlowOutNode, ...opers: IManipulate[]) {
+		this.createTrigger.next([dst, opers]);
 	}
 
 	private deployCreate() {
 		this.createTrigger
 			.pipe(withLatestFrom(this.cbService.clipboard$.getOutput()))
-			.subscribe(([dst, cbNode]) => {
+			.subscribe(([[dst, opers], cbNode]) => {
 				if (cbNode[1].length !== 0) return;
-				cbNode[0].clipboard.values.forEach((x) =>
-					this.tasksPool.add(x.oper, x.srcRemote, x.srcItem, dst)
-				);
-				this.cbService.clear();
+				cbNode[0].clipboard.values
+					.filter((x) => opers.some((y) => y === x.oper))
+					.forEach((x) => this.tasksPool.add(x.oper, x.srcRemote, x.srcItem, dst));
+				this.cbService.clear(...opers);
 				this.cbService.commit();
 				this.postTrigger.next(1);
 			});
