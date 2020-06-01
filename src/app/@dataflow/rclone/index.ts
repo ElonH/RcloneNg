@@ -10,3 +10,4 @@ export * from './operations-mkdir-flow';
 export * from './async-post-flow';
 export * from './operations-copyfile-flow';
 export * from './operations-movefile-flow';
+export * from './operations-deletefile-flow';

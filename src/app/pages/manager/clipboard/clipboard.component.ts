@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { ClipboardService, IManipulate } from './clipboard.service';
 
 @Component({
@@ -12,6 +12,12 @@ import { ClipboardService, IManipulate } from './clipboard.service';
 				[badgeText]="tab.len"
 				badgeStatus="primary"
 			>
+				<ng-container *ngIf="tab.oper === 'del'">
+					<button nbButton status="danger" (click)="onDeleteConfirm.emit()">
+						<nb-icon icon="alert-triangle"></nb-icon>
+						Confirm
+					</button>
+				</ng-container>
 				<clipboard-remotes-table [oper]="tab.oper"> </clipboard-remotes-table>
 			</nb-tab>
 		</nb-tabset>
@@ -32,4 +38,6 @@ export class ClipboardComponent implements OnInit {
 			this.data.forEach((x) => (x.len = node[0].clipboard.countManipulation(x.oper)));
 		});
 	}
+
+	@Output() onDeleteConfirm = new EventEmitter();
 }

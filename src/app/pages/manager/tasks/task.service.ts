@@ -4,7 +4,9 @@ import {
 	OperationsCopyfileFlowInNode,
 	AsyncPostFlowOutNode,
 	OperationsMovefileFlow,
-  OperationsMovefileFlowInNode,
+	OperationsMovefileFlowInNode,
+	OperationsDeletefileFlowInNode,
+	OperationsDeletefileFlow,
 } from 'src/app/@dataflow/rclone';
 import {
 	ClipboardService,
@@ -152,6 +154,37 @@ export class TaskService {
 			});
 	}
 
+	private deleteFile$: OperationsDeletefileFlow;
+	private deployDeleteFile() {
+		const outer = this;
+		const taskReal$ = outer.post$.pipe(filter((x) => x.oper === 'del' && !x.srcItem.IsDir));
+		this.deleteFile$ = new (class extends OperationsDeletefileFlow {
+			public prerequest$ = taskReal$.pipe(
+				withLatestFrom(outer.connectService.listCmd$.verify(this.cmd)),
+				map(
+					([item, cmdNode]): CombErr<OperationsDeletefileFlowInNode> => {
+						if (cmdNode[1].length !== 0) return [{}, cmdNode[1]] as any;
+						return [
+							{
+								...cmdNode[0],
+								srcFs: `${item.srcRemote}:`,
+								srcRemote: item.srcItem.Path,
+							},
+							[],
+						];
+					}
+				)
+			);
+		})();
+		this.deleteFile$.deploy();
+		this.deleteFile$
+			.getOutput()
+			.pipe(zip(taskReal$))
+			.subscribe((x) => {
+				this.postAfter(...x);
+			});
+	}
+
 	private detailTrigger = new Subject<number>();
 	public detail$: TasksPoolFlow;
 	private deployDetail() {
@@ -189,6 +222,7 @@ export class TaskService {
 		this.deployPost();
 		this.deployCopyFile();
 		this.deployMoveFile();
+		this.deployDeleteFile();
 		this.deployDetail();
 	}
 }

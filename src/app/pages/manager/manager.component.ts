@@ -9,7 +9,7 @@ import { OperationsMkdirFlow, OperationsMkdirFlowInNode } from 'src/app/@dataflo
 import { ConnectionService } from '../connection.service';
 import { NbToastrService } from '@nebular/theme';
 import { FileModeComponent } from './fileMode/fileMode.component';
-import { ClipboardService } from './clipboard/clipboard.service';
+import { ClipboardService, IManipulate } from './clipboard/clipboard.service';
 import { TaskService } from './tasks/task.service';
 
 @Component({
@@ -83,7 +83,7 @@ import { TaskService } from './tasks/task.service';
 							Clipboard
 						</nb-card-header>
 						<nb-card-body>
-							<manager-clipboard> </manager-clipboard>
+							<manager-clipboard (onDeleteConfirm)="del()"> </manager-clipboard>
 						</nb-card-body>
 					</nb-card>
 				</ng-template>
@@ -246,16 +246,20 @@ export class ManagerComponent implements OnInit {
 		});
 	}
 
-	private pasteTrigger = new Subject<number>();
+	private pasteTrigger = new Subject<IManipulate[]>();
 	private pasteDeploy() {
-		this.pasteTrigger.pipe(withLatestFrom(this.nav$.getOutput())).subscribe(([, dstNode]) => {
+		this.pasteTrigger.pipe(withLatestFrom(this.nav$.getOutput())).subscribe(([opers, dstNode]) => {
 			if (dstNode[1].length !== 0) throw Error("can't not get destination.");
-			this.taskService.createTask(dstNode[0], 'copy', 'move');
+			this.taskService.createTask(dstNode[0], ...opers);
 		});
 	}
 
 	paste() {
-		this.pasteTrigger.next(1);
+		this.pasteTrigger.next(['copy', 'move']);
+	}
+
+	del() {
+		this.pasteTrigger.next(['del']);
 	}
 
 	public orderCnt = 0;
