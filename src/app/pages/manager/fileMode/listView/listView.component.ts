@@ -37,9 +37,9 @@ import { combineLatest } from 'rxjs/operators';
 			[selectAllTemplate]="secAll"
 			(event)="eventEmitted($event)"
 		>
-			<ng-template let-row let-index="index">
+			<ng-template let-row>
 				<td>
-					<nb-checkbox [(checked)]="check[index]" (checkedChange)="onToggle()"> </nb-checkbox>
+					<nb-checkbox [(checked)]="row.check" (checkedChange)="onToggle()"> </nb-checkbox>
 					<!-- todo: disable double click event here-->
 				</td>
 				<td>
@@ -83,19 +83,18 @@ export class ListViewComponent implements OnInit, OnDestroy {
 	];
 
 	public data: (OperationsListFlowOutItemNode & {
+		check: boolean;
 		SizeHumanReadable: string;
 		ModTimeHumanReadable: string;
 		ModTimeMoment: moment.Moment;
 		TypeIcon: string;
 		ManipulateIcon: string;
 	})[];
-	public check: boolean[];
 	public checkAll = false;
 	public checAllInteral = false;
 
 	@ViewChild('table') table: APIDefinition;
 	resetCurrentPage() {
-		this.check = [];
 		this.checkAll = false;
 		this.table.apiEvent({
 			type: API.setPaginationCurrentPage,
@@ -120,13 +119,12 @@ export class ListViewComponent implements OnInit, OnDestroy {
 	}
 
 	onToggleAll(val: boolean) {
-		this.check = this.check.map(() => val);
+		this.data.forEach((x) => (x.check = val));
 		this.checAllInteral = false;
 	}
 	onToggle() {
-		let sum = 0;
-		this.check.forEach((x) => (sum += x ? 1 : 0));
-		if (sum === this.check.length) {
+		const sum = this.data.map((x) => +!!x.check).reduce((x, y) => x + y);
+		if (sum === this.data.length) {
 			this.checkAll = true;
 			this.checAllInteral = false;
 		} else if (sum === 0) {
@@ -139,11 +137,11 @@ export class ListViewComponent implements OnInit, OnDestroy {
 	}
 
 	manipulate(o: IManipulate) {
-		this.check.forEach((x, i) => {
-			if (!x) return;
-			this.clipboardService.add(o, this.remote, this.data[i]);
-			this.check[i] = false;
-			this.data[i].ManipulateIcon = this.manipulate2Icon(o);
+		this.data.forEach((x) => {
+			if (!x.check) return;
+			this.clipboardService.add(o, this.remote, x);
+			x.check = false;
+			x.ManipulateIcon = this.manipulate2Icon(o);
 		});
 		this.onToggle();
 	}
@@ -161,12 +159,12 @@ export class ListViewComponent implements OnInit, OnDestroy {
 			.subscribe(([listNode, cbNode]) => {
 				if (listNode[1].length !== 0 || cbNode[1].length !== 0) {
 					this.data = undefined;
-					this.check = [];
 					this.checkAll = false;
 				}
 				this.remote = listNode[0].remote;
 				this.data = listNode[0].list as any;
 				this.data.forEach((item) => {
+					item.check = false;
 					item.SizeHumanReadable = FormatBytes(item.Size);
 					item.ModTimeMoment = moment(item.ModTime);
 					item.ModTimeHumanReadable = item.ModTimeMoment.fromNow();
@@ -176,7 +174,6 @@ export class ListViewComponent implements OnInit, OnDestroy {
 					if (item.IsDir) item.TypeIcon = getIconForFolder(item.Name);
 					else item.TypeIcon = getIconForFile(item.Name);
 				});
-				this.check = listNode[0].list.map(() => false);
 				this.checkAll = false;
 			});
 
