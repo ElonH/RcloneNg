@@ -2,6 +2,40 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.2](https://github.com/ElonH/RcloneNg/compare/v0.2.1...v0.2.2) (2020-06-01)
+
+
+### Features
+
+* **clipboard:** a task storage center ([7a3713f](https://github.com/ElonH/RcloneNg/commit/7a3713f4588f97869d69d62d382d9b1acf0ed358))
+* **delete-file-flow:** enable delete file now ([9cefd41](https://github.com/ElonH/RcloneNg/commit/9cefd41c3e565a0714a9a77b7bbe3f68c17aa402))
+* **move-file-flow:** enable move file now ([2b2a94d](https://github.com/ElonH/RcloneNg/commit/2b2a94d6b6ed86c3e5a1fdcc67e7a3d2860f570d))
+* **operation-purge-flow:** enable delete directory now ([e7e49e5](https://github.com/ElonH/RcloneNg/commit/e7e49e584558ffc901c83da6cb886a1161973260))
+* **sync-copy-flow:** enable copy directory now ([2512fc5](https://github.com/ElonH/RcloneNg/commit/2512fc5b5781be44b7584ca1898796992009a417))
+* **sync-move-flow:** enable move directory now ([7e7dd78](https://github.com/ElonH/RcloneNg/commit/7e7dd7858c57cfa3e32eb6f114cf1faf40fba52c))
+* **task-component:** a task manager ([749d31b](https://github.com/ElonH/RcloneNg/commit/749d31b170bf7427bf7b26ad18ce6bab1e57e076))
+* **tasks-pool:** a daemon service for posting tasks to rclone server ([c534ff1](https://github.com/ElonH/RcloneNg/commit/c534ff1b0a6ee3ed37069e9b85176a60704f5e79))
+
+
+### Bug Fixes
+
+* **format-bytes:** fix format error when 0 < input < 1 ([b408816](https://github.com/ElonH/RcloneNg/commit/b40881681d8a25f1cad6e7fd60db07ba6d782589))
+* **format-bytes:** handle bytes variable undefined ([1b227a9](https://github.com/ElonH/RcloneNg/commit/1b227a9d71085e849e56a2c8be2662f93147c712))
+* **list-view:** check index not synchronize with table index after sort ([0cb442d](https://github.com/ElonH/RcloneNg/commit/0cb442db8f249d89a1a0875298176125e9d451f0))
+* **list-view:** sort work around ([823c4a7](https://github.com/ElonH/RcloneNg/commit/823c4a773e641d9b02390e462c761327e56e0b9c))
+* **main-sidebar:** main header over main sidebar ([a4f1495](https://github.com/ElonH/RcloneNg/commit/a4f1495fabd29bd7d15585cf4a179e738e80bd33))
+* **manager:** paste only trigger copy and move, not include delete ([180ff3a](https://github.com/ElonH/RcloneNg/commit/180ff3a9b49e3c4c6787a99f896184ee7dec65e4))
+* **speed-chart:** format to human readable data ([5c3b532](https://github.com/ElonH/RcloneNg/commit/5c3b5321d9aae57c83b06e919957558d53a09d61))
+* **speed-diff:** make value human-readable ([fdecc54](https://github.com/ElonH/RcloneNg/commit/fdecc54e725d838d9cb0aaabcd4fb2c12af46eb1))
+* **summary:** make Duration human-readable ([93c1786](https://github.com/ElonH/RcloneNg/commit/93c17863c268725f4c239a66e631c9b065e267c5))
+* **summary:** make speed and bytes human-readable ([721dd71](https://github.com/ElonH/RcloneNg/commit/721dd718899343ffb6705504a6f2fa3b0b252f43))
+* **summary:** more accurate in speed statistics ([c72d90a](https://github.com/ElonH/RcloneNg/commit/c72d90a15983f455f7929996507b994dde75f6a2))
+* cancel distinctUntilChanged before getoutput or getSuperset ([dd64a31](https://github.com/ElonH/RcloneNg/commit/dd64a3182394c86012652836a77345da99a8d94e))
+* **tooltip:** scale icon size ([90b0eaa](https://github.com/ElonH/RcloneNg/commit/90b0eaaea34987cad7d08be6f922d50afd7a632e))
+* **transferring:** format eta ([e1dc691](https://github.com/ElonH/RcloneNg/commit/e1dc6915ec9bafb80284c18dc94466ca1d6b9562))
+* **transferring:** make speed and size human-readable ([43bcaba](https://github.com/ElonH/RcloneNg/commit/43bcaba4b33f958879ace84a740d32f3a5af06a6))
+* **transferring:** sort incorrect ([bab48c7](https://github.com/ElonH/RcloneNg/commit/bab48c721d8c774c20e1194eb5910c2d466e2850))
+
 ### [0.2.1](https://github.com/ElonH/RcloneNg/compare/v0.2.0...v0.2.1) (2020-05-29)
 
 
