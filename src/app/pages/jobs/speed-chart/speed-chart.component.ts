@@ -1,13 +1,13 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
-import { CoreStatsFlow } from 'src/app/@dataflow/rclone';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { ChartDataSets, ChartOptions, ChartPoint } from 'chart.js';
-import { Color, BaseChartDirective } from 'ng2-charts';
 import * as moment from 'moment';
+import { BaseChartDirective, Color } from 'ng2-charts';
 import { pairwise } from 'rxjs/operators';
-import { FormatBytes } from 'src/app/utils/format-bytes';
+import { CoreStatsFlow } from '../../../@dataflow/rclone';
+import { FormatBytes } from '../../../utils/format-bytes';
 
 @Component({
-	selector: 'jobs-speed-chart',
+	selector: 'app-jobs-speed-chart',
 	template: `
 		<div class="chart-container">
 			<canvas
@@ -17,7 +17,7 @@ import { FormatBytes } from 'src/app/utils/format-bytes';
 				[colors]="lineChartColors"
 				chartType="line"
 			></canvas>
-			<jobs-speed-diff [val]="speedDiff"> </jobs-speed-diff>
+			<app-jobs-speed-diff [val]="speedDiff"> </app-jobs-speed-diff>
 		</div>
 	`,
 	styles: [
@@ -88,8 +88,8 @@ export class SpeedChartComponent implements OnInit {
 		tooltips: {
 			mode: 'index',
 			callbacks: {
-				label: function (tooltipItem, data) {
-					var label = data.datasets[tooltipItem.datasetIndex].label || '';
+				label(tooltipItem, data) {
+					let label = data.datasets[tooltipItem.datasetIndex].label || '';
 					if (label) {
 						label += ': ';
 					}
@@ -137,7 +137,7 @@ export class SpeedChartComponent implements OnInit {
 						padding: -83, // moving label into dataset
 						min: 0,
 						beginAtZero: true,
-						callback: function (value) {
+						callback(value) {
 							if (typeof value === 'number') return FormatBytes(value) + '/s';
 							return value;
 						},
@@ -182,14 +182,14 @@ export class SpeedChartComponent implements OnInit {
 
 	ngOnInit() {
 		const statsOut = this.stats$.getOutput();
-		statsOut.subscribe((node) => {
+		statsOut.subscribe(node => {
 			if (node[1].length !== 0) return;
 			const time = moment();
-			let speed = 0,
-				avg = 0;
+			let speed = 0;
+			let avg = 0;
 			if (node[0]['core-stats'].transferring) {
-				node[0]['core-stats'].transferring.forEach((x) => (avg += x.speedAvg));
-				node[0]['core-stats'].transferring.forEach((x) => (speed += x.speed));
+				node[0]['core-stats'].transferring.forEach(x => (avg += x.speedAvg));
+				node[0]['core-stats'].transferring.forEach(x => (speed += x.speed));
 			}
 			const speedData = this.lineChartData[0].data as ChartPoint[];
 			const avgData = this.lineChartData[1].data as ChartPoint[];

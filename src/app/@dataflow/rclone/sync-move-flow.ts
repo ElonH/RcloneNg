@@ -1,5 +1,5 @@
-import { IRcloneServer } from '../extra';
 import { CombErr } from '../core';
+import { IRcloneServer } from '../extra';
 import { AsyncPostFlow, AsyncPostFlowParamsNode } from './async-post-flow';
 
 export interface SyncMoveFlowParamsNode extends AsyncPostFlowParamsNode {
@@ -17,7 +17,8 @@ export abstract class SyncMoveFlow extends AsyncPostFlow<
 	SyncMoveFlowParamsNode
 > {
 	// public prerequest$: Observable<CombErr<SyncMoveFlowInNode>>;
-	protected cmd: string = 'sync/move';
+	protected cmd = 'sync/move';
+	protected cacheSupport = false;
 	protected params = (pre: CombErr<SyncMoveFlowInNode>): SyncMoveFlowParamsNode => {
 		if (pre[1].length !== 0) return {} as any;
 		return {
@@ -26,5 +27,4 @@ export abstract class SyncMoveFlow extends AsyncPostFlow<
 			deleteEmptySrcDirs: pre[0].deleteEmptySrcDirs,
 		};
 	};
-	protected cacheSupport: boolean = false;
 }

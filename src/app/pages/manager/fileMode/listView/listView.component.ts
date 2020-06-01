@@ -1,25 +1,24 @@
 import {
 	Component,
-	OnInit,
-	OnDestroy,
-	Input,
-	Output,
 	EventEmitter,
+	Input,
+	OnDestroy,
+	OnInit,
+	Output,
 	ViewChild,
 } from '@angular/core';
-import { Columns, Config, DefaultConfig } from 'ngx-easy-table';
-import { OperationsListFlowOutItemNode, OperationsListFlow } from 'src/app/@dataflow/rclone';
-import { Subscription } from 'rxjs';
-import { NavigationFlowOutNode } from 'src/app/@dataflow/extra';
-import { API, APIDefinition } from 'ngx-easy-table';
-import { FormatBytes } from 'src/app/utils/format-bytes';
 import * as moment from 'moment';
-import { getIconForFile, getIconForFolder } from 'vscode-icons-js';
-import { ClipboardService, IManipulate } from '../../clipboard/clipboard.service';
+import { API, APIDefinition, Columns, Config, DefaultConfig } from 'ngx-easy-table';
+import { Subscription } from 'rxjs';
 import { combineLatest } from 'rxjs/operators';
+import { getIconForFile, getIconForFolder } from 'vscode-icons-js';
+import { NavigationFlowOutNode } from '../../../../@dataflow/extra';
+import { OperationsListFlow, OperationsListFlowOutItemNode } from '../../../../@dataflow/rclone';
+import { FormatBytes } from '../../../../utils/format-bytes';
+import { ClipboardService, IManipulate } from '../../clipboard/clipboard.service';
 
 @Component({
-	selector: 'manager-listView',
+	selector: 'app-manager-list-view',
 	template: `
 		<ng-template #secAll>
 			<nb-checkbox
@@ -72,6 +71,7 @@ import { combineLatest } from 'rxjs/operators';
 	],
 })
 export class ListViewComponent implements OnInit, OnDestroy {
+	constructor(private clipboardService: ClipboardService) {}
 	public configuration: Config;
 	public columns: Columns[] = [
 		{ key: 'manipulation', title: '', width: '3%', searchEnabled: false, orderEnabled: false },
@@ -94,6 +94,13 @@ export class ListViewComponent implements OnInit, OnDestroy {
 	public checAllInteral = false;
 
 	@ViewChild('table') table: APIDefinition;
+
+	@Output() jump = new EventEmitter<NavigationFlowOutNode>();
+	private remote: string;
+
+	@Input() list$: OperationsListFlow;
+
+	private listScrb: Subscription;
 	resetCurrentPage() {
 		this.checkAll = false;
 		this.table.apiEvent({
@@ -101,11 +108,6 @@ export class ListViewComponent implements OnInit, OnDestroy {
 			value: 1,
 		});
 	}
-
-	constructor(private clipboardService: ClipboardService) {}
-
-	@Output() jump = new EventEmitter<NavigationFlowOutNode>();
-	private remote: string;
 	eventEmitted($event: { event: string; value: { row: OperationsListFlowOutItemNode } }): void {
 		// console.log('$event', $event);
 		if ($event.event === 'onDoubleClick') {
@@ -119,11 +121,11 @@ export class ListViewComponent implements OnInit, OnDestroy {
 	}
 
 	onToggleAll(val: boolean) {
-		this.data.forEach((x) => (x.check = val));
+		this.data.forEach(x => (x.check = val));
 		this.checAllInteral = false;
 	}
 	onToggle() {
-		const sum = this.data.map((x) => +!!x.check).reduce((x, y) => x + y);
+		const sum = this.data.map(x => +!!x.check).reduce((x, y) => x + y);
 		if (sum === this.data.length) {
 			this.checkAll = true;
 			this.checAllInteral = false;
@@ -137,7 +139,7 @@ export class ListViewComponent implements OnInit, OnDestroy {
 	}
 
 	manipulate(o: IManipulate) {
-		this.data.forEach((x) => {
+		this.data.forEach(x => {
 			if (!x.check) return;
 			this.clipboardService.add(o, this.remote, x);
 			x.check = false;
@@ -150,8 +152,6 @@ export class ListViewComponent implements OnInit, OnDestroy {
 		return o;
 	}
 
-	@Input() list$: OperationsListFlow;
-
 	ngOnInit() {
 		this.listScrb = this.list$
 			.getSupersetOutput()
@@ -163,7 +163,7 @@ export class ListViewComponent implements OnInit, OnDestroy {
 				}
 				this.remote = listNode[0].remote;
 				this.data = listNode[0].list as any;
-				this.data.forEach((item) => {
+				this.data.forEach(item => {
 					item.check = false;
 					item.SizeHumanReadable = FormatBytes(item.Size);
 					item.ModTimeMoment = moment(item.ModTime);
@@ -171,8 +171,9 @@ export class ListViewComponent implements OnInit, OnDestroy {
 					item.ManipulateIcon = this.manipulate2Icon(
 						cbNode[0].clipboard.getManipulation(this.remote, item.Path)
 					);
-					if (item.IsDir) item.TypeIcon = getIconForFolder(item.Name);
-					else item.TypeIcon = getIconForFile(item.Name);
+					item.TypeIcon = item.IsDir
+						? getIconForFolder(item.Name)
+						: (item.TypeIcon = getIconForFile(item.Name));
 				});
 				this.checkAll = false;
 			});
@@ -183,8 +184,6 @@ export class ListViewComponent implements OnInit, OnDestroy {
 		// this.configuration.isLoading = true;
 		// ... etc.
 	}
-
-	private listScrb: Subscription;
 	ngOnDestroy() {
 		this.listScrb.unsubscribe();
 		this.resetCurrentPage();

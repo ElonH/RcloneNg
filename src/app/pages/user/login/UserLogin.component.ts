@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UsersFlow } from 'src/app/@dataflow/extra';
+import { UsersFlow } from '../../../@dataflow/extra';
 import { CurrentUserService } from '../../current-user.service';
 
 @Component({

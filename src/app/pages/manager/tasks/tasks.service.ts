@@ -1,40 +1,40 @@
 import { Injectable } from '@angular/core';
+import { from, Observable, Subject } from 'rxjs';
 import {
+	filter,
+	map,
+	mapTo,
+	mergeMap,
+	sampleTime,
+	share,
+	takeWhile,
+	withLatestFrom,
+	zip,
+} from 'rxjs/operators';
+import { CombErr, NothingFlow } from '../../../@dataflow/core';
+import { NavigationFlowOutNode } from '../../../@dataflow/extra';
+import {
+	AsyncPostFlowOutNode,
 	OperationsCopyfileFlow,
 	OperationsCopyfileFlowInNode,
-	AsyncPostFlowOutNode,
+	OperationsDeletefileFlow,
+	OperationsDeletefileFlowInNode,
 	OperationsMovefileFlow,
 	OperationsMovefileFlowInNode,
-	OperationsDeletefileFlowInNode,
-	OperationsDeletefileFlow,
+	OperationsPurgeFlow,
+	OperationsPurgeFlowInNode,
 	SyncCopyFlow,
 	SyncCopyFlowInNode,
 	SyncMoveFlow,
 	SyncMoveFlowInNode,
-	OperationsPurgeFlow,
-	OperationsPurgeFlowInNode,
-} from 'src/app/@dataflow/rclone';
+} from '../../../@dataflow/rclone';
+import { ConnectionService } from '../../connection.service';
 import {
-	ClipboardService,
 	Clipboard,
 	ClipboardItem,
+	ClipboardService,
 	IManipulate,
 } from '../clipboard/clipboard.service';
-import { Subject, from, Observable } from 'rxjs';
-import {
-	withLatestFrom,
-	takeWhile,
-	mergeMap,
-	share,
-	filter,
-	map,
-	zip,
-	mapTo,
-	sampleTime,
-} from 'rxjs/operators';
-import { ConnectionService } from '../../connection.service';
-import { CombErr, NothingFlow } from 'src/app/@dataflow/core';
-import { NavigationFlowOutNode } from 'src/app/@dataflow/extra';
 
 export interface TasksPoolNode {
 	failure: Clipboard;
@@ -46,7 +46,41 @@ export abstract class TasksPoolFlow extends NothingFlow<TasksPoolNode> {}
 	providedIn: 'root',
 })
 export class TaskService {
+	constructor(private cbService: ClipboardService, private connectService: ConnectionService) {
+		this.deployCreate();
+		this.deployPost();
+		this.deployCopyFile();
+		this.deployMoveFile();
+		this.deployDeleteFile();
+		this.deploySyncCopy();
+		this.deploySyncMove();
+		this.deployPurge();
+		this.deployDetail();
+	}
 	private createTrigger = new Subject<[NavigationFlowOutNode, IManipulate[]]>();
+
+	private tasksPool = new Clipboard(); // TODO: rename Clipboard to RngClipboar, for avoiding name conffict
+	private tasksFailure = new Clipboard();
+
+	private postTrigger = new Subject<number>();
+	private post$: Observable<ClipboardItem>;
+	public postConcurrentCount = 1;
+	private emptySlot = this.postConcurrentCount;
+
+	private copyFile$: OperationsCopyfileFlow;
+
+	private moveFile$: OperationsMovefileFlow;
+
+	private deleteFile$: OperationsDeletefileFlow;
+
+	private syncCopy$: SyncCopyFlow;
+
+	private syncMove$: SyncMoveFlow;
+
+	private purge$: OperationsPurgeFlow;
+
+	private detailTrigger = new Subject<number>();
+	public detail$: TasksPoolFlow;
 	public createTask(dst: NavigationFlowOutNode, ...opers: IManipulate[]) {
 		this.createTrigger.next([dst, opers]);
 	}
@@ -57,21 +91,13 @@ export class TaskService {
 			.subscribe(([[dst, opers], cbNode]) => {
 				if (cbNode[1].length !== 0) return;
 				cbNode[0].clipboard.values
-					.filter((x) => opers.some((y) => y === x.oper))
-					.forEach((x) => this.tasksPool.add(x.oper, x.srcRemote, x.srcItem, dst));
+					.filter(x => opers.some(y => y === x.oper))
+					.forEach(x => this.tasksPool.add(x.oper, x.srcRemote, x.srcItem, dst));
 				this.cbService.clear(...opers);
 				this.cbService.commit();
 				this.postTrigger.next(1);
 			});
 	}
-
-	private tasksPool = new Clipboard(); //TODO: rename Clipboard to RngClipboar, for avoiding name conffict
-	private tasksFailure = new Clipboard();
-
-	private postTrigger = new Subject<number>();
-	private post$: Observable<ClipboardItem>;
-	public postConcurrentCount = 1;
-	private emptySlot = this.postConcurrentCount;
 	private deployPost() {
 		this.post$ = this.postTrigger.pipe(
 			takeWhile(() => this.emptySlot > 0 && this.tasksPool.size > 0),
@@ -84,11 +110,9 @@ export class TaskService {
 			share()
 		);
 	}
-
-	private copyFile$: OperationsCopyfileFlow;
 	private deployCopyFile() {
 		const outer = this;
-		const taskReal$ = outer.post$.pipe(filter((x) => x.oper === 'copy' && !x.srcItem.IsDir));
+		const taskReal$ = outer.post$.pipe(filter(x => x.oper === 'copy' && !x.srcItem.IsDir));
 		this.copyFile$ = new (class extends OperationsCopyfileFlow {
 			public prerequest$ = taskReal$.pipe(
 				withLatestFrom(outer.connectService.listCmd$.verify(this.cmd)),
@@ -113,7 +137,7 @@ export class TaskService {
 		this.copyFile$
 			.getOutput()
 			.pipe(zip(taskReal$))
-			.subscribe((x) => {
+			.subscribe(x => {
 				this.postAfter(...x);
 			});
 	}
@@ -126,11 +150,9 @@ export class TaskService {
 		this.detailTrigger.next(1);
 		this.postTrigger.next(1);
 	}
-
-	private moveFile$: OperationsMovefileFlow;
 	private deployMoveFile() {
 		const outer = this;
-		const taskReal$ = outer.post$.pipe(filter((x) => x.oper === 'move' && !x.srcItem.IsDir));
+		const taskReal$ = outer.post$.pipe(filter(x => x.oper === 'move' && !x.srcItem.IsDir));
 		this.moveFile$ = new (class extends OperationsMovefileFlow {
 			public prerequest$ = taskReal$.pipe(
 				withLatestFrom(outer.connectService.listCmd$.verify(this.cmd)),
@@ -155,15 +177,13 @@ export class TaskService {
 		this.moveFile$
 			.getOutput()
 			.pipe(zip(taskReal$))
-			.subscribe((x) => {
+			.subscribe(x => {
 				this.postAfter(...x);
 			});
 	}
-
-	private deleteFile$: OperationsDeletefileFlow;
 	private deployDeleteFile() {
 		const outer = this;
-		const taskReal$ = outer.post$.pipe(filter((x) => x.oper === 'del' && !x.srcItem.IsDir));
+		const taskReal$ = outer.post$.pipe(filter(x => x.oper === 'del' && !x.srcItem.IsDir));
 		this.deleteFile$ = new (class extends OperationsDeletefileFlow {
 			public prerequest$ = taskReal$.pipe(
 				withLatestFrom(outer.connectService.listCmd$.verify(this.cmd)),
@@ -186,15 +206,13 @@ export class TaskService {
 		this.deleteFile$
 			.getOutput()
 			.pipe(zip(taskReal$))
-			.subscribe((x) => {
+			.subscribe(x => {
 				this.postAfter(...x);
 			});
 	}
-
-	private syncCopy$: SyncCopyFlow;
 	private deploySyncCopy() {
 		const outer = this;
-		const taskReal$ = outer.post$.pipe(filter((x) => x.oper === 'copy' && x.srcItem.IsDir));
+		const taskReal$ = outer.post$.pipe(filter(x => x.oper === 'copy' && x.srcItem.IsDir));
 		this.syncCopy$ = new (class extends SyncCopyFlow {
 			public prerequest$ = taskReal$.pipe(
 				withLatestFrom(outer.connectService.listCmd$.verify(this.cmd)),
@@ -217,15 +235,13 @@ export class TaskService {
 		this.syncCopy$
 			.getOutput()
 			.pipe(zip(taskReal$))
-			.subscribe((x) => {
+			.subscribe(x => {
 				this.postAfter(...x);
 			});
 	}
-
-	private syncMove$: SyncMoveFlow;
 	private deploySyncMove() {
 		const outer = this;
-		const taskReal$ = outer.post$.pipe(filter((x) => x.oper === 'move' && x.srcItem.IsDir));
+		const taskReal$ = outer.post$.pipe(filter(x => x.oper === 'move' && x.srcItem.IsDir));
 		this.syncMove$ = new (class extends SyncMoveFlow {
 			public prerequest$ = taskReal$.pipe(
 				withLatestFrom(outer.connectService.listCmd$.verify(this.cmd)),
@@ -249,15 +265,13 @@ export class TaskService {
 		this.syncMove$
 			.getOutput()
 			.pipe(zip(taskReal$))
-			.subscribe((x) => {
+			.subscribe(x => {
 				this.postAfter(...x);
 			});
 	}
-
-	private purge$: OperationsPurgeFlow;
 	private deployPurge() {
 		const outer = this;
-		const taskReal$ = outer.post$.pipe(filter((x) => x.oper === 'del' && x.srcItem.IsDir));
+		const taskReal$ = outer.post$.pipe(filter(x => x.oper === 'del' && x.srcItem.IsDir));
 		this.purge$ = new (class extends OperationsPurgeFlow {
 			public prerequest$ = taskReal$.pipe(
 				withLatestFrom(outer.connectService.listCmd$.verify(this.cmd)),
@@ -280,13 +294,10 @@ export class TaskService {
 		this.purge$
 			.getOutput()
 			.pipe(zip(taskReal$))
-			.subscribe((x) => {
+			.subscribe(x => {
 				this.postAfter(...x);
 			});
 	}
-
-	private detailTrigger = new Subject<number>();
-	public detail$: TasksPoolFlow;
 	private deployDetail() {
 		const outer = this;
 		this.detail$ = new (class extends TasksPoolFlow {
@@ -305,7 +316,7 @@ export class TaskService {
 	}
 
 	public retryFailureTasks() {
-		this.tasksFailure.values.forEach((v) => {
+		this.tasksFailure.values.forEach(v => {
 			this.tasksPool.add(v.oper, v.srcRemote, v.srcItem, v.dst);
 		});
 		this.removeFailureTasks();
@@ -315,17 +326,5 @@ export class TaskService {
 	public removeFailureTasks() {
 		this.tasksPool.clear();
 		this.detailTrigger.next(1);
-	}
-
-	constructor(private cbService: ClipboardService, private connectService: ConnectionService) {
-		this.deployCreate();
-		this.deployPost();
-		this.deployCopyFile();
-		this.deployMoveFile();
-		this.deployDeleteFile();
-		this.deploySyncCopy();
-		this.deploySyncMove();
-		this.deployPurge();
-		this.deployDetail();
 	}
 }

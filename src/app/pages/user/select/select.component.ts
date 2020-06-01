@@ -1,13 +1,13 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Observable } from 'rxjs';
-import { UsersFlowOutNode } from 'src/app/@dataflow/extra';
-import { map, startWith } from 'rxjs/operators';
-import { CombErr } from 'src/app/@dataflow/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
+import { CombErr } from '../../../@dataflow/core';
+import { UsersFlowOutNode } from '../../../@dataflow/extra';
 import { UsersService } from '../../users.service';
 
 @Component({
-	selector: 'user-select',
+	selector: 'app-user-select',
 	template: `
 		<nb-card>
 			<nb-card-body>
@@ -21,8 +21,8 @@ import { UsersService } from '../../users.service';
 				<button
 					nbButton
 					status="primary"
-					[disabled]="(confirm$ | async) == false"
-					(click)="onConfirm.emit(option.value)"
+					[disabled]="(confirm$ | async) === false"
+					(click)="confirm.emit(option.value)"
 				>
 					Confirm
 				</button>
@@ -44,20 +44,20 @@ export class SelectComponent implements OnInit {
 
 	users$: Observable<CombErr<UsersFlowOutNode>>;
 	@Output()
-	onConfirm: EventEmitter<string> = new EventEmitter();
+	confirm: EventEmitter<string> = new EventEmitter();
 
 	toOptionsList$: Observable<{ name: string; url: string }[]>;
 	confirm$: Observable<boolean>;
 	ngOnInit(): void {
 		this.users$ = this.usersService.usersFlow$.getOutput();
 		this.toOptionsList$ = this.users$.pipe(
-			map((x) => {
+			map(x => {
 				if (x[1].length === 0) return x[0].users;
 				return [];
 			})
 		);
 		this.confirm$ = this.option.valueChanges.pipe(
-			map((x) => x !== ''),
+			map(x => x !== ''),
 			startWith(false)
 		);
 	}

@@ -1,7 +1,7 @@
-import { PostFlow } from './post-flow';
-import { IRcloneServer } from '../extra';
-import { CombErr, AjaxFlowInteralNode } from '../core';
 import { AjaxRequest } from 'rxjs/ajax';
+import { AjaxFlowInteralNode, CombErr } from '../core';
+import { IRcloneServer } from '../extra';
+import { PostFlow } from './post-flow';
 
 export interface NoopAuthFlowOutNode {
 	'response-time': number;
@@ -11,11 +11,11 @@ export interface NoopAuthFlowSupNode extends IRcloneServer, NoopAuthFlowOutNode 
 
 export abstract class NoopAuthFlow extends PostFlow<IRcloneServer, NoopAuthFlowOutNode> {
 	// public prerequest$: Observable<CombErr<IRcloneServer>>;
-	protected cmd: string = 'rc/noopauth';
+	protected cmd = 'rc/noopauth';
 	protected params: object = {};
-	protected cacheSupport: boolean = false;
+	protected cacheSupport = false;
 	protected requestAjax(x: CombErr<IRcloneServer>): AjaxRequest {
-		let ans = super.requestAjax(x);
+		const ans = super.requestAjax(x);
 		ans['body'] = {
 			timestamp: new Date().getTime(),
 		};

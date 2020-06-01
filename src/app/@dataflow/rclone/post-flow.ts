@@ -1,7 +1,7 @@
-import { AjaxRequest, AjaxResponse } from 'rxjs/ajax';
-import { FlowSupNode, FlowOutNode, CombErr, AjaxFlow, FlowInNode } from '../core';
-import { IRcloneServer } from '../extra';
 import { Observable } from 'rxjs';
+import { AjaxRequest, AjaxResponse } from 'rxjs/ajax';
+import { AjaxFlow, CombErr, FlowInNode, FlowOutNode, FlowSupNode } from '../core';
+import { IRcloneServer } from '../extra';
 
 export type AjaxFlowNode = [AjaxResponse | object, Error[]];
 
@@ -18,17 +18,10 @@ export abstract class PostFlow<
 	// }
 	protected abstract cmd: string;
 	protected abstract params: Tparms | ((pre: CombErr<Tin>) => Tparms);
-	/**
-	 * auto-gen based on `cmd` and `params`
-	 *
-	 * @protected
-	 * @type {string}
-	 * @memberof PostFlow
-	 */
 	protected cachePath: string;
 
 	protected requestAjax(x: CombErr<Tin>): AjaxRequest {
-		let headers = {
+		const headers = {
 			'Content-Type': 'application/json',
 		};
 		if (x[0]['user'] && x[0]['user'] !== '' && x[0]['password'] && x[0]['password'] !== '')
@@ -40,8 +33,8 @@ export abstract class PostFlow<
 		return {
 			url: x[0]['url'] + '/' + this.cmd,
 			method: 'POST',
-			headers: headers,
-			body: body,
+			headers,
+			body,
 		};
 	}
 	protected request(pre: CombErr<Tin>): Observable<CombErr<Tout>> {

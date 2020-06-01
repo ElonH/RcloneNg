@@ -1,23 +1,23 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 
-import { UserRoutingModule } from './user-routing.module';
-import { UserComponent } from './user.component';
-import { ConfigComponent } from './config/config.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
-	NbFormFieldModule,
-	NbCardModule,
-	NbIconModule,
-	NbInputModule,
 	NbActionsModule,
 	NbButtonModule,
-	NbStepperModule,
+	NbCardModule,
+	NbFormFieldModule,
+	NbIconModule,
+	NbInputModule,
+	NbListModule,
 	NbRadioModule,
-  NbListModule,
+	NbStepperModule,
 } from '@nebular/theme';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { SelectComponent } from './select/select.component';
+import { ConfigComponent } from './config/config.component';
 import { ConfirmComponent } from './confirm/confirm.component';
+import { SelectComponent } from './select/select.component';
+import { UserRoutingModule } from './user-routing.module';
+import { UserComponent } from './user.component';
 
 @NgModule({
 	declarations: [UserComponent, ConfigComponent, SelectComponent, ConfirmComponent],

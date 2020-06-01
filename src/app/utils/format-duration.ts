@@ -1,4 +1,4 @@
-import { HumanizeDurationLanguage, HumanizeDuration } from 'humanize-duration-ts';
+import { HumanizeDuration, HumanizeDurationLanguage } from 'humanize-duration-ts';
 
 const langService = new HumanizeDurationLanguage();
 langService.addLanguage('shortEn', {

@@ -1,5 +1,5 @@
-import { IRcloneServer } from '../extra';
 import { CombErr } from '../core';
+import { IRcloneServer } from '../extra';
 import { AsyncPostFlow, AsyncPostFlowParamsNode } from './async-post-flow';
 
 export interface OperationsPurgeFlowParamsNode extends AsyncPostFlowParamsNode {
@@ -9,9 +9,7 @@ export interface OperationsPurgeFlowParamsNode extends AsyncPostFlowParamsNode {
 	srcRemote: string;
 }
 
-export interface OperationsPurgeFlowInNode
-	extends OperationsPurgeFlowParamsNode,
-		IRcloneServer {}
+export interface OperationsPurgeFlowInNode extends OperationsPurgeFlowParamsNode, IRcloneServer {}
 
 interface OperationsPurgeFlowInnerParamsNode extends AsyncPostFlowParamsNode {
 	/** a remote name string eg "drive:" */
@@ -25,7 +23,8 @@ export abstract class OperationsPurgeFlow extends AsyncPostFlow<
 	OperationsPurgeFlowInnerParamsNode
 > {
 	// public prerequest$: Observable<CombErr<OperationsPurgeFlowInNode>>;
-	protected cmd: string = 'operations/purge';
+	protected cmd = 'operations/purge';
+	protected cacheSupport = false;
 	protected params = (
 		pre: CombErr<OperationsPurgeFlowInNode>
 	): OperationsPurgeFlowInnerParamsNode => {
@@ -35,5 +34,4 @@ export abstract class OperationsPurgeFlow extends AsyncPostFlow<
 			remote: pre[0].srcRemote,
 		};
 	};
-	protected cacheSupport: boolean = false;
 }

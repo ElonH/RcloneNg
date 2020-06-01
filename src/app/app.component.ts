@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 @Component({
-	selector: 'rng-app',
+	selector: 'app-rng',
 	template: ` <router-outlet></router-outlet> `,
 	styles: [],
 })

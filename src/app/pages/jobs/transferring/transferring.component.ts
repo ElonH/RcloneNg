@@ -1,11 +1,11 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Columns, Config, DefaultConfig } from 'ngx-easy-table';
-import { CoreStatsFlow, ITransferring } from 'src/app/@dataflow/rclone';
-import { FormatBytes } from 'src/app/utils/format-bytes';
-import { ForamtDuration } from 'src/app/utils/format-duration';
+import { CoreStatsFlow, ITransferring } from '../../../@dataflow/rclone';
+import { FormatBytes } from '../../../utils/format-bytes';
+import { ForamtDuration } from '../../../utils/format-duration';
 
 @Component({
-	selector: 'jobs-transferring',
+	selector: 'app-jobs-transferring',
 	template: `
 		<ngx-table [configuration]="configuration" [data]="data" [columns]="columns">
 			<ng-template let-row>
@@ -44,12 +44,11 @@ export class TransfersComponent implements OnInit {
 			if (err.length !== 0) return;
 			const data = x['core-stats'].transferring;
 			this.data = data ? data : ([] as any);
-			this.data.forEach((x) => {
-				x.sizeHumanReadable = FormatBytes(x.size, 3);
-				x.speedHumanReadable = FormatBytes(x.speed) + '/s';
-				if (typeof x.eta === 'number')
-					x.etaHumanReadable = ForamtDuration.humanize(x.eta * 1000, { largest: 3 });
-				else x.etaHumanReadable = '-';
+			this.data.forEach(y => {
+				y.sizeHumanReadable = FormatBytes(y.size, 3);
+				y.speedHumanReadable = FormatBytes(y.speed) + '/s';
+				y.etaHumanReadable =
+					typeof y.eta === 'number' ? ForamtDuration.humanize(y.eta * 1000, { largest: 3 }) : '-';
 			});
 		});
 

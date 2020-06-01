@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
-import { CurrentUserService } from './current-user.service';
 import { interval, Observable } from 'rxjs';
-import {
-	NoopAuthFlow,
-	ConnectionFlow,
-	NoopAuthFlowSupNode,
-	ListCmdFlow,
-} from '../@dataflow/rclone';
+import { combineLatest, map } from 'rxjs/operators';
 import { CombErr } from '../@dataflow/core';
-import { map, combineLatest } from 'rxjs/operators';
+import {
+	ConnectionFlow,
+	ListCmdFlow,
+	NoopAuthFlow,
+	NoopAuthFlowSupNode,
+} from '../@dataflow/rclone';
+import { CurrentUserService } from './current-user.service';
 
 @Injectable({
 	providedIn: 'root',

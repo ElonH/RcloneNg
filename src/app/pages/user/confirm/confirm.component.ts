@@ -1,9 +1,9 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { NothingFlow } from 'src/app/@dataflow/core';
-import { IUser } from 'src/app/@dataflow/extra';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { NothingFlow } from '../../../@dataflow/core';
+import { IUser } from '../../../@dataflow/extra';
 
 @Component({
-	selector: 'user-confirm',
+	selector: 'app-user-confirm',
 	template: `
 		<nb-card>
 			<nb-list>
@@ -13,7 +13,7 @@ import { IUser } from 'src/app/@dataflow/extra';
 				<nb-list-item> pass : ***** </nb-list-item>
 			</nb-list>
 			<nb-card-footer>
-				<button nbButton status="primary" (click)="onDelete.emit()">
+				<button nbButton status="primary" (click)="delete.emit()">
 					Confirm
 				</button>
 			</nb-card-footer>
@@ -32,12 +32,12 @@ export class ConfirmComponent implements OnInit {
 	@Input()
 	select$: NothingFlow<IUser>;
 	@Output()
-	onDelete = new EventEmitter();
+	delete = new EventEmitter();
 
 	constructor() {}
 
 	ngOnInit(): void {
-		this.select$.getOutput().subscribe((x) => {
+		this.select$.getOutput().subscribe(x => {
 			if (x[1].length !== 0) return;
 			this.user = x[0];
 		});

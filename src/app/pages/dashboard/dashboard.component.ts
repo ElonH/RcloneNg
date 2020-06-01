@@ -1,8 +1,8 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { CoreStatsFlow, CoreStatsFlowInNode } from 'src/app/@dataflow/rclone';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { combineLatest, map, takeWhile } from 'rxjs/operators';
+import { CombErr } from '../../@dataflow/core';
+import { CoreStatsFlow, CoreStatsFlowInNode } from '../../@dataflow/rclone';
 import { ConnectionService } from '../connection.service';
-import { takeWhile, combineLatest, map } from 'rxjs/operators';
-import { CombErr } from 'src/app/@dataflow/core';
 
 @Component({
 	selector: 'app-dashboard',
@@ -31,7 +31,7 @@ import { CombErr } from 'src/app/@dataflow/core';
 									</button>
 								</nb-card-header>
 								<nb-card-body>
-									<jobs-speed-chart [stats$]="stats$"> </jobs-speed-chart>
+									<app-jobs-speed-chart [stats$]="stats$"> </app-jobs-speed-chart>
 								</nb-card-body>
 							</nb-card>
 						</nb-card-front>
@@ -61,7 +61,7 @@ import { CombErr } from 'src/app/@dataflow/core';
 						<nb-card-body>
 							<nb-tabset fullWidth>
 								<nb-tab tabTitle="Summary">
-									<jobs-summary [stats$]="stats$"> </jobs-summary>
+									<app-jobs-summary [stats$]="stats$"> </app-jobs-summary>
 								</nb-tab>
 								<nb-tab tabTitle="Memory">
 									Memory stats
@@ -95,6 +95,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
 	public stats$: CoreStatsFlow;
 
+	private visable = false;
+
 	ngOnInit(): void {
 		const outer = this;
 		this.visable = true;
@@ -107,8 +109,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
 		})();
 		this.stats$.deploy();
 	}
-
-	private visable = false;
 	ngOnDestroy() {
 		this.visable = false;
 	}

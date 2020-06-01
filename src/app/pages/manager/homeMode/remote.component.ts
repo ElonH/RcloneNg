@@ -1,7 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
-	selector: 'home-view-remote',
+	selector: 'app-home-view-remote',
 	template: `
 		<table class="grid-container">
 			<tr>
@@ -28,7 +28,7 @@ import { Component, OnInit, Input } from '@angular/core';
 		`
 			.grid-container {
 				width: 100%;
-        height: 4rem;
+				height: 4rem;
 				cursor: pointer;
 				/* background-color: #2196f3; */
 			}
@@ -40,16 +40,16 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class RemoteComponent implements OnInit {
 	@Input()
-	title: string = 'unknow';
+	title = 'unknow';
 
 	@Input()
-	subtitle: string = '';
+	subtitle = '';
 
 	@Input()
-	value: number = 0;
+	value = 0;
 
 	@Input()
-	easyMode: boolean = false;
+	easyMode = false;
 
 	constructor() {}
 

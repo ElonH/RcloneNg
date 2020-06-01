@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { UsersService } from './users.service';
-import { CurrentUserFlow } from '../@dataflow/extra';
 import { Subject } from 'rxjs';
 import { combineLatest, map } from 'rxjs/operators';
+import { CurrentUserFlow } from '../@dataflow/extra';
+import { UsersService } from './users.service';
 
 @Injectable({
 	providedIn: 'root',

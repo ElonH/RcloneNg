@@ -1,8 +1,8 @@
-import { PostFlow } from './post-flow';
-import { IRcloneServer } from '../extra';
-import { AjaxFlowInteralNode, CombErr } from '../core';
 import { Observable } from 'rxjs';
-import { map, distinctUntilChanged } from 'rxjs/operators';
+import { distinctUntilChanged, map } from 'rxjs/operators';
+import { AjaxFlowInteralNode, CombErr } from '../core';
+import { IRcloneServer } from '../extra';
+import { PostFlow } from './post-flow';
 
 export interface IRcloneCmd {
 	Path: string;
@@ -27,9 +27,9 @@ export abstract class ListCmdFlow extends PostFlow<IRcloneServer, ListCmdFlowOut
 	}
 	public verify(cmd: string): Observable<CombErr<IRcloneServer>> {
 		return this.getSupersetOutput().pipe(
-			map((sup) => {
+			map(sup => {
 				if (sup[1].length !== 0) return [{}, sup[1]] as any;
-				if (-1 === sup[0].commands.findIndex((x) => x.Path == cmd))
+				if (-1 === sup[0].commands.findIndex(x => x.Path === cmd))
 					return [{}, [new Error(`not support command: ${cmd}`)]];
 				else return [{ url: sup[0].url, password: sup[0].password, user: sup[0].user }, []];
 			}),

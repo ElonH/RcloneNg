@@ -1,6 +1,6 @@
+import { AjaxFlowInteralNode, CombErr, FlowOutNode } from '../core';
+import { IRcloneServer, NavigationFlowOutNode } from '../extra';
 import { PostFlow } from './post-flow';
-import { NavigationFlowOutNode, IRcloneServer } from '../extra';
-import { CombErr, AjaxFlowInteralNode, FlowOutNode } from '../core';
 
 export interface OperationsMkdirFlowParamsNode {
 	/** a remote name string eg “drive:” */
@@ -17,7 +17,8 @@ export abstract class OperationsMkdirFlow extends PostFlow<
 	OperationsMkdirFlowParamsNode
 > {
 	// public prerequest$: Observable<CombErr<OperationsMkdirFlowInNode>>;
-	protected cmd: string = 'operations/mkdir';
+	protected cmd = 'operations/mkdir';
+	protected cacheSupport = false;
 	protected params = (pre: CombErr<OperationsMkdirFlowInNode>): OperationsMkdirFlowParamsNode => {
 		if (pre[1].length !== 0) return {} as any;
 		return {
@@ -25,7 +26,6 @@ export abstract class OperationsMkdirFlow extends PostFlow<
 			remote: pre[0].path,
 		};
 	};
-	protected cacheSupport: boolean = false;
 	protected reconstructAjaxResult(x: AjaxFlowInteralNode): CombErr<OperationsMkdirFlowOutNode> {
 		return [{}, x[1]];
 	}

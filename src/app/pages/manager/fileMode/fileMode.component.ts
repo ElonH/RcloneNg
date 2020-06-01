@@ -1,16 +1,18 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild } from '@angular/core';
-import { NavigationFlow, NavigationFlowOutNode } from 'src/app/@dataflow/extra';
-import { ConnectionService } from '../../connection.service';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Subject } from 'rxjs';
-import { OperationsListFlow, OperationsListFlowInNode } from 'src/app/@dataflow/rclone';
-import { combineLatest, map, filter } from 'rxjs/operators';
-import { CombErr } from 'src/app/@dataflow/core';
+import { combineLatest, filter, map } from 'rxjs/operators';
+import { CombErr } from '../../../@dataflow/core';
+import { NavigationFlow, NavigationFlowOutNode } from '../../../@dataflow/extra';
+import { OperationsListFlow, OperationsListFlowInNode } from '../../../@dataflow/rclone';
+import { ConnectionService } from '../../connection.service';
+import { ClipboardService, IManipulate } from '../clipboard/clipboard.service';
 import { ListViewComponent } from './listView/listView.component';
-import { IManipulate, ClipboardService } from '../clipboard/clipboard.service';
 
 @Component({
-	selector: 'manager-fileMode',
-	template: ` <manager-listView [list$]="list$" (jump)="jump.emit($event)"> </manager-listView> `,
+	selector: 'app-manager-file-mode',
+	template: `
+		<app-manager-list-view [list$]="list$" (jump)="jump.emit($event)"> </app-manager-list-view>
+	`,
 	styles: [],
 })
 export class FileModeComponent implements OnInit {
@@ -23,11 +25,11 @@ export class FileModeComponent implements OnInit {
 	private listTrigger = new Subject<number>();
 	list$: OperationsListFlow;
 
+	@ViewChild(ListViewComponent) listView: ListViewComponent;
+
 	refresh() {
 		this.listTrigger.next(1);
 	}
-
-	@ViewChild(ListViewComponent) listView: ListViewComponent;
 	manipulate(o: IManipulate) {
 		this.listView.manipulate(o);
 		this.clipboard.commit();
@@ -45,7 +47,7 @@ export class FileModeComponent implements OnInit {
 						return [{ ...navNode[0], ...cmdNode[0] }, []];
 					}
 				),
-				filter((x) => x[1].length !== 0 || !!x[0].remote)
+				filter(x => x[1].length !== 0 || !!x[0].remote)
 			);
 		})();
 		this.list$.deploy();

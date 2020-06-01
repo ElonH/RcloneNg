@@ -1,14 +1,14 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
-import { IManipulate, ClipboardService, ClipboardItem } from '../clipboard.service';
-import { Config, Columns, DefaultConfig, APIDefinition, API } from 'ngx-easy-table';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { API, APIDefinition, Columns, Config, DefaultConfig } from 'ngx-easy-table';
+import { ClipboardItem, ClipboardService, IManipulate } from '../clipboard.service';
 
-type IRemotesTableItem = {
+interface IRemotesTableItem {
 	remote: string;
 	children: string[];
-};
+}
 
 @Component({
-	selector: 'clipboard-remotes-table',
+	selector: 'app-clipboard-remotes-table',
 	template: `
 		<ngx-table
 			#remotesTable
@@ -29,8 +29,8 @@ type IRemotesTableItem = {
 	styles: [],
 })
 export class ClipboardRemotesTableComponent implements OnInit {
-	@Input() oper: IManipulate;
 	constructor(private service: ClipboardService) {}
+	@Input() oper: IManipulate;
 	public configuration: Config;
 	public columns: Columns[] = [
 		{ key: 'srcRemote', title: 'Remote', width: '10%' },
@@ -39,18 +39,18 @@ export class ClipboardRemotesTableComponent implements OnInit {
 	];
 
 	data: ClipboardItem[] = [];
+
+	@ViewChild('remotesTable') table: APIDefinition;
 	ngOnInit() {
-		this.service.clipboard$.getOutput().subscribe((node) => {
+		this.service.clipboard$.getOutput().subscribe(node => {
 			if (node[1].length !== 0) return;
-			this.data = node[0].clipboard.values.filter((x) => x.oper === this.oper);
+			this.data = node[0].clipboard.values.filter(x => x.oper === this.oper);
 		});
 
 		this.configuration = { ...DefaultConfig };
 		this.configuration.detailsTemplate = true;
 		this.configuration.tableLayout.hover = true;
 	}
-
-	@ViewChild('remotesTable') table: APIDefinition;
 	toggleDatail($event: MouseEvent, rowidx: number) {
 		$event.preventDefault();
 		this.table.apiEvent({

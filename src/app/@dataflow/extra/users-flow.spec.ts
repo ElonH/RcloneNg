@@ -1,7 +1,7 @@
-import { UsersFlow, IUser } from './users-flow';
-import { TestScheduler } from 'rxjs/testing';
 import { map } from 'rxjs/operators';
+import { TestScheduler } from 'rxjs/testing';
 import { CombErr, FlowInNode } from '../core';
+import { IUser, UsersFlow } from './users-flow';
 
 describe('UsersFlow', () => {
 	let scheduler: TestScheduler;
@@ -12,7 +12,7 @@ describe('UsersFlow', () => {
 			}))
 	);
 	it('get init value', () => {
-		scheduler.run((helpers) => {
+		scheduler.run(helpers => {
 			const { cold, hot, expectObservable, expectSubscriptions, flush } = helpers;
 			const values = {
 				a: 1,
@@ -32,7 +32,7 @@ describe('UsersFlow', () => {
 		});
 	});
 	it('get storagaed value', () => {
-		scheduler.run((helpers) => {
+		scheduler.run(helpers => {
 			const { cold, hot, expectObservable, expectSubscriptions, flush } = helpers;
 			const values = {
 				a: 1,
@@ -52,7 +52,7 @@ describe('UsersFlow', () => {
 		});
 	});
 	it('update sigel user', () => {
-		scheduler.run((helpers) => {
+		scheduler.run(helpers => {
 			const { cold, hot, expectObservable, expectSubscriptions, flush } = helpers;
 			const values = {
 				a: 1,

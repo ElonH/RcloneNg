@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { NbSidebarService, NbMenuItem } from '@nebular/theme';
-import { MENU_ITEMS } from './pages-menu';
+import { NbMenuItem, NbSidebarService } from '@nebular/theme';
 import { CurrentUserService } from './current-user.service';
+import { MENU_ITEMS } from './pages-menu';
 
 @Component({
-	selector: 'rng-pages',
+	selector: 'app-rng-pages',
 	template: `
 		<nb-layout [withScroll]="false">
 			<nb-layout-header fixed>
@@ -40,12 +40,12 @@ export class PagesComponent implements OnInit {
 		this.sidebarService.toggle(true, 'nav');
 	}
 	ngOnInit(): void {
-		this.currUserService.currentUserFlow$.getSupersetOutput().subscribe((node) => {
+		this.currUserService.currentUserFlow$.getSupersetOutput().subscribe(node => {
 			if (node[1].length !== 0) return;
 			const userGroup = this.menu[0];
 			userGroup.title = node[0].name;
 			userGroup.children = node[0].users
-				.filter((x) => x.name !== node[0].name) // disable show current user in child item
+				.filter(x => x.name !== node[0].name) // disable show current user in child item
 				.map(
 					(x): NbMenuItem => {
 						return {

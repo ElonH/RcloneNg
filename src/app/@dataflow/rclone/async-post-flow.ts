@@ -1,5 +1,5 @@
 import { AjaxRequest } from 'rxjs/ajax';
-import { FlowSupNode, CombErr, AjaxFlowInteralNode } from '../core';
+import { AjaxFlowInteralNode, CombErr, FlowSupNode } from '../core';
 import { IRcloneServer } from '../extra';
 import { PostFlow } from './post-flow';
 

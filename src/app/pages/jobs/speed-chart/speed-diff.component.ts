@@ -1,8 +1,8 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { FormatBytes } from 'src/app/utils/format-bytes';
+import { Component, Input, OnInit } from '@angular/core';
+import { FormatBytes } from '../../../utils/format-bytes';
 
 @Component({
-	selector: 'jobs-speed-diff',
+	selector: 'app-jobs-speed-diff',
 	template: `
 		<span> {{ (val < 0 ? '-' + FormatBytes(-val) : FormatBytes(val)) + '/s' }} </span>
 		<nb-icon

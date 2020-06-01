@@ -1,7 +1,7 @@
-import { NameValidation, NameValidationPreNode, NameValidationNode } from './name-validation';
+import { Observable } from 'rxjs';
 import { TestScheduler } from 'rxjs/testing';
 import { CombErr } from '../core';
-import { Observable } from 'rxjs';
+import { NameValidation, NameValidationNode, NameValidationPreNode } from './name-validation';
 
 describe('NameValidation', () => {
 	let scheduler: TestScheduler;
@@ -12,7 +12,7 @@ describe('NameValidation', () => {
 			}))
 	);
 	it('normal', () => {
-		scheduler.run((helpers) => {
+		scheduler.run(helpers => {
 			const { cold, hot, expectObservable, expectSubscriptions, flush } = helpers;
 			const values: { [id: string]: CombErr<NameValidationPreNode | NameValidationNode> } = {
 				a: [{ users: [{ name: '123', url: '' }], currentName: 'asd' }, []],
@@ -30,11 +30,11 @@ describe('NameValidation', () => {
 		});
 	});
 	it('not allow empty', () => {
-		scheduler.run((helpers) => {
+		scheduler.run(helpers => {
 			const { cold, hot, expectObservable, expectSubscriptions, flush } = helpers;
 			const values: { [id: string]: CombErr<NameValidationPreNode | NameValidationNode> } = {
 				a: [{ users: [], currentName: '' }, []],
-				b: [{}, [new Error('You must enter a value')]]as any,
+				b: [{}, [new Error('You must enter a value')]] as any,
 			};
 			const pre = cold('a----', values) as Observable<CombErr<NameValidationPreNode>>;
 			const expected = 'b----';
@@ -48,7 +48,7 @@ describe('NameValidation', () => {
 		});
 	});
 	it('not allow duplicate name', () => {
-		scheduler.run((helpers) => {
+		scheduler.run(helpers => {
 			const { cold, hot, expectObservable, expectSubscriptions, flush } = helpers;
 			const values: { [id: string]: CombErr<NameValidationPreNode | NameValidationNode> } = {
 				a: [{ users: [{ name: '123', url: '' }], currentName: '123' }, []],

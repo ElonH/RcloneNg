@@ -1,8 +1,8 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { ClipboardService, IManipulate } from './clipboard.service';
 
 @Component({
-	selector: 'manager-clipboard',
+	selector: 'app-manager-clipboard',
 	template: `
 		<nb-tabset fullWidth>
 			<nb-tab
@@ -13,31 +13,31 @@ import { ClipboardService, IManipulate } from './clipboard.service';
 				badgeStatus="primary"
 			>
 				<ng-container *ngIf="tab.oper === 'del'">
-					<button nbButton status="danger" (click)="onDeleteConfirm.emit()">
+					<button nbButton status="danger" (click)="deleteConfirm.emit()">
 						<nb-icon icon="alert-triangle"></nb-icon>
 						Confirm
 					</button>
 				</ng-container>
-				<clipboard-remotes-table [oper]="tab.oper"> </clipboard-remotes-table>
+				<app-clipboard-remotes-table [oper]="tab.oper"> </app-clipboard-remotes-table>
 			</nb-tab>
 		</nb-tabset>
 	`,
 	styles: [],
 })
 export class ClipboardComponent implements OnInit {
+	constructor(private service: ClipboardService) {}
 	data: { oper: IManipulate; title: string; icon: string; len: number }[] = [
 		{ oper: 'copy', title: 'Copy', icon: 'copy', len: 0 },
 		{ oper: 'move', title: 'Move', icon: 'move', len: 0 },
 		{ oper: 'del', title: 'Delete', icon: 'trash-2', len: 0 },
 	];
-	constructor(private service: ClipboardService) {}
+
+	@Output() deleteConfirm = new EventEmitter();
 
 	ngOnInit() {
-		this.service.clipboard$.getOutput().subscribe((node) => {
+		this.service.clipboard$.getOutput().subscribe(node => {
 			if (node[1].length !== 0) return;
-			this.data.forEach((x) => (x.len = node[0].clipboard.countManipulation(x.oper)));
+			this.data.forEach(x => (x.len = node[0].clipboard.countManipulation(x.oper)));
 		});
 	}
-
-	@Output() onDeleteConfirm = new EventEmitter();
 }

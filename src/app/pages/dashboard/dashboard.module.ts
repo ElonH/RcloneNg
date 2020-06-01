@@ -1,17 +1,17 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 
-import { DashboardRoutingModule } from './dashboard-routing.module';
-import { DashboardComponent } from './dashboard.component';
 import {
-	NbCardModule,
 	NbButtonModule,
+	NbCardModule,
 	NbIconModule,
 	NbListModule,
 	NbTabsetModule,
 } from '@nebular/theme';
 import { ChartsModule } from 'ng2-charts';
 import { JobsModule } from '../jobs/jobs.module';
+import { DashboardRoutingModule } from './dashboard-routing.module';
+import { DashboardComponent } from './dashboard.component';
 
 @NgModule({
 	declarations: [DashboardComponent],

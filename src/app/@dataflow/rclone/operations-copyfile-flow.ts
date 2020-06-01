@@ -1,5 +1,5 @@
-import { IRcloneServer } from '../extra';
 import { CombErr } from '../core';
+import { IRcloneServer } from '../extra';
 import { AsyncPostFlow, AsyncPostFlowParamsNode } from './async-post-flow';
 
 export interface OperationsCopyfileFlowParamsNode extends AsyncPostFlowParamsNode {
@@ -21,7 +21,8 @@ export abstract class OperationsCopyfileFlow extends AsyncPostFlow<
 	OperationsCopyfileFlowParamsNode
 > {
 	// public prerequest$: Observable<CombErr<OperationsCopyfileFlowInNode>>;
-	protected cmd: string = 'operations/copyfile';
+	protected cmd = 'operations/copyfile';
+	protected cacheSupport = false;
 	protected params = (
 		pre: CombErr<OperationsCopyfileFlowInNode>
 	): OperationsCopyfileFlowParamsNode => {
@@ -33,5 +34,4 @@ export abstract class OperationsCopyfileFlow extends AsyncPostFlow<
 			dstRemote: pre[0].dstRemote,
 		};
 	};
-	protected cacheSupport: boolean = false;
 }

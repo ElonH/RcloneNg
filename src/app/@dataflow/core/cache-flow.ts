@@ -1,13 +1,20 @@
-import {  FlowInNode, FlowOutNode, CombErr } from './bare-flow';
-import { Observable, iif, of } from 'rxjs';
-import { SupersetFlow, FlowSupNode } from './superset-flow';
-import { tap, take, map } from 'rxjs/operators';
+import { iif, Observable, of } from 'rxjs';
+import { map, take, tap } from 'rxjs/operators';
+import { CombErr, FlowInNode, FlowOutNode } from './bare-flow';
+import { FlowSupNode, SupersetFlow } from './superset-flow';
 
 export abstract class CacheFlow<
 	Tin extends FlowInNode,
 	Tout extends FlowOutNode,
 	Tsup extends FlowSupNode = Tin & Tout
 > extends SupersetFlow<Tin, Tout, Tsup> {
+	private static cacheStorage: { [id: string]: CombErr<FlowOutNode> } = {};
+
+	protected abstract cacheSupport: boolean;
+	protected abstract cachePath: string | undefined;
+	public static purgeAllCache() {
+		CacheFlow.cacheStorage = {};
+	}
 	protected abstract requestCache(pre: CombErr<Tin>): Observable<CombErr<Tout>>;
 	protected request(pre: CombErr<Tin>): Observable<CombErr<Tout>> {
 		return iif(
@@ -15,16 +22,12 @@ export abstract class CacheFlow<
 			of(this.getCache()),
 			this.requestCache(pre).pipe(
 				take(1),
-				tap((x) => {
+				tap(x => {
 					if (this.cacheEnabled()) this.setCache(x);
 				})
 			)
 		);
 	}
-
-	protected abstract cacheSupport: boolean;
-	protected abstract cachePath: string | undefined;
-	private static cacheStorage: { [id: string]: CombErr<FlowOutNode> } = {};
 
 	private cacheEnabled(): boolean {
 		return this.cacheSupport && typeof this.cachePath === 'string';
@@ -40,8 +43,5 @@ export abstract class CacheFlow<
 	}
 	public clearCache() {
 		delete CacheFlow.cacheStorage[this.cachePath];
-	}
-	public static purgeAllCache() {
-		CacheFlow.cacheStorage = {};
 	}
 }

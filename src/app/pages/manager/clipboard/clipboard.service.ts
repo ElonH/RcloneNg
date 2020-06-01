@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { NothingFlow, CombErr } from 'src/app/@dataflow/core';
 import { mapTo } from 'rxjs/operators';
-import { NavigationFlowOutNode } from 'src/app/@dataflow/extra';
-import { OperationsListFlowOutItemNode } from 'src/app/@dataflow/rclone';
+import { CombErr, NothingFlow } from '../../../@dataflow/core';
+import { NavigationFlowOutNode } from '../../../@dataflow/extra';
+import { OperationsListFlowOutItemNode } from '../../../@dataflow/rclone';
 
 export type IManipulate = 'copy' | 'move' | 'del';
 
@@ -16,7 +16,18 @@ export interface ClipboardItem {
 }
 
 export class Clipboard {
+	public get values(): ClipboardItem[] {
+		return Array.from(this.data.values());
+	}
+
+	public get size(): number {
+		return this.data.size;
+	}
 	private data = new Map<string, ClipboardItem>();
+
+	public static genKey(remote: string, path: string) {
+		return JSON.stringify({ r: remote, p: path });
+	}
 
 	public add(
 		o: IManipulate,
@@ -27,7 +38,7 @@ export class Clipboard {
 		const key = Clipboard.genKey(remote, row.Path);
 		this.data.set(key, {
 			oper: o,
-			key: key,
+			key,
 			srcItem: { ...row },
 			srcRemote: remote,
 			dst: { ...dst },
@@ -50,30 +61,18 @@ export class Clipboard {
 
 	public countManipulation(o: IManipulate): number {
 		let cnt = 0;
-		this.data.forEach((x) => (x.oper === o ? cnt++ : null));
+		this.data.forEach(x => (x.oper === o ? cnt++ : null));
 		return cnt;
-	}
-
-	public get values(): ClipboardItem[] {
-		return Array.from(this.data.values());
-	}
-
-	public get size(): number {
-		return this.data.size;
 	}
 
 	public clear(...opers: IManipulate[]) {
 		if (opers.length === 0) this.data.clear();
 		else
 			this.values
-				.filter((x) => opers.some((y) => x.oper === y))
-				.forEach((x) => {
+				.filter(x => opers.some(y => x.oper === y))
+				.forEach(x => {
 					this.data.delete(x.key);
 				});
-	}
-
-	public static genKey(remote: string, path: string) {
-		return JSON.stringify({ r: remote, p: path });
 	}
 }
 

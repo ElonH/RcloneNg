@@ -1,7 +1,7 @@
-import { PostFlow } from './post-flow';
-import { NoopAuthFlowSupNode } from './noop-auth-flow';
+import { AjaxFlowInteralNode, CombErr } from '../core';
 import { IRcloneServer } from '../extra';
-import { CombErr, AjaxFlowInteralNode } from '../core';
+import { NoopAuthFlowSupNode } from './noop-auth-flow';
+import { PostFlow } from './post-flow';
 
 export interface ListRemotesOutNode {
 	remotes: string[];
@@ -11,9 +11,9 @@ export interface ListRemotesSupNode extends ListRemotesOutNode, NoopAuthFlowSupN
 
 export abstract class ListRemotesFlow extends PostFlow<IRcloneServer, ListRemotesOutNode> {
 	// public prerequest$: Observable<CombErr<IRcloneServer>>;
-	protected cmd: string = 'config/listremotes';
+	protected cmd = 'config/listremotes';
 	protected params: object = {};
-	protected cacheSupport: boolean = true;
+	protected cacheSupport = true;
 	protected reconstructAjaxResult(x: AjaxFlowInteralNode): CombErr<ListRemotesOutNode> {
 		if (x[1].length !== 0) return [{}, x[1]] as any;
 		const rsp = x[0].ajaxRsp.response;

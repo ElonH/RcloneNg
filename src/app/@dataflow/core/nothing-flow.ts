@@ -1,5 +1,5 @@
-import { BareFlow, FlowInNode, CombErr } from './bare-flow';
 import { Observable, of } from 'rxjs';
+import { BareFlow, CombErr, FlowInNode } from './bare-flow';
 
 /**
  * do nothing

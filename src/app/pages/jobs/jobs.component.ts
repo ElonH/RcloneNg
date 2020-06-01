@@ -1,9 +1,9 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ListGroupFlow, CoreStatsFlow, CoreStatsFlowInNode } from 'src/app/@dataflow/rclone';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { combineLatest, map, takeWhile } from 'rxjs/operators';
+import { CombErr } from '../../@dataflow/core';
+import { CoreStatsFlow, CoreStatsFlowInNode, ListGroupFlow } from '../../@dataflow/rclone';
 import { ConnectionService } from '../connection.service';
-import { CombErr } from 'src/app/@dataflow/core';
 
 @Component({
 	selector: 'app-jobs',
@@ -38,7 +38,7 @@ import { CombErr } from 'src/app/@dataflow/core';
 							<nb-card size="small">
 								<nb-card-header> Speed </nb-card-header>
 								<nb-card-body class="speed-body">
-									<jobs-speed-chart [stats$]="stats$"> </jobs-speed-chart>
+									<app-jobs-speed-chart [stats$]="stats$"> </app-jobs-speed-chart>
 								</nb-card-body>
 							</nb-card>
 						</div>
@@ -46,7 +46,7 @@ import { CombErr } from 'src/app/@dataflow/core';
 							<nb-card>
 								<nb-card-header> Summary </nb-card-header>
 								<nb-card-body>
-									<jobs-summary [stats$]="stats$"> </jobs-summary>
+									<app-jobs-summary [stats$]="stats$"> </app-jobs-summary>
 								</nb-card-body>
 							</nb-card>
 						</div>
@@ -56,7 +56,7 @@ import { CombErr } from 'src/app/@dataflow/core';
 							<nb-card>
 								<nb-card-header> Transferring </nb-card-header>
 								<nb-card-body>
-									<jobs-transferring [stats$]="stats$"> </jobs-transferring>
+									<app-jobs-transferring [stats$]="stats$"> </app-jobs-transferring>
 								</nb-card-body>
 							</nb-card>
 						</div>
@@ -96,21 +96,22 @@ import { CombErr } from 'src/app/@dataflow/core';
 	],
 })
 export class JobsComponent implements OnInit, OnDestroy {
-	public activeGroup: string = '';
-	public groups: string[] = [];
-
-	public activateGroup(group: string) {
-		this.activeGroup = group;
-		this.statsTrigger.next(group);
-	}
-
 	constructor(private cmdService: ConnectionService) {}
+	public activeGroup = '';
+	public groups: string[] = [];
 
 	private listTrigger = new Subject<number>();
 	public listGroup$: ListGroupFlow;
 
 	private statsTrigger = new Subject<string>();
 	public stats$: CoreStatsFlow;
+
+	private visable = false;
+
+	public activateGroup(group: string) {
+		this.activeGroup = group;
+		this.statsTrigger.next(group);
+	}
 	ngOnInit(): void {
 		const outer = this;
 		this.visable = true;
@@ -121,7 +122,7 @@ export class JobsComponent implements OnInit, OnDestroy {
 			);
 		})();
 		this.listGroup$.deploy();
-		this.listGroup$.getOutput().subscribe((x) => {
+		this.listGroup$.getOutput().subscribe(x => {
 			if (x[1].length !== 0) return;
 			this.groups = x[0].groups;
 		});
@@ -135,7 +136,7 @@ export class JobsComponent implements OnInit, OnDestroy {
 					([, group, node]): CombErr<CoreStatsFlowInNode> => {
 						if (node[1].length !== 0) return [{}, node[1]] as any;
 						if (group === '') return node;
-						return [{ ...node[0], group: group }, []];
+						return [{ ...node[0], group }, []];
 					}
 				)
 			);
@@ -147,8 +148,6 @@ export class JobsComponent implements OnInit, OnDestroy {
 	public refreshList() {
 		this.listTrigger.next(1);
 	}
-
-	private visable = false;
 	ngOnDestroy() {
 		this.visable = false;
 	}

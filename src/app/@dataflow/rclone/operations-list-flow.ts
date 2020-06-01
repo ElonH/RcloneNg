@@ -1,6 +1,6 @@
-import { PostFlow } from './post-flow';
 import { AjaxFlowInteralNode, CombErr } from '../core';
-import { NavigationFlowOutNode, IRcloneServer } from '../extra';
+import { IRcloneServer, NavigationFlowOutNode } from '../extra';
+import { PostFlow } from './post-flow';
 
 export interface OperationsListFlowParmsNode {
 	fs: string;
@@ -40,10 +40,9 @@ export abstract class OperationsListFlow extends PostFlow<
 	OperationsListFlowParmsNode
 > {
 	// public prerequest$: Observable<CombErr<OperationsListFlowInNode>>;
-	protected cmd: string = 'operations/list';
-	protected params = function (
-		pre: CombErr<OperationsListFlowInNode>
-	): OperationsListFlowParmsNode {
+	protected cmd = 'operations/list';
+	protected cacheSupport = true;
+	protected params = (pre: CombErr<OperationsListFlowInNode>): OperationsListFlowParmsNode => {
 		if (pre[1].length !== 0) return {} as any;
 		if (!pre[0].remote) throw new Error('not provide remote');
 		return {
@@ -55,7 +54,6 @@ export abstract class OperationsListFlow extends PostFlow<
 			// },
 		};
 	};
-	protected cacheSupport: boolean = true;
 	protected reconstructAjaxResult(x: AjaxFlowInteralNode): CombErr<OperationsListFlowOutNode> {
 		if (x[1].length !== 0) return [{}, x[1]] as any;
 		const rsp = x[0].ajaxRsp.response;

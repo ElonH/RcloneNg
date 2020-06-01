@@ -1,6 +1,6 @@
-import { BareFlow, FlowInNode, FlowOutNode, CombErr } from './bare-flow';
 import { Observable } from 'rxjs';
-import { take, distinctUntilChanged, withLatestFrom, map, shareReplay } from 'rxjs/operators';
+import { distinctUntilChanged, map, shareReplay, take, withLatestFrom } from 'rxjs/operators';
+import { BareFlow, CombErr, FlowInNode, FlowOutNode } from './bare-flow';
 
 export interface FlowSupNode {}
 

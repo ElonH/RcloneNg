@@ -1,8 +1,8 @@
-import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
-import { NavigationFlow, NavigationFlowOutNode } from 'src/app/@dataflow/extra';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { NavigationFlow, NavigationFlowOutNode } from '../../../@dataflow/extra';
 
 @Component({
-	selector: 'manager-breadcrumb',
+	selector: 'app-manager-breadcrumb',
 	template: `
 		<!-- <nav> -->
 		<ol class="breadcrumb">
@@ -69,7 +69,7 @@ export class BreadcrumbComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		this.nav$.getOutput().subscribe((x) => {
+		this.nav$.getOutput().subscribe(x => {
 			this.remote = x[0].remote;
 			[this.pathPrefix, this.pathSurfix] = this.splitPath(x[0].path);
 		});

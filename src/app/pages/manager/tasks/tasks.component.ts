@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { TaskService } from './tasks.service';
-import { Config, Columns } from 'ngx-easy-table';
+import { Columns, Config } from 'ngx-easy-table';
 import { ClipboardItem, IManipulate } from '../clipboard/clipboard.service';
+import { TaskService } from './tasks.service';
 
 @Component({
-	selector: 'manager-tasks',
+	selector: 'app-manager-tasks',
 	template: `
 		<nb-accordion multi>
 			<!-- <nb-accordion-item *ngIf="orderSize !== 0"> -->
@@ -90,7 +90,7 @@ export class TasksComponent implements OnInit {
 	failData: ClipboardItem[] = [];
 
 	ngOnInit() {
-		this.service.detail$.getOutput().subscribe((x) => {
+		this.service.detail$.getOutput().subscribe(x => {
 			if (x[1].length !== 0) return;
 			const order = x[0].order;
 			const fail = x[0].failure;

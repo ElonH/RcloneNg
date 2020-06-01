@@ -1,9 +1,9 @@
-import { NoopAuthFlow, NoopAuthFlowOutNode } from './noop-auth-flow';
+import { Observable } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';
 import { CombErr } from '../core';
 import { IRcloneServer } from '../extra';
-import { map, tap } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { NoopAuthFlow, NoopAuthFlowOutNode } from './noop-auth-flow';
 
 describe('NoopAuthFlow', () => {
 	let scheduler: TestScheduler;
@@ -14,7 +14,7 @@ describe('NoopAuthFlow', () => {
 			}))
 	);
 	xit('fetch success', () => {
-		scheduler.run((helpers) => {
+		scheduler.run(helpers => {
 			const { cold, hot, expectObservable, expectSubscriptions, flush } = helpers;
 			const values: { [id: string]: CombErr<IRcloneServer> | boolean } = {
 				a: [{ url: 'http://127.0.0.1:5572', user: 'admin', password: 'admin' }, []],
@@ -25,22 +25,22 @@ describe('NoopAuthFlow', () => {
 				s: false,
 			};
 			// const pre = cold('a--b--c--d', values);
-			const pre = cold('a---', values) as Observable<CombErr<IRcloneServer>>;
+			const inp = cold('a---', values) as Observable<CombErr<IRcloneServer>>;
 			const expected = 'r---';
 			// const expected = 'a--b--b--b';
 
 			const rst = new (class extends NoopAuthFlow {
-				public prerequest$ = pre;
+				public prerequest$ = inp;
 			})();
 			rst.deploy();
 
 			expectObservable(
 				rst.getOutput().pipe(
-					tap((x) => console.log(x)),
-					map((x) => x[1].length === 0)
+					tap(x => console.log(x)),
+					map(x => x[1].length === 0)
 				)
-      ).toBe(expected, values);
-      // ERROR: tap is ok, but toBe can't get any output.
+			).toBe(expected, values);
+			// ERROR: tap is ok, but toBe can't get any output.
 		});
 	});
 });

@@ -1,5 +1,5 @@
-import { NbMenuItem } from '@nebular/theme';
 import { group } from '@angular/animations';
+import { NbMenuItem } from '@nebular/theme';
 
 export const MENU_ITEMS: NbMenuItem[] = [
 	{

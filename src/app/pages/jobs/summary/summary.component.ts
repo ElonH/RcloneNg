@@ -1,10 +1,10 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { CoreStatsFlow, CoreStatsFlowOutItemNode } from 'src/app/@dataflow/rclone';
-import { FormatBytes } from 'src/app/utils/format-bytes';
-import { ForamtDuration } from 'src/app/utils/format-duration';
+import { Component, Input, OnInit } from '@angular/core';
+import { CoreStatsFlow, CoreStatsFlowOutItemNode } from '../../../@dataflow/rclone';
+import { FormatBytes } from '../../../utils/format-bytes';
+import { ForamtDuration } from '../../../utils/format-duration';
 
 @Component({
-	selector: 'jobs-summary',
+	selector: 'app-jobs-summary',
 	template: `
 		<dl>
 			<ng-container *ngFor="let item of keys">
@@ -61,7 +61,7 @@ export class SummaryComponent implements OnInit {
 			if (err.length !== 0) return;
 			let speed = 0;
 			if (this.values.transferring) {
-				this.values.transferring.forEach((x) => (speed += x.speed));
+				this.values.transferring.forEach(y => (speed += y.speed));
 			}
 			this.values = JSON.parse(JSON.stringify(x['core-stats']));
 			this.values.bytesHumanReadable = FormatBytes(this.values.bytes, 4);

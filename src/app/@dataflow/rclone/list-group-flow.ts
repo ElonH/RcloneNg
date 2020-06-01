@@ -1,6 +1,6 @@
-import { PostFlow } from './post-flow';
+import { AjaxFlowInteralNode, CombErr } from '../core';
 import { IRcloneServer } from '../extra';
-import { CombErr, AjaxFlowInteralNode } from '../core';
+import { PostFlow } from './post-flow';
 
 export interface ListGroupFlowOutNode {
 	groups: string[];
@@ -8,9 +8,9 @@ export interface ListGroupFlowOutNode {
 
 export abstract class ListGroupFlow extends PostFlow<IRcloneServer, ListGroupFlowOutNode> {
 	// public prerequest$: Observable<CombErr<IRcloneServer>>;
-	protected cmd: string = 'core/group-list';
+	protected cmd = 'core/group-list';
 	protected params = {};
-	protected cacheSupport: boolean = false;
+	protected cacheSupport = false;
 	protected reconstructAjaxResult(x: AjaxFlowInteralNode): CombErr<ListGroupFlowOutNode> {
 		if (x[1].length !== 0) return [{}, x[1]] as any;
 		return [{ groups: x[0].ajaxRsp.response['groups'] }, []];

@@ -1,5 +1,5 @@
-import { IRcloneServer } from '../extra';
 import { CombErr } from '../core';
+import { IRcloneServer } from '../extra';
 import { AsyncPostFlow, AsyncPostFlowParamsNode } from './async-post-flow';
 
 export interface OperationsDeletefileFlowParamsNode extends AsyncPostFlowParamsNode {
@@ -25,7 +25,8 @@ export abstract class OperationsDeletefileFlow extends AsyncPostFlow<
 	OperationsDeletefileFlowInnerParamsNode
 > {
 	// public prerequest$: Observable<CombErr<OperationsDeletefileFlowInNode>>;
-	protected cmd: string = 'operations/deletefile';
+	protected cmd = 'operations/deletefile';
+	protected cacheSupport = false;
 	protected params = (
 		pre: CombErr<OperationsDeletefileFlowInNode>
 	): OperationsDeletefileFlowInnerParamsNode => {
@@ -35,5 +36,4 @@ export abstract class OperationsDeletefileFlow extends AsyncPostFlow<
 			remote: pre[0].srcRemote,
 		};
 	};
-	protected cacheSupport: boolean = false;
 }

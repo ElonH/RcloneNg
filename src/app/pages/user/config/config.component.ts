@@ -1,21 +1,21 @@
 import {
-	Component,
-	OnInit,
 	ChangeDetectionStrategy,
-	Input,
-	Output,
+	Component,
 	EventEmitter,
+	Input,
+	OnInit,
+	Output,
 } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
-import { IRcloneServer, IUser } from 'src/app/@dataflow/extra';
 import { FormControl } from '@angular/forms';
-import { withLatestFrom, map } from 'rxjs/operators';
-import { CombErr, NothingFlow } from 'src/app/@dataflow/core';
-import { NoopAuthFlow } from 'src/app/@dataflow/rclone';
+import { Observable, Subject } from 'rxjs';
+import { map, withLatestFrom } from 'rxjs/operators';
+import { CombErr, NothingFlow } from '../../../@dataflow/core';
+import { IRcloneServer, IUser } from '../../../@dataflow/extra';
+import { NoopAuthFlow } from '../../../@dataflow/rclone';
 import { UsersService } from '../../users.service';
 
 @Component({
-	selector: 'user-config',
+	selector: 'app-user-config',
 	template: `
 		<nb-card>
 			<nb-card-body>
@@ -95,7 +95,7 @@ import { UsersService } from '../../users.service';
 						[status]="authPass === null ? 'info' : authPass === true ? 'success' : 'warning'"
 					></nb-icon>
 				</button>
-				<button nbButton outline status="primary" [disabled]="nameErr !== ''" (click)="save()">
+				<button nbButton outline status="primary" [disabled]="nameErr !== ''" (click)="onSave()">
 					save
 				</button>
 			</nb-card-footer>
@@ -129,14 +129,14 @@ export class ConfigComponent implements OnInit {
 	@Input()
 	select$: NothingFlow<IUser>;
 	@Output()
-	onSave: EventEmitter<IUser> = new EventEmitter();
+	save: EventEmitter<IUser> = new EventEmitter();
 
 	authPass: boolean = null;
 
 	constructor(private usersService: UsersService) {}
 
-	save() {
-		this.onSave.emit({
+	onSave() {
+		this.save.emit({
 			name: this.name.value,
 			url: this.url.value,
 			user: this.user.value,
@@ -156,7 +156,7 @@ export class ConfigComponent implements OnInit {
 		const sec$ = this.select$.getOutput();
 		const users$ = this.usersService.usersFlow$.getOutput();
 		// init input value
-		sec$.subscribe((node) => {
+		sec$.subscribe(node => {
 			if (node[1].length !== 0) return;
 			const user = node[0];
 			this.setUser(user.name, user.url, user.user, user.password);
@@ -169,15 +169,14 @@ export class ConfigComponent implements OnInit {
 				if (usersNode[1].length !== 0 || secNode[1].length !== 0)
 					this.nameErr = usersNode[1][0].message;
 				else if (name === '') this.nameErr = 'You must enter a value';
-				else if (usersNode[0].users.find((x) => x.name !== secNode[0].name && x.name === name))
+				else if (usersNode[0].users.find(x => x.name !== secNode[0].name && x.name === name))
 					this.nameErr = 'This name already exists';
 				else this.nameErr = '';
 				// this.disableSave = this.nameErr !== '';
 			});
 
-		this.url.valueChanges.subscribe((x) => {
-			if (x === '') this.urlErr = 'You must enter a value';
-			else this.urlErr = '';
+		this.url.valueChanges.subscribe(x => {
+			this.urlErr = x === '' ? 'You must enter a value' : '';
 		});
 
 		const authFlow$ = new (class extends NoopAuthFlow {

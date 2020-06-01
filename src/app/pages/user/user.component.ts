@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { UsersFlow, IUser, UsersFlowOutNode } from 'src/app/@dataflow/extra';
-import { Subject, Observable, of } from 'rxjs';
-import { map, withLatestFrom, filter, tap } from 'rxjs/operators';
-import { CombErr, FlowInNode, NothingFlow } from 'src/app/@dataflow/core';
-import { NbStepperComponent, NbStepComponent } from '@nebular/theme';
+import { NbStepComponent, NbStepperComponent } from '@nebular/theme';
+import { Observable, of, Subject } from 'rxjs';
+import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
+import { CombErr, FlowInNode, NothingFlow } from '../../@dataflow/core';
+import { IUser, UsersFlow, UsersFlowOutNode } from '../../@dataflow/extra';
 import { UsersService } from '../users.service';
 
 @Component({
@@ -30,19 +30,22 @@ import { UsersService } from '../users.service';
 					</nb-step>
 					<nb-step hidden label="Select">
 						<h4>Select User</h4>
-						<user-select (onConfirm)="selectTrigger.next($event); realNext()"> </user-select>
+						<app-user-select (confirm)="selectTrigger.next($event); realNext()"> </app-user-select>
 						<button nbButton (click)="realPrev()">prev</button>
 					</nb-step>
 					<nb-step hidden label="Config">
 						<h4>Configurate User</h4>
-						<user-config [select$]="select$" (onSave)="saveTrigger.next($event); stepper.reset()">
-						</user-config>
+						<app-user-config [select$]="select$" (save)="saveTrigger.next($event); stepper.reset()">
+						</app-user-config>
 						<button nbButton (click)="realPrev()">prev</button>
 					</nb-step>
 					<nb-step hidden label="Confirm">
 						<h4>Delete Confirm</h4>
-						<user-confirm [select$]="select$" (onDelete)="confirmTrigger.next(1); stepper.reset()">
-						</user-confirm>
+						<app-user-confirm
+							[select$]="select$"
+							(delete)="confirmTrigger.next(1); stepper.reset()"
+						>
+						</app-user-confirm>
 						<button nbButton (click)="realPrev()">prev</button>
 					</nb-step>
 				</nb-stepper>
@@ -121,7 +124,7 @@ export class UserComponent implements OnInit {
 						if (usersNode[1].length !== 0) return [{}, usersNode[1]] as any;
 						if (name === '')
 							return [{ name: '', url: 'http://localhost:5572', user: '', password: '' }, []]; // default value, add new conf
-						const selected = usersNode[0].users.find((x) => x.name === name);
+						const selected = usersNode[0].users.find(x => x.name === name);
 						if (!selected) return [{}, [new Error(`user '${name}'not found`)]] as any;
 						return [selected, []];
 					}
@@ -150,7 +153,7 @@ export class UserComponent implements OnInit {
 					([curUser, secNode, usersNode]): CombErr<UsersFlowOutNode> => {
 						if (secNode[1].length !== 0 || usersNode[1].length !== 0)
 							return [{}, [].concat(secNode[1], usersNode[1])] as any;
-						const rst = usersNode[0].users.filter((x) => x.name !== secNode[0].name);
+						const rst = usersNode[0].users.filter(x => x.name !== secNode[0].name);
 						rst.push(curUser);
 						return [{ users: rst }, []];
 					}

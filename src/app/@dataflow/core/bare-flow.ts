@@ -1,5 +1,5 @@
 import { Observable, of } from 'rxjs';
-import { switchMap, take, distinctUntilChanged, shareReplay } from 'rxjs/operators';
+import { distinctUntilChanged, shareReplay, switchMap, take } from 'rxjs/operators';
 
 export interface FlowInNode {}
 export interface FlowOutNode {}
@@ -7,9 +7,9 @@ export type CombErr<T> = [T, Error[]];
 
 export abstract class BareFlow<Tin extends FlowInNode, Tout extends FlowOutNode> {
 	public abstract prerequest$: Observable<CombErr<Tin>>;
-	protected abstract request(pre: CombErr<Tin>): Observable<CombErr<Tout>>;
 	private bareData$: Observable<CombErr<Tout>>;
 	private deployed = false;
+	protected abstract request(pre: CombErr<Tin>): Observable<CombErr<Tout>>;
 	protected deployBefore() {
 		this.bareData$ = this.prerequest$.pipe(
 			switchMap(

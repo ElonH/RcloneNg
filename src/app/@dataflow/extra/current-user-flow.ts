@@ -1,6 +1,6 @@
-import { IUser, UsersFlowOutNode } from './users-flow';
-import { CombErr, SupersetFlow } from '../core';
 import { Observable, of } from 'rxjs';
+import { CombErr, SupersetFlow } from '../core';
+import { IUser, UsersFlowOutNode } from './users-flow';
 
 export interface CurrentUserFlowOutNode extends IUser {}
 
@@ -8,6 +8,12 @@ export abstract class CurrentUserFlow extends SupersetFlow<
 	UsersFlowOutNode,
 	CurrentUserFlowOutNode
 > {
+	public static setLogin(name: string) {
+		localStorage.setItem('loginUser', name);
+	}
+	public static getLogin(): string {
+		return localStorage.getItem('loginUser');
+	}
 	// public prerequest$: Observable<CombErr<UsersFlowOutNode>>;
 	protected request(pre: CombErr<UsersFlowOutNode>): Observable<CombErr<CurrentUserFlowOutNode>> {
 		if (pre[1].length !== 0) return of([{}, pre[1]]) as any;
@@ -23,12 +29,5 @@ export abstract class CurrentUserFlow extends SupersetFlow<
 		for (const item of pre[0].users) if (item.name === loginUser) return of([{ ...item }, []]);
 		// lost name
 		return of([{ ...pre[0].users[0] }, []]);
-	}
-
-	public static setLogin(name: string) {
-		localStorage.setItem('loginUser', name);
-	}
-	public static getLogin(): string {
-		return localStorage.getItem('loginUser');
 	}
 }

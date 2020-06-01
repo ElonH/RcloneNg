@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { UsersFlow, CurrentUserFlow } from '../@dataflow/extra';
-import { CombErr, FlowInNode } from '../@dataflow/core';
 import { map } from 'rxjs/operators';
+import { CombErr, FlowInNode } from '../@dataflow/core';
+import { CurrentUserFlow, UsersFlow } from '../@dataflow/extra';
 
 @Injectable({
 	providedIn: 'root',

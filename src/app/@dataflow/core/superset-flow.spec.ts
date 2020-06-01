@@ -1,7 +1,7 @@
-import { SupersetFlow } from './superset-flow';
-import { TestScheduler } from 'rxjs/testing';
-import {  FlowInNode, FlowOutNode, CombErr } from './bare-flow';
 import { Observable, of } from 'rxjs';
+import { TestScheduler } from 'rxjs/testing';
+import { CombErr, FlowInNode, FlowOutNode } from './bare-flow';
+import { SupersetFlow } from './superset-flow';
 
 describe('SupersetFlow', () => {
 	let scheduler: TestScheduler;
@@ -12,7 +12,7 @@ describe('SupersetFlow', () => {
 			}))
 	);
 	it('prerequest twice(different value), got twice', () => {
-		scheduler.run((helpers) => {
+		scheduler.run(helpers => {
 			const { cold, hot, expectObservable, expectSubscriptions, flush } = helpers;
 			const values: { [id: string]: CombErr<{}> } = {
 				a: [{ ab: 555 }, []],
@@ -20,11 +20,11 @@ describe('SupersetFlow', () => {
 				c: [{ ab: 555, cd: 556 }, []],
 				d: [{ ab: 123, cd: 124 }, []],
 			};
-			const pre = cold('a--b-', values);
+			const inp = cold('a--b-', values);
 			const expected = 'c--d-';
 
 			const rst = new (class extends SupersetFlow<FlowInNode, FlowOutNode> {
-				public prerequest$ = pre;
+				public prerequest$ = inp;
 				protected request(pre: CombErr<FlowInNode>): Observable<CombErr<FlowOutNode>> {
 					return of([{ cd: pre[0]['ab'] + 1 }, []]);
 				}

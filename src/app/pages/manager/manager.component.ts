@@ -1,33 +1,33 @@
-import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
-import { NavigationFlowOutNode, NavigationFlow } from 'src/app/@dataflow/extra';
-import { Subject, Observable } from 'rxjs';
-import { CombErr } from 'src/app/@dataflow/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { NbDialogService, NbToastrService } from '@nebular/theme';
+import { Observable, Subject } from 'rxjs';
 import { map, withLatestFrom } from 'rxjs/operators';
-import { HomeModeComponent } from './homeMode/homeMode.component';
-import { NbDialogService } from '@nebular/theme';
-import { OperationsMkdirFlow, OperationsMkdirFlowInNode } from 'src/app/@dataflow/rclone';
+import { CombErr } from '../../@dataflow/core';
+import { NavigationFlow, NavigationFlowOutNode } from '../../@dataflow/extra';
+import { OperationsMkdirFlow, OperationsMkdirFlowInNode } from '../../@dataflow/rclone';
 import { ConnectionService } from '../connection.service';
-import { NbToastrService } from '@nebular/theme';
-import { FileModeComponent } from './fileMode/fileMode.component';
 import { ClipboardService, IManipulate } from './clipboard/clipboard.service';
+import { FileModeComponent } from './fileMode/fileMode.component';
+import { HomeModeComponent } from './homeMode/homeMode.component';
 import { TaskService } from './tasks/tasks.service';
 
 @Component({
 	selector: 'app-manager',
 	template: `
 		<nb-layout-header fixed style="width: calc(100% - 16rem); left: inherit;">
-			<manager-breadcrumb [nav$]="nav$" (jump)="addrJump($event)">
+			<app-manager-breadcrumb [nav$]="nav$" (jump)="addrJump($event)">
 				<a class="pushToRight option" (click)="refresh()"><nb-icon icon="refresh"></nb-icon></a>
 				<a class="option"><nb-icon icon="list"></nb-icon></a>
 				<a class="option"><nb-icon icon="info"></nb-icon></a>
-			</manager-breadcrumb>
+			</app-manager-breadcrumb>
 		</nb-layout-header>
 		<div class="subcolumn container">
 			<nb-card>
 				<nb-card-body>
-					<manager-homeMode *ngIf="homeMode" (jump)="addrJump($event)"> </manager-homeMode>
-					<manager-fileMode *ngIf="fileMode" [nav$]="nav$" (jump)="addrJump($event)">
-					</manager-fileMode>
+					<app-manager-home-mode *ngIf="homeMode" (jump)="addrJump($event)">
+					</app-manager-home-mode>
+					<app-manager-file-mode *ngIf="fileMode" [nav$]="nav$" (jump)="addrJump($event)">
+					</app-manager-file-mode>
 				</nb-card-body>
 			</nb-card>
 		</div>
@@ -83,7 +83,7 @@ import { TaskService } from './tasks/tasks.service';
 							Clipboard
 						</nb-card-header>
 						<nb-card-body>
-							<manager-clipboard (onDeleteConfirm)="del()"> </manager-clipboard>
+							<app-manager-clipboard (onDeleteConfirm)="del()"> </app-manager-clipboard>
 						</nb-card-body>
 					</nb-card>
 				</ng-template>
@@ -104,7 +104,7 @@ import { TaskService } from './tasks/tasks.service';
 							Tasks
 						</nb-card-header>
 						<nb-card-body>
-							<manager-tasks> </manager-tasks>
+							<app-manager-tasks> </app-manager-tasks>
 						</nb-card-body>
 					</nb-card>
 				</ng-template>
@@ -168,12 +168,21 @@ export class ManagerComponent implements OnInit {
 
 	@ViewChild(FileModeComponent) file: FileModeComponent;
 	@ViewChild(HomeModeComponent) home: HomeModeComponent;
-	refresh() {
-		if (this.homeMode) this.home.refresh();
-	}
 
 	private navTrigger = new Subject<NavigationFlowOutNode>();
 	nav$: NavigationFlow;
+
+	private mkdirTrigger = new Subject<string>();
+	mkdir$: OperationsMkdirFlow;
+
+	clipboardSize = 0;
+
+	private pasteTrigger = new Subject<IManipulate[]>();
+
+	public orderCnt = 0;
+	refresh() {
+		if (this.homeMode) this.home.refresh();
+	}
 
 	addrJump(addr: NavigationFlowOutNode) {
 		this.navTrigger.next(addr);
@@ -192,7 +201,7 @@ export class ManagerComponent implements OnInit {
 
 						outer.homeMode = !remote;
 						outer.fileMode = !!remote;
-						return [{ remote: remote, path: path }, []];
+						return [{ remote, path }, []];
 					}
 				)
 			);
@@ -200,9 +209,6 @@ export class ManagerComponent implements OnInit {
 		this.nav$.deploy();
 		this.navTrigger.next({});
 	}
-
-	private mkdirTrigger = new Subject<string>();
-	mkdir$: OperationsMkdirFlow;
 
 	mkdir(name: string) {
 		this.mkdirTrigger.next(name);
@@ -222,31 +228,26 @@ export class ManagerComponent implements OnInit {
 						if (navNode[0].path) {
 							path = [navNode[0].path, path].join('/');
 						}
-						return [{ ...cmdNode[0], remote: navNode[0].remote, path: path }, []];
+						return [{ ...cmdNode[0], remote: navNode[0].remote, path }, []];
 					}
 				)
 			);
 		})();
 		this.mkdir$.deploy();
-		this.mkdir$.getOutput().subscribe((x) => {
+		this.mkdir$.getOutput().subscribe(x => {
 			if (x[1].length !== 0) {
 				this.toastrService.danger('create dir failure');
-				debugger;
 			} else {
 				this.toastrService.success('create dir success');
 			}
 		});
 	}
-
-	clipboardSize: number = 0;
 	private clipboardDeploy() {
-		this.clipboard.clipboard$.getOutput().subscribe((node) => {
+		this.clipboard.clipboard$.getOutput().subscribe(node => {
 			if (node[1].length !== 0) return;
 			this.clipboardSize = node[0].clipboard.values.length;
 		});
 	}
-
-	private pasteTrigger = new Subject<IManipulate[]>();
 	private pasteDeploy() {
 		this.pasteTrigger.pipe(withLatestFrom(this.nav$.getOutput())).subscribe(([opers, dstNode]) => {
 			if (dstNode[1].length !== 0) throw Error("can't not get destination.");
@@ -261,10 +262,8 @@ export class ManagerComponent implements OnInit {
 	del() {
 		this.pasteTrigger.next(['del']);
 	}
-
-	public orderCnt = 0;
 	private tasksDeploy() {
-		this.taskService.detail$.getOutput().subscribe((x) => {
+		this.taskService.detail$.getOutput().subscribe(x => {
 			if (x[1].length !== 0) return;
 			this.orderCnt = x[0].order.size + x[0].failure.size;
 		});
