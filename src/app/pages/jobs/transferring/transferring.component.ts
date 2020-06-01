@@ -7,7 +7,15 @@ import { ForamtDuration } from 'src/app/utils/format-duration';
 @Component({
 	selector: 'jobs-transferring',
 	template: `
-		<ngx-table [configuration]="configuration" [data]="data" [columns]="columns"> </ngx-table>
+		<ngx-table [configuration]="configuration" [data]="data" [columns]="columns">
+			<ng-template let-row>
+				<td>{{ row.name }}</td>
+				<td>{{ row.sizeHumanReadable }}</td>
+				<td>{{ row.percentage }}</td>
+				<td>{{ row.speedHumanReadable }}</td>
+				<td>{{ row.etaHumanReadable }}</td>
+			</ng-template>
+		</ngx-table>
 	`,
 	styles: [],
 })
@@ -18,10 +26,10 @@ export class TransfersComponent implements OnInit {
 	public configuration: Config;
 	public columns: Columns[] = [
 		{ key: 'name', title: 'Name' },
-		{ key: 'sizeHumanReadable', title: 'Size' },
+		{ key: 'size', title: 'Size' },
 		{ key: 'percentage', title: 'Percentage' },
-		{ key: 'speedHumanReadable', title: 'Speed' },
-		{ key: 'etaHumanReadable', title: 'eta' },
+		{ key: 'speed', title: 'Speed' },
+		{ key: 'eta', title: 'eta' },
 	];
 	public data: (ITransferring & {
 		sizeHumanReadable: string;
