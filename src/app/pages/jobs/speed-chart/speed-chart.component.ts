@@ -4,6 +4,7 @@ import { ChartDataSets, ChartOptions, ChartPoint } from 'chart.js';
 import { Color, BaseChartDirective } from 'ng2-charts';
 import * as moment from 'moment';
 import { pairwise } from 'rxjs/operators';
+import { FormatBytes } from 'src/app/utils/format-bytes';
 
 @Component({
 	selector: 'jobs-speed-chart',
@@ -84,6 +85,21 @@ export class SpeedChartComponent implements OnInit {
 		hover: {
 			intersect: false,
 		},
+		tooltips: {
+			mode: 'index',
+			callbacks: {
+				label: function (tooltipItem, data) {
+					var label = data.datasets[tooltipItem.datasetIndex].label || '';
+					if (label) {
+						label += ': ';
+					}
+					if (typeof tooltipItem.yLabel === 'number')
+						label += FormatBytes(tooltipItem.yLabel, 3) + '/s';
+					else label += tooltipItem.yLabel;
+					return label;
+				},
+			},
+		},
 		scales: {
 			// We use this empty structure as a placeholder for dynamic theming.
 			xAxes: [
@@ -118,9 +134,13 @@ export class SpeedChartComponent implements OnInit {
 					},
 					ticks: {
 						labelOffset: -10, // sit on gridline
-						padding: -65, // moving label into dataset
-						// min: 0,
+						padding: -83, // moving label into dataset
+						min: 0,
 						beginAtZero: true,
+						callback: function (value) {
+							if (typeof value === 'number') return FormatBytes(value) + '/s';
+							return value;
+						},
 					},
 					scaleLabel: {
 						display: false,
