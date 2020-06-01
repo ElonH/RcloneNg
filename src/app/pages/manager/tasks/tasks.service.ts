@@ -9,6 +9,8 @@ import {
 	OperationsDeletefileFlow,
 	SyncCopyFlow,
 	SyncCopyFlowInNode,
+	SyncMoveFlow,
+	SyncMoveFlowInNode,
 } from 'src/app/@dataflow/rclone';
 import {
 	ClipboardService,
@@ -218,6 +220,38 @@ export class TaskService {
 			});
 	}
 
+	private syncMove$: SyncMoveFlow;
+	private deploySyncMove() {
+		const outer = this;
+		const taskReal$ = outer.post$.pipe(filter((x) => x.oper === 'move' && x.srcItem.IsDir));
+		this.syncMove$ = new (class extends SyncMoveFlow {
+			public prerequest$ = taskReal$.pipe(
+				withLatestFrom(outer.connectService.listCmd$.verify(this.cmd)),
+				map(
+					([item, cmdNode]): CombErr<SyncMoveFlowInNode> => {
+						if (cmdNode[1].length !== 0) return [{}, cmdNode[1]] as any;
+						return [
+							{
+								...cmdNode[0],
+								srcFs: `${item.srcRemote}:${item.srcItem.Path}`,
+								dstFs: `${item.dst.remote}:${[item.dst.path, item.srcItem.Name].join('/')}`,
+								deleteEmptySrcDirs: false,
+							},
+							[],
+						];
+					}
+				)
+			);
+		})();
+		this.syncMove$.deploy();
+		this.syncMove$
+			.getOutput()
+			.pipe(zip(taskReal$))
+			.subscribe((x) => {
+				this.postAfter(...x);
+			});
+	}
+
 	private detailTrigger = new Subject<number>();
 	public detail$: TasksPoolFlow;
 	private deployDetail() {
@@ -257,6 +291,7 @@ export class TaskService {
 		this.deployMoveFile();
 		this.deployDeleteFile();
 		this.deploySyncCopy();
+		this.deploySyncMove();
 		this.deployDetail();
 	}
 }
