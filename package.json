@@ -24,6 +24,7 @@
     "build:prod": "npm run build -- --prod --aot",
     "test": "ng test",
     "lint": "ng lint",
+    "pre-commit": "pretty-quick --staged && ng lint",
     "commit": "git-cz",
     "release": "standard-version",
     "release:dry": "standard-version --dry-run",
@@ -68,7 +69,6 @@
     "@types/node": "^12.12.42",
     "codelyzer": "^5.1.2",
     "cz-conventional-changelog": "^3.2.0",
-    "husky": "^4.2.5",
     "jasmine-core": "~3.5.0",
     "jasmine-spec-reporter": "~4.2.1",
     "karma": "^5.0.9",
@@ -90,12 +90,6 @@
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
-    }
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "pretty-quick --staged && ng lint",
-      "commit-msg": "commitlint -x @commitlint/config-conventional -E HUSKY_GIT_PARAMS"
     }
   }
 }
