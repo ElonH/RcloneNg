@@ -5,11 +5,16 @@ import { CombErr } from 'src/app/@dataflow/core';
 import { map, withLatestFrom } from 'rxjs/operators';
 import { HomeModeComponent } from './homeMode/homeMode.component';
 import { NbDialogService } from '@nebular/theme';
-import { OperationsMkdirFlow, OperationsMkdirFlowInNode } from 'src/app/@dataflow/rclone';
+import {
+	OperationsMkdirFlow,
+	OperationsMkdirFlowInNode,
+	OperationsCopyfileFlow,
+} from 'src/app/@dataflow/rclone';
 import { ConnectionService } from '../connection.service';
 import { NbToastrService } from '@nebular/theme';
 import { FileModeComponent } from './fileMode/fileMode.component';
 import { ClipboardService } from './clipboard/clipboard.service';
+import { TaskService } from './task.service';
 
 @Component({
 	selector: 'app-manager',
@@ -35,7 +40,7 @@ import { ClipboardService } from './clipboard/clipboard.service';
 				<nb-action icon="copy" (click)="file.manipulate('copy')"></nb-action>
 				<nb-action icon="move" (click)="file.manipulate('move')"></nb-action>
 				<nb-action icon="trash-2" (click)="file.manipulate('del')"></nb-action>
-				<nb-action icon="clipboard"></nb-action>
+				<nb-action icon="clipboard" (click)="paste()"></nb-action>
 			</nb-actions>
 			<nb-actions *ngIf="fileMode">
 				<ng-template #mkdirDialog let-ref="dialogRef">
@@ -138,7 +143,8 @@ export class ManagerComponent implements OnInit {
 		private dialogService: NbDialogService,
 		private connectService: ConnectionService,
 		private toastrService: NbToastrService,
-		private clipboard: ClipboardService
+		private clipboard: ClipboardService,
+		private taskService: TaskService
 	) {}
 	homeMode = false;
 	fileMode = false;
@@ -223,10 +229,23 @@ export class ManagerComponent implements OnInit {
 		});
 	}
 
+	private pasteTrigger = new Subject<number>();
+	private pasteDeploy() {
+		this.pasteTrigger.pipe(withLatestFrom(this.nav$.getOutput())).subscribe(([, dstNode]) => {
+			if (dstNode[1].length !== 0) throw Error("can't not get destination.");
+			this.taskService.createTask(dstNode[0]);
+		});
+	}
+
+	paste() {
+		this.pasteTrigger.next(1);
+	}
+
 	ngOnInit(): void {
 		this.navDeploy();
 		this.mkdirDeploy();
 		this.clipboardDeploy();
+		this.pasteDeploy();
 	}
 
 	dialog(dialog: TemplateRef<any>) {

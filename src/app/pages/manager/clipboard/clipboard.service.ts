@@ -25,7 +25,13 @@ export class Clipboard {
 		dst?: NavigationFlowOutNode
 	) {
 		const key = Clipboard.genKey(remote, row.Path);
-		this.data.set(key, { oper: o, key: key, srcItem: { ...row }, srcRemote: remote, dst: dst });
+		this.data.set(key, {
+			oper: o,
+			key: key,
+			srcItem: { ...row },
+			srcRemote: remote,
+			dst: { ...dst },
+		});
 	}
 
 	public pop(remote: string, path: string): ClipboardItem {
@@ -50,6 +56,14 @@ export class Clipboard {
 
 	public get values(): ClipboardItem[] {
 		return Array.from(this.data.values());
+	}
+
+	public get size(): number {
+		return this.data.size;
+	}
+
+	public clear() {
+		this.data.clear();
 	}
 
 	public static genKey(remote: string, path: string) {

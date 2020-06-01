@@ -7,3 +7,5 @@ export * from './connection-flow';
 export * from './list-cmd-flow';
 export * from './list-group-flow';
 export * from './operations-mkdir-flow';
+export * from './async-post-flow';
+export * from './operations-copyfile-flow';
