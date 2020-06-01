@@ -1,5 +1,11 @@
 import { Injectable } from '@angular/core';
-import { OperationsCopyfileFlow, OperationsCopyfileFlowInNode } from 'src/app/@dataflow/rclone';
+import {
+	OperationsCopyfileFlow,
+	OperationsCopyfileFlowInNode,
+	AsyncPostFlowOutNode,
+	OperationsMovefileFlow,
+  OperationsMovefileFlowInNode,
+} from 'src/app/@dataflow/rclone';
 import { ClipboardService, Clipboard, ClipboardItem } from '../clipboard/clipboard.service';
 import { Subject, from, Observable } from 'rxjs';
 import {
@@ -94,12 +100,50 @@ export class TaskService {
 		this.copyFile$
 			.getOutput()
 			.pipe(zip(taskReal$))
-			.subscribe(([x, y]) => {
-				this.tasksPool.pop(y.srcRemote, y.srcItem.Path); // TODO: replase as del rather pop, for perf
-				this.emptySlot++;
-				if (x[1].length !== 0) this.tasksFailure.add(y.oper, y.srcRemote, y.srcItem, y.dst);
-				this.detailTrigger.next(1);
-				this.postTrigger.next(1);
+			.subscribe((x) => {
+				this.postAfter(...x);
+			});
+	}
+
+	private postAfter(output: CombErr<AsyncPostFlowOutNode>, task: ClipboardItem) {
+		this.tasksPool.pop(task.srcRemote, task.srcItem.Path); // TODO: replase as del rather pop, for perf
+		this.emptySlot++;
+		if (output[1].length !== 0)
+			this.tasksFailure.add(task.oper, task.srcRemote, task.srcItem, task.dst);
+		this.detailTrigger.next(1);
+		this.postTrigger.next(1);
+	}
+
+	private moveFile$: OperationsMovefileFlow;
+	private deployMoveFile() {
+		const outer = this;
+		const taskReal$ = outer.post$.pipe(filter((x) => x.oper === 'move' && !x.srcItem.IsDir));
+		this.moveFile$ = new (class extends OperationsMovefileFlow {
+			public prerequest$ = taskReal$.pipe(
+				withLatestFrom(outer.connectService.listCmd$.verify(this.cmd)),
+				map(
+					([item, cmdNode]): CombErr<OperationsMovefileFlowInNode> => {
+						if (cmdNode[1].length !== 0) return [{}, cmdNode[1]] as any;
+						return [
+							{
+								...cmdNode[0],
+								srcFs: `${item.srcRemote}:`,
+								srcRemote: item.srcItem.Path,
+								dstFs: `${item.dst.remote}:`,
+								dstRemote: [item.dst.path, item.srcItem.Name].join('/'), // TODO: windows path delimiter '\' ?
+							},
+							[],
+						];
+					}
+				)
+			);
+		})();
+		this.moveFile$.deploy();
+		this.moveFile$
+			.getOutput()
+			.pipe(zip(taskReal$))
+			.subscribe((x) => {
+				this.postAfter(...x);
 			});
 	}
 
@@ -139,6 +183,7 @@ export class TaskService {
 		this.deployCreate();
 		this.deployPost();
 		this.deployCopyFile();
+		this.deployMoveFile();
 		this.deployDetail();
 	}
 }
