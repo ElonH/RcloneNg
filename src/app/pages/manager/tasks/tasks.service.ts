@@ -11,6 +11,8 @@ import {
 	SyncCopyFlowInNode,
 	SyncMoveFlow,
 	SyncMoveFlowInNode,
+	OperationsPurgeFlow,
+	OperationsPurgeFlowInNode,
 } from 'src/app/@dataflow/rclone';
 import {
 	ClipboardService,
@@ -252,6 +254,37 @@ export class TaskService {
 			});
 	}
 
+	private purge$: OperationsPurgeFlow;
+	private deployPurge() {
+		const outer = this;
+		const taskReal$ = outer.post$.pipe(filter((x) => x.oper === 'del' && x.srcItem.IsDir));
+		this.purge$ = new (class extends OperationsPurgeFlow {
+			public prerequest$ = taskReal$.pipe(
+				withLatestFrom(outer.connectService.listCmd$.verify(this.cmd)),
+				map(
+					([item, cmdNode]): CombErr<OperationsPurgeFlowInNode> => {
+						if (cmdNode[1].length !== 0) return [{}, cmdNode[1]] as any;
+						return [
+							{
+								...cmdNode[0],
+								srcFs: `${item.srcRemote}:`,
+								srcRemote: item.srcItem.Path,
+							},
+							[],
+						];
+					}
+				)
+			);
+		})();
+		this.purge$.deploy();
+		this.purge$
+			.getOutput()
+			.pipe(zip(taskReal$))
+			.subscribe((x) => {
+				this.postAfter(...x);
+			});
+	}
+
 	private detailTrigger = new Subject<number>();
 	public detail$: TasksPoolFlow;
 	private deployDetail() {
@@ -292,6 +325,7 @@ export class TaskService {
 		this.deployDeleteFile();
 		this.deploySyncCopy();
 		this.deploySyncMove();
+		this.deployPurge();
 		this.deployDetail();
 	}
 }

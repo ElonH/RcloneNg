@@ -13,3 +13,4 @@ export * from './operations-movefile-flow';
 export * from './operations-deletefile-flow';
 export * from './sync-copy-flow';
 export * from './sync-move-flow';
+export * from './operations-purge-flow';
