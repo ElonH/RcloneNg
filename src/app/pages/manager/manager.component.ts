@@ -10,7 +10,7 @@ import { ConnectionService } from '../connection.service';
 import { NbToastrService } from '@nebular/theme';
 import { FileModeComponent } from './fileMode/fileMode.component';
 import { ClipboardService, IManipulate } from './clipboard/clipboard.service';
-import { TaskService } from './tasks/task.service';
+import { TaskService } from './tasks/tasks.service';
 
 @Component({
 	selector: 'app-manager',

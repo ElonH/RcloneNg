@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { TaskService } from './task.service';
+import { TaskService } from './tasks.service';
 import { Config, Columns } from 'ngx-easy-table';
 import { ClipboardItem, IManipulate } from '../clipboard/clipboard.service';
 
