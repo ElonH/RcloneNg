@@ -59,9 +59,13 @@ export class SummaryComponent implements OnInit {
 	ngOnInit() {
 		this.stats$.getOutput().subscribe(([x, err]) => {
 			if (err.length !== 0) return;
+			let speed = 0;
+			if (this.values.transferring) {
+				this.values.transferring.forEach((x) => (speed += x.speed));
+			}
 			this.values = JSON.parse(JSON.stringify(x['core-stats']));
 			this.values.bytesHumanReadable = FormatBytes(this.values.bytes, 4);
-			this.values.speedHumanReadable = FormatBytes(this.values.speed, 4) + '/s';
+			this.values.speedHumanReadable = FormatBytes(speed, 4) + '/s';
 			this.values.durationHumanReadable = ForamtDuration.humanize(this.values.elapsedTime * 1000, {
 				language: 'shortEn',
 				round: true,
