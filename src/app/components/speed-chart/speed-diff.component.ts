@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormatBytes } from '../../../utils/format-bytes';
+import { FormatBytes } from '../../utils/format-bytes';
 
 @Component({
-	selector: 'app-jobs-speed-diff',
+	selector: 'app-rng-diff',
 	template: `
 		<span> {{ (val < 0 ? '-' + FormatBytes(-val) : FormatBytes(val)) + '/s' }} </span>
 		<nb-icon
@@ -20,7 +20,7 @@ import { FormatBytes } from '../../../utils/format-bytes';
 		`,
 	],
 })
-export class SpeedDiffComponent implements OnInit {
+export class RngDiffComponent implements OnInit {
 	@Input()
 	val = 0;
 

@@ -3,11 +3,11 @@ import { ChartDataSets, ChartOptions, ChartPoint } from 'chart.js';
 import * as moment from 'moment';
 import { BaseChartDirective, Color } from 'ng2-charts';
 import { pairwise } from 'rxjs/operators';
-import { CoreStatsFlow } from '../../../@dataflow/rclone';
-import { FormatBytes } from '../../../utils/format-bytes';
+import { CoreStatsFlow } from '../../@dataflow/rclone';
+import { FormatBytes } from '../../utils/format-bytes';
 
 @Component({
-	selector: 'app-jobs-speed-chart',
+	selector: 'app-rng-speed-chart',
 	template: `
 		<div class="chart-container">
 			<canvas
@@ -17,7 +17,7 @@ import { FormatBytes } from '../../../utils/format-bytes';
 				[colors]="lineChartColors"
 				chartType="line"
 			></canvas>
-			<app-jobs-speed-diff [val]="speedDiff"> </app-jobs-speed-diff>
+			<app-rng-diff [val]="speedDiff"> </app-rng-diff>
 		</div>
 	`,
 	styles: [
@@ -31,7 +31,7 @@ import { FormatBytes } from '../../../utils/format-bytes';
 				width: 100%;
 				height: 100%;
 			}
-			.chart-container jobs-speed-diff {
+			.chart-container app-rng-diff {
 				position: absolute;
 				right: 1rem;
 				top: 0.25rem;
@@ -39,7 +39,7 @@ import { FormatBytes } from '../../../utils/format-bytes';
 		`,
 	],
 })
-export class SpeedChartComponent implements OnInit {
+export class RngSpeedChartComponent implements OnInit {
 	constructor() {}
 	public lineChartData: ChartDataSets[] = [
 		{

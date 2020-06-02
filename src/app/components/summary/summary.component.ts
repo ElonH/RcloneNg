@@ -1,10 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { CoreStatsFlow, CoreStatsFlowOutItemNode } from '../../../@dataflow/rclone';
-import { FormatBytes } from '../../../utils/format-bytes';
-import { ForamtDuration } from '../../../utils/format-duration';
+import { CoreStatsFlow, CoreStatsFlowOutItemNode } from '../../@dataflow/rclone';
+import { FormatBytes } from '../../utils/format-bytes';
+import { ForamtDuration } from '../../utils/format-duration';
 
 @Component({
-	selector: 'app-jobs-summary',
+	selector: 'app-rng-summary',
 	template: `
 		<dl>
 			<ng-container *ngFor="let item of keys">
@@ -29,7 +29,7 @@ import { ForamtDuration } from '../../../utils/format-duration';
 		`,
 	],
 })
-export class SummaryComponent implements OnInit {
+export class RngSummaryComponent implements OnInit {
 	@Input()
 	stats$: CoreStatsFlow;
 

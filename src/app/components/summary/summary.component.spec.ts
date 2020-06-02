@@ -3,20 +3,20 @@ import { DebugElement } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
-import { SummaryComponent } from './summary.component';
+import { RngSummaryComponent } from './summary.component';
 
 describe('SummaryComponent', () => {
-	let component: SummaryComponent;
-	let fixture: ComponentFixture<SummaryComponent>;
+	let component: RngSummaryComponent;
+	let fixture: ComponentFixture<RngSummaryComponent>;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [SummaryComponent],
+			declarations: [RngSummaryComponent],
 		}).compileComponents();
 	}));
 
 	beforeEach(() => {
-		fixture = TestBed.createComponent(SummaryComponent);
+		fixture = TestBed.createComponent(RngSummaryComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});

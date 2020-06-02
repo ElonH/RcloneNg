@@ -38,7 +38,7 @@ import { ConnectionService } from '../connection.service';
 							<nb-card size="small">
 								<nb-card-header> Speed </nb-card-header>
 								<nb-card-body class="speed-body">
-									<app-jobs-speed-chart [stats$]="stats$"> </app-jobs-speed-chart>
+									<app-rng-speed-chart [stats$]="stats$"> </app-rng-speed-chart>
 								</nb-card-body>
 							</nb-card>
 						</div>
@@ -46,7 +46,7 @@ import { ConnectionService } from '../connection.service';
 							<nb-card>
 								<nb-card-header> Summary </nb-card-header>
 								<nb-card-body>
-									<app-jobs-summary [stats$]="stats$"> </app-jobs-summary>
+									<app-rng-summary [stats$]="stats$"> </app-rng-summary>
 								</nb-card-body>
 							</nb-card>
 						</div>

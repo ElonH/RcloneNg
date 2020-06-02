@@ -31,7 +31,7 @@ import { ConnectionService } from '../connection.service';
 									</button>
 								</nb-card-header>
 								<nb-card-body>
-									<app-jobs-speed-chart [stats$]="stats$"> </app-jobs-speed-chart>
+									<app-rng-speed-chart [stats$]="stats$"> </app-rng-speed-chart>
 								</nb-card-body>
 							</nb-card>
 						</nb-card-front>
@@ -61,7 +61,7 @@ import { ConnectionService } from '../connection.service';
 						<nb-card-body>
 							<nb-tabset fullWidth>
 								<nb-tab tabTitle="Summary">
-									<app-jobs-summary [stats$]="stats$"> </app-jobs-summary>
+									<app-rng-summary [stats$]="stats$"> </app-rng-summary>
 								</nb-tab>
 								<nb-tab tabTitle="Memory">
 									Memory stats
