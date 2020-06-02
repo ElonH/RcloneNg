@@ -6,8 +6,8 @@ import { FormatBytes } from '../../utils/format-bytes';
 	template: `
 		<span> {{ (val < 0 ? '-' + FormatBytes(-val) : FormatBytes(val)) + suffic }} </span>
 		<nb-icon
-			[icon]="'arrow-' + (val < 0 ? 'down' : 'up')"
-			[status]="val < 0 ? 'danger' : 'success'"
+			[icon]="val < 0 ? 'arrow-down' : val > 0 ? 'arrow-up' : 'minus'"
+			[status]="val < 0 ? 'danger' : val > 0 ? 'success' : 'basic'"
 		>
 		</nb-icon>
 	`,
