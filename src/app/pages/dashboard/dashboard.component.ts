@@ -88,6 +88,9 @@ import { ConnectionService } from '../connection.service';
 			:host nb-tab {
 				padding-top: 2rem;
 			}
+			:host nb-flip-card ::ng-deep div.front-container {
+				width: 100%;
+			}
 		`,
 	],
 })
