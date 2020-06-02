@@ -3,7 +3,7 @@
  * License: MIT
  */
 export function FormatBytes(bytes: number, decimals = 2) {
-	if (bytes < 0 || typeof bytes !== 'number') {
+	if (typeof bytes !== 'number' || bytes < 0) {
 		return '-';
 	}
 	if (bytes === 0) {
