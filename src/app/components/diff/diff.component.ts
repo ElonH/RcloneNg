@@ -4,7 +4,7 @@ import { FormatBytes } from '../../utils/format-bytes';
 @Component({
 	selector: 'app-rng-diff',
 	template: `
-		<span> {{ (val < 0 ? '-' + FormatBytes(-val) : FormatBytes(val)) + '/s' }} </span>
+		<span> {{ (val < 0 ? '-' + FormatBytes(-val) : FormatBytes(val)) + suffic }} </span>
 		<nb-icon
 			[icon]="'arrow-' + (val < 0 ? 'down' : 'up')"
 			[status]="val < 0 ? 'danger' : 'success'"
@@ -21,8 +21,9 @@ import { FormatBytes } from '../../utils/format-bytes';
 	],
 })
 export class RngDiffComponent implements OnInit {
-	@Input()
-	val = 0;
+	@Input() val = 0;
+
+	@Input() suffic = '';
 
 	FormatBytes = FormatBytes;
 

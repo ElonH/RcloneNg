@@ -17,7 +17,7 @@ import { FormatBytes } from '../../utils/format-bytes';
 				[colors]="lineChartColors"
 				chartType="line"
 			></canvas>
-			<app-rng-diff [val]="speedDiff"> </app-rng-diff>
+			<app-rng-diff [val]="speedDiff" [suffic]="'/s'"> </app-rng-diff>
 		</div>
 	`,
 	styles: [
