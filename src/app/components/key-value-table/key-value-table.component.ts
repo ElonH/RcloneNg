@@ -1,42 +1,52 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, ContentChild, Input, OnInit, TemplateRef } from '@angular/core';
+import { Columns, Config, DefaultConfig } from 'ngx-easy-table';
 
 @Component({
 	selector: 'app-rng-kv-table',
 	template: `
-		<table>
-			<tr *ngFor="let k of keys">
-				<th>{{ k.title ? k.title : k.key }}</th>
-				<td>{{ isDefine(data[k.key]) ? data[k.key] : ' ' }}</td>
-			</tr>
-		</table>
+		<ngx-table
+			[configuration]="configuration"
+			[columns]="columns"
+			[data]="keys"
+			[pagination]="{ limit: 100, offset: 0, count: 100 }"
+		>
+			<ng-template let-row let-rowIndex="index">
+				<th style="border: none; padding: 0.25rem 3% 0.25rem 0.5rem;text-align: right;">
+					{{ row.title ? row.title : row.key }}
+				</th>
+				<td style="border: none; padding: 0.25rem 0.5rem;">
+					{{ isDefine(data[row.key]) ? data[row.key] : '??' }}
+				</td>
+				<ng-container
+					*ngIf="addonTemplate"
+					[ngTemplateOutlet]="addonTemplate"
+					[ngTemplateOutletContext]="{ $implicit: row.key }"
+				>
+				</ng-container>
+			</ng-template>
+		</ngx-table>
 	`,
 	styles: [
 		`
-			th {
-				text-align: right;
-				min-width: 20%;
-				max-width: 40%;
-				padding: 0.25rem 3% 0.25rem 0.5rem;
-			}
 			th::after {
 				content: ':';
 			}
-			td {
-				min-width: 50%;
-				word-break: break-word;
-				padding: 0.25rem 0.5rem;
-			}
 			tr {
 				vertical-align: top;
-			}
-			table {
-				width: 100%;
 			}
 		`,
 	],
 })
 export class RngKeyValueTableComponent implements OnInit {
 	constructor() {}
+	@ContentChild(TemplateRef, { static: true }) public addonTemplate: TemplateRef<any>;
+
+	public configuration: Config;
+
+	columns: Columns[] = [
+		{ key: 'keys', title: 'keys' },
+		{ key: 'values', title: 'values' },
+	];
 
 	@Input() keys: { key: string; title?: string }[] = [];
 	@Input() data: { [idx: string]: any } = {};
@@ -44,5 +54,13 @@ export class RngKeyValueTableComponent implements OnInit {
 	isDefine(val: any) {
 		return typeof val !== 'undefined';
 	}
-	ngOnInit() {}
+	ngOnInit() {
+		this.configuration = { ...DefaultConfig };
+		this.configuration.searchEnabled = false;
+		this.configuration.isLoading = false;
+		this.configuration.infiniteScroll = false;
+		this.configuration.headerEnabled = false;
+		this.configuration.paginationEnabled = false;
+		this.configuration.paginationMaxSize = 100;
+	}
 }

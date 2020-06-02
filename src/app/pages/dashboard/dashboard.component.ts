@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ResponsiveSizeInfoRx } from 'ngx-responsive';
 import { combineLatest, Subject } from 'rxjs';
-import { map, takeWhile } from 'rxjs/operators';
+import { map, pairwise, takeWhile } from 'rxjs/operators';
 import { CombErr } from '../../@dataflow/core';
 import { CoreMemstatsFlow, CoreStatsFlow, CoreStatsFlowInNode } from '../../@dataflow/rclone';
 import { FormatBytes } from '../../utils/format-bytes';
@@ -71,7 +71,15 @@ import { ConnectionService } from '../connection.service';
 					<nb-card>
 						<nb-card-header> Memory </nb-card-header>
 						<nb-card-body>
-							<app-rng-kv-table [keys]="memKeys" [data]="memVals"> </app-rng-kv-table>
+							<app-rng-kv-table [keys]="memKeys" [data]="memVals">
+								<ng-template let-key>
+									<th
+										style="border: none; padding: 0.25rem 0.5rem; text-align: right; width: 7.25rem;"
+									>
+										<app-rng-diff [val]="memDiff[key]"></app-rng-diff>
+									</th>
+								</ng-template>
+							</app-rng-kv-table>
 						</nb-card-body>
 					</nb-card>
 				</div>
@@ -125,6 +133,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 		{ key: 'TotalAlloc' },
 	];
 	memVals = {};
+	memDiff = {};
 
 	private memTrigger = new Subject<number>();
 	mem$: CoreMemstatsFlow;
@@ -168,6 +177,18 @@ export class DashboardComponent implements OnInit, OnDestroy {
 				}
 			}
 		});
+
+		this.mem$
+			.getOutput()
+			.pipe(pairwise())
+			.subscribe(([pre, cur]) => {
+				if (pre[1].length !== 0 || cur[1].length !== 0) return;
+				for (const key in pre[0]['mem-stats']) {
+					if (this.memVals.hasOwnProperty(key)) {
+						this.memDiff[key] = cur[0]['mem-stats'][key] - pre[0]['mem-stats'][key];
+					}
+				}
+			});
 		this.memTrigger.next(1);
 	}
 	ngOnDestroy() {
