@@ -16,7 +16,7 @@ import { ConnectionService } from '../connection.service';
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-sm-12 col-md-6 col-xl-6">
+				<div class="col-sm-12 col-md-6">
 					<nb-flip-card #flip [showToggleButton]="false">
 						<nb-card-front>
 							<nb-card size="medium">
@@ -58,20 +58,19 @@ import { ConnectionService } from '../connection.service';
 						</nb-card-back>
 					</nb-flip-card>
 				</div>
-				<div class="col-sm-12 col-md-6 col-xl-6">
+				<div class="col-sm-12 col-md-6">
 					<nb-card size="medium">
+						<nb-card-header> Summary </nb-card-header>
 						<nb-card-body>
-							<nb-tabset fullWidth>
-								<nb-tab tabTitle="Summary">
-									<app-rng-summary [stats$]="stats$"> </app-rng-summary>
-								</nb-tab>
-								<nb-tab tabTitle="Memory">
-									<app-rng-kv-table [keys]="memKeys" [data]="memVals"> </app-rng-kv-table>
-								</nb-tab>
-								<nb-tab tabTitle="Cache">
-									Cache stats
-								</nb-tab>
-							</nb-tabset>
+							<app-rng-summary [stats$]="stats$"> </app-rng-summary>
+						</nb-card-body>
+					</nb-card>
+				</div>
+				<div class="col-sm-12 col-md-6">
+					<nb-card>
+						<nb-card-header> Memory </nb-card-header>
+						<nb-card-body>
+							<app-rng-kv-table [keys]="memKeys" [data]="memVals"> </app-rng-kv-table>
 						</nb-card-body>
 					</nb-card>
 				</div>
@@ -144,10 +143,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
 		this.stats$.deploy();
 
 		this.mem$ = new (class extends CoreMemstatsFlow {
+			protected cacheSupport = false;
 			public prerequest$ = combineLatest([
-				outer.memTrigger,
+				outer.cmdService.rst$.getOutput(),
 				outer.cmdService.listCmd$.verify(this.cmd),
-			]).pipe(map(x => x[1]));
+			]).pipe(
+				takeWhile(() => outer.visable),
+				map(x => x[1])
+			);
 		})();
 		this.mem$.deploy();
 		this.mem$.getOutput().subscribe(x => {
