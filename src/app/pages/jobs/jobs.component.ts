@@ -149,6 +149,7 @@ export class JobsComponent implements OnInit, OnDestroy {
 	}
 
 	public refreshList() {
+		this.listGroup$.clearCache();
 		this.listTrigger.next(1);
 	}
 	ngOnDestroy() {

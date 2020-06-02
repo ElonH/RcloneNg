@@ -1,5 +1,5 @@
 import { iif, Observable, of } from 'rxjs';
-import { map, take, tap } from 'rxjs/operators';
+import { take, tap } from 'rxjs/operators';
 import { CombErr, FlowInNode, FlowOutNode } from './bare-flow';
 import { FlowSupNode, SupersetFlow } from './superset-flow';
 
@@ -12,6 +12,8 @@ export abstract class CacheFlow<
 
 	protected abstract cacheSupport: boolean;
 	protected abstract cachePath: string | undefined;
+	protected cleanCacheFlag = false;
+
 	public static purgeAllCache() {
 		CacheFlow.cacheStorage = {};
 	}
@@ -33,7 +35,8 @@ export abstract class CacheFlow<
 		return this.cacheSupport && typeof this.cachePath === 'string';
 	}
 	private isCached() {
-		return CacheFlow.cacheStorage.hasOwnProperty(this.cachePath);
+		if (this.cleanCacheFlag) return !(this.cleanCacheFlag = true);
+		return !this.cleanCacheFlag && CacheFlow.cacheStorage.hasOwnProperty(this.cachePath);
 	}
 	private getCache(): CombErr<Tout> {
 		return CacheFlow.cacheStorage[this.cachePath] as CombErr<Tout>;
@@ -42,6 +45,7 @@ export abstract class CacheFlow<
 		CacheFlow.cacheStorage[this.cachePath] = x;
 	}
 	public clearCache() {
-		delete CacheFlow.cacheStorage[this.cachePath];
+		this.cleanCacheFlag = true;
+		// delete CacheFlow.cacheStorage[this.cachePath];
 	}
 }
