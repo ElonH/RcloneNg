@@ -5,29 +5,8 @@ import { ForamtDuration } from '../../utils/format-duration';
 
 @Component({
 	selector: 'app-rng-summary',
-	template: `
-		<dl>
-			<ng-container *ngFor="let item of keys">
-				<dt>{{ item.title }}</dt>
-				<dd>{{ isDefine(values[item.key]) ? values[item.key] : 'Unknow' }}</dd>
-			</ng-container>
-		</dl>
-	`,
-	styles: [
-		`
-			dl dt {
-				float: left;
-				width: 8rem;
-				text-align: right;
-			}
-			dt::after {
-				content: ': ';
-			}
-			dl dd {
-				margin-left: 10rem;
-			}
-		`,
-	],
+	template: ` <app-rng-kv-table [keys]="keys" [data]="values"> </app-rng-kv-table> `,
+	styles: [],
 })
 export class RngSummaryComponent implements OnInit {
 	@Input()
@@ -42,8 +21,8 @@ export class RngSummaryComponent implements OnInit {
 		{ key: 'deletes', title: 'Delete' },
 		{ key: 'durationHumanReadable', title: 'Duration' },
 		{ key: 'errors', title: 'Errors' },
-		{ key: 'fatalError', title: 'FatalError' },
-		{ key: 'retryError', title: 'RetryError' },
+		{ key: 'fatalError', title: 'Fatal Error' },
+		{ key: 'retryError', title: 'Retry Error' },
 	];
 	values: CoreStatsFlowOutItemNode & {
 		speedHumanReadable: string;
