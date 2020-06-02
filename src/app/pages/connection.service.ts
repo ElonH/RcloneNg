@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { interval, Observable } from 'rxjs';
-import { combineLatest, map } from 'rxjs/operators';
+import { combineLatest, interval, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { CombErr } from '../@dataflow/core';
 import {
 	ConnectionFlow,
@@ -22,10 +22,10 @@ export class ConnectionService {
 	constructor(currentUserService: CurrentUserService) {
 		const outer = this;
 		this.rst$ = new (class extends NoopAuthFlow {
-			public prerequest$ = outer.timer.pipe(
-				combineLatest(currentUserService.currentUserFlow$.getOutput()),
-				map(([, y]) => y)
-			);
+			public prerequest$ = combineLatest([
+				outer.timer,
+				currentUserService.currentUserFlow$.getOutput(),
+			]).pipe(map(x => x[1]));
 		})();
 		this.rst$.deploy();
 

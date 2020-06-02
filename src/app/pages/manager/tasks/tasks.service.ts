@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { from, Observable, Subject } from 'rxjs';
+import { from, Observable, Subject, zip } from 'rxjs';
 import {
 	filter,
 	map,
@@ -9,7 +9,6 @@ import {
 	share,
 	takeWhile,
 	withLatestFrom,
-	zip,
 } from 'rxjs/operators';
 import { CombErr, NothingFlow } from '../../../@dataflow/core';
 import { NavigationFlowOutNode } from '../../../@dataflow/extra';
@@ -134,12 +133,9 @@ export class TaskService {
 			);
 		})();
 		this.copyFile$.deploy();
-		this.copyFile$
-			.getOutput()
-			.pipe(zip(taskReal$))
-			.subscribe(x => {
-				this.postAfter(...x);
-			});
+		zip(this.copyFile$.getOutput(), taskReal$).subscribe(x => {
+			this.postAfter(...x);
+		});
 	}
 
 	private postAfter(output: CombErr<AsyncPostFlowOutNode>, task: ClipboardItem) {
@@ -174,12 +170,9 @@ export class TaskService {
 			);
 		})();
 		this.moveFile$.deploy();
-		this.moveFile$
-			.getOutput()
-			.pipe(zip(taskReal$))
-			.subscribe(x => {
-				this.postAfter(...x);
-			});
+		zip(this.moveFile$.getOutput(), taskReal$).subscribe(x => {
+			this.postAfter(...x);
+		});
 	}
 	private deployDeleteFile() {
 		const outer = this;
@@ -203,12 +196,9 @@ export class TaskService {
 			);
 		})();
 		this.deleteFile$.deploy();
-		this.deleteFile$
-			.getOutput()
-			.pipe(zip(taskReal$))
-			.subscribe(x => {
-				this.postAfter(...x);
-			});
+		zip(this.deleteFile$.getOutput(), taskReal$).subscribe(x => {
+			this.postAfter(...x);
+		});
 	}
 	private deploySyncCopy() {
 		const outer = this;
@@ -232,12 +222,9 @@ export class TaskService {
 			);
 		})();
 		this.syncCopy$.deploy();
-		this.syncCopy$
-			.getOutput()
-			.pipe(zip(taskReal$))
-			.subscribe(x => {
-				this.postAfter(...x);
-			});
+		zip(this.syncCopy$.getOutput(), taskReal$).subscribe(x => {
+			this.postAfter(...x);
+		});
 	}
 	private deploySyncMove() {
 		const outer = this;
@@ -262,12 +249,9 @@ export class TaskService {
 			);
 		})();
 		this.syncMove$.deploy();
-		this.syncMove$
-			.getOutput()
-			.pipe(zip(taskReal$))
-			.subscribe(x => {
-				this.postAfter(...x);
-			});
+		zip(this.syncMove$.getOutput(), taskReal$).subscribe(x => {
+			this.postAfter(...x);
+		});
 	}
 	private deployPurge() {
 		const outer = this;
@@ -291,12 +275,9 @@ export class TaskService {
 			);
 		})();
 		this.purge$.deploy();
-		this.purge$
-			.getOutput()
-			.pipe(zip(taskReal$))
-			.subscribe(x => {
-				this.postAfter(...x);
-			});
+		zip(this.purge$.getOutput(), taskReal$).subscribe(x => {
+			this.postAfter(...x);
+		});
 	}
 	private deployDetail() {
 		const outer = this;

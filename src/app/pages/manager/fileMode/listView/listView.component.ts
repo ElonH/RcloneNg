@@ -9,8 +9,7 @@ import {
 } from '@angular/core';
 import * as moment from 'moment';
 import { API, APIDefinition, Columns, Config, DefaultConfig } from 'ngx-easy-table';
-import { Subscription } from 'rxjs';
-import { combineLatest } from 'rxjs/operators';
+import { combineLatest, Subscription } from 'rxjs';
 import { getIconForFile, getIconForFolder } from 'vscode-icons-js';
 import { NavigationFlowOutNode } from '../../../../@dataflow/extra';
 import { OperationsListFlow, OperationsListFlowOutItemNode } from '../../../../@dataflow/rclone';
@@ -153,30 +152,30 @@ export class ListViewComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit() {
-		this.listScrb = this.list$
-			.getSupersetOutput()
-			.pipe(combineLatest(this.clipboardService.clipboard$.getOutput()))
-			.subscribe(([listNode, cbNode]) => {
-				if (listNode[1].length !== 0 || cbNode[1].length !== 0) {
-					this.data = undefined;
-					this.checkAll = false;
-				}
-				this.remote = listNode[0].remote;
-				this.data = listNode[0].list as any;
-				this.data.forEach(item => {
-					item.check = false;
-					item.SizeHumanReadable = FormatBytes(item.Size);
-					item.ModTimeMoment = moment(item.ModTime);
-					item.ModTimeHumanReadable = item.ModTimeMoment.fromNow();
-					item.ManipulateIcon = this.manipulate2Icon(
-						cbNode[0].clipboard.getManipulation(this.remote, item.Path)
-					);
-					item.TypeIcon = item.IsDir
-						? getIconForFolder(item.Name)
-						: (item.TypeIcon = getIconForFile(item.Name));
-				});
+		this.listScrb = combineLatest([
+			this.list$.getSupersetOutput(),
+			this.clipboardService.clipboard$.getOutput(),
+		]).subscribe(([listNode, cbNode]) => {
+			if (listNode[1].length !== 0 || cbNode[1].length !== 0) {
+				this.data = undefined;
 				this.checkAll = false;
+			}
+			this.remote = listNode[0].remote;
+			this.data = listNode[0].list as any;
+			this.data.forEach(item => {
+				item.check = false;
+				item.SizeHumanReadable = FormatBytes(item.Size);
+				item.ModTimeMoment = moment(item.ModTime);
+				item.ModTimeHumanReadable = item.ModTimeMoment.fromNow();
+				item.ManipulateIcon = this.manipulate2Icon(
+					cbNode[0].clipboard.getManipulation(this.remote, item.Path)
+				);
+				item.TypeIcon = item.IsDir
+					? getIconForFolder(item.Name)
+					: (item.TypeIcon = getIconForFile(item.Name));
 			});
+			this.checkAll = false;
+		});
 
 		this.configuration = { ...DefaultConfig };
 		this.configuration.searchEnabled = true;

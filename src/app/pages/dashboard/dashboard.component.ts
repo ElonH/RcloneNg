@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { combineLatest, map, takeWhile } from 'rxjs/operators';
+import { combineLatest } from 'rxjs';
+import { map, takeWhile } from 'rxjs/operators';
 import { CombErr } from '../../@dataflow/core';
 import { CoreStatsFlow, CoreStatsFlowInNode } from '../../@dataflow/rclone';
 import { ConnectionService } from '../connection.service';
@@ -101,9 +102,11 @@ export class DashboardComponent implements OnInit, OnDestroy {
 		const outer = this;
 		this.visable = true;
 		this.stats$ = new (class extends CoreStatsFlow {
-			public prerequest$ = outer.cmdService.rst$.getOutput().pipe(
+			public prerequest$ = combineLatest([
+				outer.cmdService.rst$.getOutput(),
+				outer.cmdService.listCmd$.verify(this.cmd),
+			]).pipe(
 				takeWhile(() => outer.visable),
-				combineLatest(outer.cmdService.listCmd$.verify(this.cmd)),
 				map(([, node]): CombErr<CoreStatsFlowInNode> => node)
 			);
 		})();

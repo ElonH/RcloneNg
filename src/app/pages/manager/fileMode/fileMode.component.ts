@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { Subject } from 'rxjs';
-import { combineLatest, filter, map } from 'rxjs/operators';
+import { combineLatest, Subject } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
 import { CombErr } from '../../../@dataflow/core';
 import { NavigationFlow, NavigationFlowOutNode } from '../../../@dataflow/extra';
 import { OperationsListFlow, OperationsListFlowInNode } from '../../../@dataflow/rclone';
@@ -38,8 +38,11 @@ export class FileModeComponent implements OnInit {
 	ngOnInit() {
 		const outer = this;
 		this.list$ = new (class extends OperationsListFlow {
-			public prerequest$ = outer.listTrigger.pipe(
-				combineLatest(outer.nav$.getOutput(), outer.connectService.listCmd$.verify(this.cmd)),
+			public prerequest$ = combineLatest([
+				outer.listTrigger,
+				outer.nav$.getOutput(),
+				outer.connectService.listCmd$.verify(this.cmd),
+			]).pipe(
 				map(
 					([, navNode, cmdNode]): CombErr<OperationsListFlowInNode> => {
 						if (navNode[1].length !== 0 || cmdNode[1].length !== 0)

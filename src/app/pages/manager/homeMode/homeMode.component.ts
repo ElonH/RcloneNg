@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Subject } from 'rxjs';
-import { combineLatest } from 'rxjs/internal/operators/combineLatest';
+import { combineLatest, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { NavigationFlow, NavigationFlowOutNode } from '../../../@dataflow/extra';
 import { ListRemotesFlow } from '../../../@dataflow/rclone';
@@ -39,10 +38,10 @@ export class HomeModeComponent implements OnInit {
 	ngOnInit() {
 		const outer = this;
 		this.remotes$ = new (class extends ListRemotesFlow {
-			public prerequest$ = outer.remotesTrigger.pipe(
-				combineLatest(outer.cmdService.listCmd$.verify(this.cmd)),
-				map(([, y]) => y)
-			);
+			public prerequest$ = combineLatest([
+				outer.remotesTrigger,
+				outer.cmdService.listCmd$.verify(this.cmd),
+			]).pipe(map(([, y]) => y));
 		})();
 		this.remotes$.deploy();
 		this.remotesTrigger.next(1);
