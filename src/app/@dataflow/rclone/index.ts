@@ -14,3 +14,4 @@ export * from './operations-deletefile-flow';
 export * from './sync-copy-flow';
 export * from './sync-move-flow';
 export * from './operations-purge-flow';
+export * from './core-memstats-flow';

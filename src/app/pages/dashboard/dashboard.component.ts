@@ -1,8 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { combineLatest } from 'rxjs';
+import { combineLatest, Subject } from 'rxjs';
 import { map, takeWhile } from 'rxjs/operators';
 import { CombErr } from '../../@dataflow/core';
-import { CoreStatsFlow, CoreStatsFlowInNode } from '../../@dataflow/rclone';
+import { CoreMemstatsFlow, CoreStatsFlow, CoreStatsFlowInNode } from '../../@dataflow/rclone';
+import { FormatBytes } from '../../utils/format-bytes';
 import { ConnectionService } from '../connection.service';
 
 @Component({
@@ -65,7 +66,7 @@ import { ConnectionService } from '../connection.service';
 									<app-rng-summary [stats$]="stats$"> </app-rng-summary>
 								</nb-tab>
 								<nb-tab tabTitle="Memory">
-									Memory stats
+									<app-rng-kv-table [keys]="memKeys" [data]="memVals"> </app-rng-kv-table>
 								</nb-tab>
 								<nb-tab tabTitle="Cache">
 									Cache stats
@@ -101,6 +102,33 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
 	private visable = false;
 
+	memKeys = [
+		{ key: 'Alloc' },
+		{ key: 'BuckHashSys' },
+		{ key: 'Frees' },
+		{ key: 'GCSys' },
+		{ key: 'HeapAlloc' },
+		{ key: 'HeapIdle' },
+		{ key: 'HeapInuse' },
+		{ key: 'HeapObjects' },
+		{ key: 'HeapReleased' },
+		{ key: 'HeapSys' },
+		{ key: 'MCacheInuse' },
+		{ key: 'MCacheSys' },
+		{ key: 'MSpanInuse' },
+		{ key: 'MSpanSys' },
+		{ key: 'Mallocs' },
+		{ key: 'OtherSys' },
+		{ key: 'StackInuse' },
+		{ key: 'StackSys' },
+		{ key: 'Sys' },
+		{ key: 'TotalAlloc' },
+	];
+	memVals = {};
+
+	private memTrigger = new Subject<number>();
+	mem$: CoreMemstatsFlow;
+
 	ngOnInit(): void {
 		const outer = this;
 		this.visable = true;
@@ -114,6 +142,24 @@ export class DashboardComponent implements OnInit, OnDestroy {
 			);
 		})();
 		this.stats$.deploy();
+
+		this.mem$ = new (class extends CoreMemstatsFlow {
+			public prerequest$ = combineLatest([
+				outer.memTrigger,
+				outer.cmdService.listCmd$.verify(this.cmd),
+			]).pipe(map(x => x[1]));
+		})();
+		this.mem$.deploy();
+		this.mem$.getOutput().subscribe(x => {
+			if (x[1].length !== 0) return;
+			this.memVals = { ...x[0]['mem-stats'] };
+			for (const key in this.memVals) {
+				if (this.memVals.hasOwnProperty(key)) {
+					this.memVals[key] = FormatBytes(this.memVals[key], 3);
+				}
+			}
+		});
+		this.memTrigger.next(1);
 	}
 	ngOnDestroy() {
 		this.visable = false;
