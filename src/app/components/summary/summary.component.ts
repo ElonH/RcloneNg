@@ -61,7 +61,9 @@ export class RngSummaryComponent implements OnInit {
 			if (err.length !== 0) return;
 			let speed = 0;
 			if (this.values.transferring) {
-				this.values.transferring.forEach(y => (speed += y.speed));
+				this.values.transferring.forEach(y => {
+					if (y.speed) speed += y.speed;
+				});
 			}
 			this.values = JSON.parse(JSON.stringify(x['core-stats']));
 			this.values.bytesHumanReadable = FormatBytes(this.values.bytes, 4);

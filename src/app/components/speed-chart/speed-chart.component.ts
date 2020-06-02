@@ -188,8 +188,10 @@ export class RngSpeedChartComponent implements OnInit {
 			let speed = 0;
 			let avg = 0;
 			if (node[0]['core-stats'].transferring) {
-				node[0]['core-stats'].transferring.forEach(x => (avg += x.speedAvg));
-				node[0]['core-stats'].transferring.forEach(x => (speed += x.speed));
+				node[0]['core-stats'].transferring.forEach(x => {
+					if (x.speed) speed += x.speed;
+					if (x.speedAvg) avg += x.speedAvg;
+				});
 			}
 			const speedData = this.lineChartData[0].data as ChartPoint[];
 			const avgData = this.lineChartData[1].data as ChartPoint[];
