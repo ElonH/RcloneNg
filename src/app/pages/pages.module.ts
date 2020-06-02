@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 
 import { NbEvaIconsModule } from '@nebular/eva-icons';
 import { NbActionsModule, NbLayoutModule, NbMenuModule, NbSidebarModule } from '@nebular/theme';
+import { ResponsiveModule } from 'ngx-responsive';
 import { PagesRoutingModule } from './pages-routing.module';
 import { PagesComponent } from './pages.component';
 
@@ -10,6 +11,7 @@ import { PagesComponent } from './pages.component';
 	declarations: [PagesComponent],
 	imports: [
 		CommonModule,
+		ResponsiveModule,
 		PagesRoutingModule,
 		NbLayoutModule,
 		NbActionsModule,

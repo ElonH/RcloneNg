@@ -8,7 +8,7 @@ import { ConnectionService } from '../connection.service';
 @Component({
 	selector: 'app-dashboard',
 	template: `
-		<div class="container">
+		<div class="container-fluid">
 			<div class="row">
 				<div class="col">
 					<nb-card><nb-card-body>tutorial</nb-card-body></nb-card>

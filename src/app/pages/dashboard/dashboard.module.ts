@@ -9,6 +9,7 @@ import {
 	NbTabsetModule,
 } from '@nebular/theme';
 import { ChartsModule } from 'ng2-charts';
+import { ResponsiveModule } from 'ngx-responsive';
 import { RngModule } from '../../components/rng.module';
 import { DashboardRoutingModule } from './dashboard-routing.module';
 import { DashboardComponent } from './dashboard.component';
@@ -17,6 +18,7 @@ import { DashboardComponent } from './dashboard.component';
 	declarations: [DashboardComponent],
 	imports: [
 		CommonModule,
+		ResponsiveModule,
 		DashboardRoutingModule,
 		NbCardModule,
 		NbButtonModule,

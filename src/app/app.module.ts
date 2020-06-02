@@ -9,6 +9,7 @@ import {
 	NbThemeModule,
 	NbToastrModule,
 } from '@nebular/theme';
+import { ResponsiveModule } from 'ngx-responsive';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
@@ -18,6 +19,7 @@ import { AppComponent } from './app.component';
 		BrowserModule,
 		AppRoutingModule,
 		BrowserAnimationsModule,
+		ResponsiveModule.forRoot(),
 		NbThemeModule.forRoot({ name: 'default' }),
 		NbMenuModule.forRoot(),
 		NbDialogModule.forRoot({ autoFocus: true, closeOnEsc: true }),

@@ -1,20 +1,27 @@
 import { Component, OnInit } from '@angular/core';
 import { NbMenuItem, NbSidebarService } from '@nebular/theme';
+import { ResponsiveSizeInfoRx } from 'ngx-responsive';
 import { CurrentUserService } from './current-user.service';
 import { MENU_ITEMS } from './pages-menu';
 
 @Component({
 	selector: 'app-rng-pages',
 	template: `
-		<nb-layout [withScroll]="false">
+		<nb-layout [withScroll]="false" [responsive-window]="'pages'">
 			<nb-layout-header fixed>
 				<nb-actions>
-					<nb-action icon="menu-outline" (click)="toggleNav()"></nb-action>
+					<nb-action
+						icon="menu-outline"
+						(click)="toggleNav()"
+						*hideItBootstrap="['lg', 'xl']"
+					></nb-action>
 					<nb-action> <img src="./assets/favicon.svg" style="height: 3rem;" /> </nb-action>
 				</nb-actions>
 			</nb-layout-header>
 
-			<nb-sidebar class="main-sidebar" tag="nav"><nb-menu [items]="menu"> </nb-menu></nb-sidebar>
+			<nb-sidebar class="main-sidebar" tag="nav" [fixed]="mainSideBarFixed">
+				<nb-menu [items]="menu"> </nb-menu>
+			</nb-sidebar>
 
 			<nb-layout-column class="colored-column-basic basic-contant" style="padding: 0;">
 				<router-outlet></router-outlet>
@@ -30,16 +37,30 @@ import { MENU_ITEMS } from './pages-menu';
 	],
 })
 export class PagesComponent implements OnInit {
-	menu = MENU_ITEMS;
 	constructor(
 		private sidebarService: NbSidebarService,
-		private currUserService: CurrentUserService
-	) {}
+		private currUserService: CurrentUserService,
+		private resp: ResponsiveSizeInfoRx
+	) {
+		resp.connect();
+	}
+	menu = MENU_ITEMS;
+
+	respSize = 'lg';
+	mainSideBarFixed = false;
 
 	toggleNav() {
-		this.sidebarService.toggle(true, 'nav');
+		this.sidebarService.toggle(false, 'nav');
 	}
+
 	ngOnInit(): void {
+		this.resp.getResponsiveSize.subscribe(data => {
+			this.respSize = data;
+
+			this.mainSideBarFixed = data === 'xs' || data === 'sm' || data === 'md';
+			if (!this.mainSideBarFixed) this.sidebarService.expand('nav');
+			else this.sidebarService.collapse('nav');
+		});
 		this.currUserService.currentUserFlow$.getSupersetOutput().subscribe(node => {
 			if (node[1].length !== 0) return;
 			const userGroup = this.menu[0];
