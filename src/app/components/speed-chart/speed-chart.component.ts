@@ -206,7 +206,19 @@ export class RngSpeedChartComponent implements OnInit {
 		});
 		statsOut.pipe(pairwise()).subscribe(([pre, cur]) => {
 			if (pre[1].length !== 0 || cur[1].length !== 0) return;
-			this.speedDiff = Math.round(cur[0]['core-stats'].speed - pre[0]['core-stats'].speed);
+			let preSpeed = 0;
+			let curSpeed = 0;
+			if (pre[0]['core-stats'].transferring) {
+				pre[0]['core-stats'].transferring.forEach(x => {
+					if (x.speed) preSpeed += x.speed;
+				});
+			}
+			if (cur[0]['core-stats'].transferring) {
+				cur[0]['core-stats'].transferring.forEach(x => {
+					if (x.speed) curSpeed += x.speed;
+				});
+			}
+			this.speedDiff = Math.round(curSpeed - preSpeed);
 		});
 	}
 }
