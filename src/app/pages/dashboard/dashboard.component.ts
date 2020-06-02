@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ResponsiveSizeInfoRx } from 'ngx-responsive';
 import { combineLatest, Subject } from 'rxjs';
 import { map, takeWhile } from 'rxjs/operators';
 import { CombErr } from '../../@dataflow/core';
@@ -59,7 +60,7 @@ import { ConnectionService } from '../connection.service';
 					</nb-flip-card>
 				</div>
 				<div class="col-sm-12 col-md-6">
-					<nb-card size="medium">
+					<nb-card [size]="isSmallerThanSmSize ? '' : 'medium'">
 						<nb-card-header> Summary </nb-card-header>
 						<nb-card-body>
 							<app-rng-summary [stats$]="stats$"> </app-rng-summary>
@@ -95,7 +96,7 @@ import { ConnectionService } from '../connection.service';
 	],
 })
 export class DashboardComponent implements OnInit, OnDestroy {
-	constructor(private cmdService: ConnectionService) {}
+	constructor(private cmdService: ConnectionService, private resp: ResponsiveSizeInfoRx) {}
 
 	public stats$: CoreStatsFlow;
 
@@ -128,7 +129,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
 	private memTrigger = new Subject<number>();
 	mem$: CoreMemstatsFlow;
 
+	isSmallerThanSmSize = false;
+
 	ngOnInit(): void {
+		this.resp.getResponsiveSize.subscribe(data => {
+			this.isSmallerThanSmSize = data === 'xs';
+		});
 		const outer = this;
 		this.visable = true;
 		this.stats$ = new (class extends CoreStatsFlow {
