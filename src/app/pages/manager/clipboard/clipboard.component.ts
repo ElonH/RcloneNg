@@ -13,16 +13,24 @@ import { ClipboardService, IManipulate } from './clipboard.service';
 				badgeStatus="primary"
 			>
 				<ng-container *ngIf="tab.oper === 'del'">
-					<button nbButton status="danger" (click)="deleteConfirm.emit()">
-						<nb-icon icon="alert-triangle"></nb-icon>
-						Confirm
-					</button>
+					<div style="display: flex; justify-content: center;">
+						<button nbButton status="danger" (click)="deleteConfirm.emit()">
+							<nb-icon icon="alert-triangle"></nb-icon>
+							Confirm
+						</button>
+					</div>
 				</ng-container>
 				<app-clipboard-remotes-table [oper]="tab.oper"> </app-clipboard-remotes-table>
 			</nb-tab>
 		</nb-tabset>
 	`,
-	styles: [],
+	styles: [
+		`
+			:host nb-tab {
+				padding: 0;
+			}
+		`,
+	],
 })
 export class ClipboardComponent implements OnInit {
 	constructor(private service: ClipboardService) {}
