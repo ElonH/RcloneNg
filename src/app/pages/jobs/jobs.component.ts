@@ -9,7 +9,7 @@ import { ConnectionService } from '../connection.service';
 	selector: 'app-jobs',
 	template: `
 		<nb-layout>
-			<nb-sidebar tag="group">
+			<nb-sidebar tag="group" *showItBootstrap="['xl', 'lg', 'md']">
 				<nb-card-header>
 					Groups
 					<nb-icon icon="refresh" (click)="refreshList()"></nb-icon>
@@ -19,7 +19,7 @@ import { ConnectionService } from '../connection.service';
 						(click)="activateGroup('')"
 						[ngClass]="{ 'active-group': activeGroup === '' }"
 					>
-						[all]
+						[All]
 					</nb-list-item>
 					<nb-list-item
 						*ngFor="let item of groups"
@@ -31,10 +31,24 @@ import { ConnectionService } from '../connection.service';
 				</nb-list>
 			</nb-sidebar>
 
-			<nb-layout-column style="padding: 0;">
-				<div class="container">
+			<nb-layout-column>
+				<nb-card *hideItBootstrap="['xl', 'lg', 'md']">
+					<nb-card-header>
+						<nb-select
+							placeholder="Groups"
+							style="max-width: calc(100% - 1em - 1.5rem); width: calc(100% - 1em - 1.5rem);"
+							[(selected)]="activeGroup"
+							(selectedChange)="activateGroup(activeGroup)"
+						>
+							<nb-option value="">[All]</nb-option>
+							<nb-option *ngFor="let item of groups" [value]="item"> {{ item }}</nb-option>
+						</nb-select>
+						<nb-icon icon="refresh" (click)="refreshList()"></nb-icon>
+					</nb-card-header>
+				</nb-card>
+				<div class="container-flex">
 					<div class="row">
-						<div class="col-6">
+						<div class="col-xl-6 col-lg-7 col-md-6 col-sm-5 col-sx-12">
 							<nb-card size="small">
 								<nb-card-header> Speed </nb-card-header>
 								<nb-card-body class="speed-body">
@@ -42,7 +56,7 @@ import { ConnectionService } from '../connection.service';
 								</nb-card-body>
 							</nb-card>
 						</div>
-						<div class="col-6">
+						<div class="col-xl-6 col-lg-5 col-md-6 col-sm-7 col-sx-12">
 							<nb-card>
 								<nb-card-header> Summary </nb-card-header>
 								<nb-card-body>
@@ -67,6 +81,16 @@ import { ConnectionService } from '../connection.service';
 	`,
 	styles: [
 		`
+			nb-card-header {
+				display: flex;
+			}
+			nb-card-header > nb-icon {
+				margin-left: auto;
+				margin-top: auto;
+				margin-bottom: auto;
+				font-size: 1.5rem;
+				cursor: pointer;
+			}
 			nb-sidebar {
 				border-left: solid;
 				border-color: #edf1f7;
