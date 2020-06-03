@@ -87,6 +87,7 @@ export class RngSpeedChartComponent implements OnInit {
 		},
 		tooltips: {
 			mode: 'index',
+			intersect: false,
 			callbacks: {
 				label(tooltipItem, data) {
 					let label = data.datasets[tooltipItem.datasetIndex].label || '';
