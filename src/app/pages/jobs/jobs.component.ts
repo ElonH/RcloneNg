@@ -85,7 +85,8 @@ import { ConnectionService } from '../connection.service';
 				padding-top: 1rem;
 			}
 			.active-group {
-				background-color: lightcoral;
+				background-color: #598bff88;
+				border-radius: 0.25rem;
 			}
 			.speed-body {
 				padding: 0;
