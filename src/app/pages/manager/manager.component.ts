@@ -1,5 +1,6 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { NbDialogService, NbToastrService } from '@nebular/theme';
+import { ResponsiveSizeInfoRx } from 'ngx-responsive';
 import { Observable, Subject } from 'rxjs';
 import { map, withLatestFrom } from 'rxjs/operators';
 import { CombErr } from '../../@dataflow/core';
@@ -14,14 +15,14 @@ import { TaskService } from './tasks/tasks.service';
 @Component({
 	selector: 'app-manager',
 	template: `
-		<nb-layout-header fixed style="width: calc(100% - 16rem); left: inherit;">
+		<nb-layout-header subheader>
 			<app-manager-breadcrumb [nav$]="nav$" (jump)="addrJump($event)">
-				<a class="pushToRight option" (click)="refresh()"><nb-icon icon="refresh"></nb-icon></a>
+				<a class="push-to-right option" (click)="refresh()"><nb-icon icon="refresh"></nb-icon></a>
 				<a class="option"><nb-icon icon="list"></nb-icon></a>
 				<a class="option"><nb-icon icon="info"></nb-icon></a>
 			</app-manager-breadcrumb>
 		</nb-layout-header>
-		<div class="subcolumn container">
+		<div class="subcolumn">
 			<nb-card>
 				<nb-card-body>
 					<app-manager-home-mode *ngIf="homeMode" (jump)="addrJump($event)">
@@ -31,7 +32,7 @@ import { TaskService } from './tasks/tasks.service';
 				</nb-card-body>
 			</nb-card>
 		</div>
-		<nb-layout-header subheader>
+		<nb-layout-footer [ngClass]="{ mobile: isMobile, pc: !isMobile }">
 			<nb-actions *ngIf="fileMode">
 				<nb-action icon="copy" (click)="file.manipulate('copy')"></nb-action>
 				<nb-action icon="move" (click)="file.manipulate('move')"></nb-action>
@@ -44,7 +45,7 @@ import { TaskService } from './tasks/tasks.service';
 						<nb-card-header>
 							Create Directory
 							<nb-icon
-								class="pushToRight"
+								class="push-to-right"
 								icon="info-outline"
 								style="font-size: 1.5rem;"
 								nbTooltip="support recursively create. (eg: a/b/c)"
@@ -54,7 +55,7 @@ import { TaskService } from './tasks/tasks.service';
 						<nb-card-footer>
 							<button nbButton (click)="ref.close()" status="danger">Close</button>
 							<button
-								class="pushToRight"
+								class="push-to-right"
 								nbButton
 								(click)="mkdir(newDir.value); ref.close()"
 								status="success"
@@ -66,7 +67,7 @@ import { TaskService } from './tasks/tasks.service';
 				</ng-template>
 				<nb-action icon="folder-add" (click)="dialog(mkdirDialog)"></nb-action>
 			</nb-actions>
-			<nb-actions class="pushToRight">
+			<nb-actions class="push-to-right">
 				<nb-action
 					style="padding-right: 1.5rem;padding-left: 0.5rem;"
 					(click)="dialog(clipboardDialog)"
@@ -109,39 +110,51 @@ import { TaskService } from './tasks/tasks.service';
 					</nb-card>
 				</ng-template>
 			</nb-actions>
-		</nb-layout-header>
+		</nb-layout-footer>
 		<!-- <nb-sidebar fixed right>
 			<div>123</div>
 		</nb-sidebar> -->
 	`,
 	styles: [
 		`
-			nb-layout-header ::ng-deep nav.fixed {
-				box-shadow: none;
+			nb-layout-header {
+				position: sticky;
+				top: 4.75rem;
+				z-index: 700;
 			}
-			manager-breadcrumb {
+			app-manager-breadcrumb {
 				width: 100%;
 			}
 			.option {
 				padding: 0 0.3rem;
 			}
 			.subcolumn {
-				height: calc(100vh - 2 * 4.75rem);
-				padding: 2.25rem 2.25rem 0.75rem;
+				margin-bottom: 4.75rem;
+				margin-top: 1.5rem;
 			}
 			/* nb-sidebar.right ::ng-deep .scrollable {
 				padding-top: 5rem;
 			} */
+			nb-layout-footer {
+				position: fixed;
+				bottom: 0;
+			}
+			nb-layout-footer.mobile {
+				width: 100%;
+			}
+			nb-layout-footer.pc {
+				width: calc(100% - 16rem);
+			}
 			nb-card-footer,
 			nb-card-header {
 				display: flex;
 			}
-			.pushToRight {
+			.push-to-right {
 				margin-left: auto;
 				/* margin-right: 16rem; */
 			}
-			nb-card {
-				/* margin-top: 1.25rem; */
+			.subcolumn > nb-card {
+				margin: 0 1.25rem;
 			}
 			.clipboard {
 				height: 80vh;
@@ -161,7 +174,8 @@ export class ManagerComponent implements OnInit {
 		private connectService: ConnectionService,
 		private toastrService: NbToastrService,
 		private clipboard: ClipboardService,
-		private taskService: TaskService
+		private taskService: TaskService,
+		private resp: ResponsiveSizeInfoRx
 	) {}
 	homeMode = false;
 	fileMode = false;
@@ -180,6 +194,8 @@ export class ManagerComponent implements OnInit {
 	private pasteTrigger = new Subject<IManipulate[]>();
 
 	public orderCnt = 0;
+
+	isMobile = false;
 	refresh() {
 		if (this.homeMode) this.home.refresh();
 	}
@@ -268,8 +284,10 @@ export class ManagerComponent implements OnInit {
 			this.orderCnt = x[0].order.size + x[0].failure.size;
 		});
 	}
-
 	ngOnInit(): void {
+		this.resp.getResponsiveSize.subscribe(data => {
+			this.isMobile = data === 'xs' || data === 'sm' || data === 'md';
+		});
 		this.navDeploy();
 		this.mkdirDeploy();
 		this.clipboardDeploy();
