@@ -1,10 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
+import { FormsModule } from '@angular/forms';
 import {
 	NbButtonModule,
 	NbCardModule,
 	NbIconModule,
+	NbInputModule,
 	NbListModule,
 	NbTabsetModule,
 } from '@nebular/theme';
@@ -27,6 +29,8 @@ import { DashboardComponent } from './dashboard.component';
 		NbListModule,
 		RngModule,
 		NbTabsetModule,
+		NbInputModule,
+		FormsModule,
 	],
 })
 export class DashboardModule {}

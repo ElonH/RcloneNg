@@ -3,7 +3,13 @@ import { ResponsiveSizeInfoRx } from 'ngx-responsive';
 import { combineLatest, Subject } from 'rxjs';
 import { map, pairwise, takeWhile } from 'rxjs/operators';
 import { CombErr } from '../../@dataflow/core';
-import { CoreMemstatsFlow, CoreStatsFlow, CoreStatsFlowInNode } from '../../@dataflow/rclone';
+import {
+	CoreBwlimitFlow,
+	CoreBwlimitFlowInNode,
+	CoreMemstatsFlow,
+	CoreStatsFlow,
+	CoreStatsFlowInNode,
+} from '../../@dataflow/rclone';
 import { FormatBytes } from '../../utils/format-bytes';
 import { ConnectionService } from '../connection.service';
 
@@ -39,7 +45,7 @@ import { ConnectionService } from '../connection.service';
 							</nb-card>
 						</nb-card-front>
 						<nb-card-back>
-							<nb-card>
+							<nb-card size="medium">
 								<nb-card-header>
 									<span>Speed Limitation</span>
 									<button
@@ -53,7 +59,34 @@ import { ConnectionService } from '../connection.service';
 									</button>
 								</nb-card-header>
 								<nb-card-body>
-									123
+									<input
+										class="limit"
+										type="text"
+										nbInput
+										placeholder="Limitation"
+										[(ngModel)]="limitation"
+									/>
+									<button
+										*ngIf="limitation !== limitationServer"
+										nbButton
+										status="primary"
+										(click)="changeLimit()"
+									>
+										Set
+									</button>
+									<nb-card>
+										<nb-card-header>
+											<h6>Rule</h6>
+										</nb-card-header>
+										<nb-card-body>
+											<ol>
+												<li>format: off | &lt;number&gt;[B|K|M|T|P...]</li>
+												<li>case-insensitive</li>
+												<li>"off" is meaning no limatation</li>
+												<li>examples: "off" "100K", "1m", "4G", "1t", "8P" ...</li>
+											</ol>
+										</nb-card-body>
+									</nb-card>
 								</nb-card-body>
 							</nb-card>
 						</nb-card-back>
@@ -100,6 +133,18 @@ import { ConnectionService } from '../connection.service';
 			:host nb-flip-card ::ng-deep div.front-container {
 				width: 100%;
 			}
+			.limit {
+				margin-bottom: 1.875rem;
+			}
+			h6 {
+				text-align: center;
+			}
+			nb-card-header {
+				display: flex;
+			}
+			nb-card-header > button {
+				margin-left: auto;
+			}
 		`,
 	],
 })
@@ -139,6 +184,15 @@ export class DashboardComponent implements OnInit, OnDestroy {
 	mem$: CoreMemstatsFlow;
 
 	isSmallerThanSmSize = false;
+
+	limitation = '';
+	limitationServer = '';
+	private bwlimitTrigger = new Subject<string>();
+	bwlimit$: CoreBwlimitFlow;
+
+	changeLimit() {
+		this.bwlimitTrigger.next(this.limitation);
+	}
 
 	ngOnInit(): void {
 		this.resp.getResponsiveSize.subscribe(data => {
@@ -190,6 +244,26 @@ export class DashboardComponent implements OnInit, OnDestroy {
 				}
 			});
 		this.memTrigger.next(1);
+
+		this.bwlimit$ = new (class extends CoreBwlimitFlow {
+			public prerequest$ = combineLatest([
+				outer.cmdService.listCmd$.verify(this.cmd),
+				outer.bwlimitTrigger.pipe(map(input => (input === '' ? {} : { rate: input }))),
+			]).pipe(
+				map(
+					([userNode, params]): CombErr<CoreBwlimitFlowInNode> => [
+						{ ...userNode[0], ...params },
+						userNode[1],
+					]
+				)
+			);
+		})();
+		this.bwlimit$.deploy();
+		this.bwlimit$.getOutput().subscribe(x => {
+			if (x[1].length !== 0) return;
+			this.limitation = this.limitationServer = x[0].bandwidth.rate;
+		});
+		this.bwlimitTrigger.next(''); // query bandwidth
 	}
 	ngOnDestroy() {
 		this.visable = false;
