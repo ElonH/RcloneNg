@@ -7,8 +7,8 @@ import {
 	Output,
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Observable, Subject } from 'rxjs';
-import { map, withLatestFrom } from 'rxjs/operators';
+import { combineLatest, Observable, Subject } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { CombErr, NothingFlow } from '../../../@dataflow/core';
 import { IRcloneServer, IUser } from '../../../@dataflow/extra';
 import { NoopAuthFlow } from '../../../@dataflow/rclone';
@@ -161,11 +161,9 @@ export class ConfigComponent implements OnInit {
 			const user = node[0];
 			this.setUser(user.name, user.url, user.user, user.password);
 		});
-		this.name.valueChanges
-			.pipe(
-				withLatestFrom(users$, sec$) // TODO: some wrong in users$
-			)
-			.subscribe(([name, usersNode, secNode]) => {
+		combineLatest([this.name.valueChanges, users$, sec$]).subscribe(
+			([name, usersNode, secNode]) => {
+				// TODO: some wrong in users$
 				if (usersNode[1].length !== 0 || secNode[1].length !== 0)
 					this.nameErr = usersNode[1][0].message;
 				else if (name === '') this.nameErr = 'You must enter a value';
@@ -173,7 +171,8 @@ export class ConfigComponent implements OnInit {
 					this.nameErr = 'This name already exists';
 				else this.nameErr = '';
 				// this.disableSave = this.nameErr !== '';
-			});
+			}
+		);
 
 		this.url.valueChanges.subscribe(x => {
 			this.urlErr = x === '' ? 'You must enter a value' : '';
