@@ -5,6 +5,7 @@ import { Columns, Config, DefaultConfig } from 'ngx-easy-table';
 	selector: 'app-rng-kv-table',
 	template: `
 		<ngx-table
+			id="kv-table"
 			[configuration]="configuration"
 			[columns]="columns"
 			[data]="keys"
