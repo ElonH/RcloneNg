@@ -9,7 +9,7 @@ import { ConnectionService } from '../../connection.service';
 	selector: 'app-manager-home-mode',
 	template: `
 		<div class="row justify-content-start">
-			<div class="cloud col-xl-4 col-lg-6 col-md-12" *ngFor="let remote of remotes">
+			<div class="cloud col-xl-3 col-md-4 col-sm-6" *ngFor="let remote of remotes">
 				<app-home-view-remote
 					[easyMode]="true"
 					[title]="remote"
