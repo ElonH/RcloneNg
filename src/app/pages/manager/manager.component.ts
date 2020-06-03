@@ -84,7 +84,7 @@ import { TaskService } from './tasks/tasks.service';
 							Clipboard
 						</nb-card-header>
 						<nb-card-body>
-							<app-manager-clipboard (onDeleteConfirm)="del()"> </app-manager-clipboard>
+							<app-manager-clipboard (deleteConfirm)="del()"> </app-manager-clipboard>
 						</nb-card-body>
 					</nb-card>
 				</ng-template>
@@ -277,6 +277,7 @@ export class ManagerComponent implements OnInit {
 
 	del() {
 		this.pasteTrigger.next(['del']);
+		console.log('delete');
 	}
 	private tasksDeploy() {
 		this.taskService.detail$.getOutput().subscribe(x => {
