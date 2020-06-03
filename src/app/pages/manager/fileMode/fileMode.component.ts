@@ -28,6 +28,7 @@ export class FileModeComponent implements OnInit {
 	@ViewChild(ListViewComponent) listView: ListViewComponent;
 
 	refresh() {
+		this.list$.clearCache();
 		this.listTrigger.next(1);
 	}
 	manipulate(o: IManipulate) {

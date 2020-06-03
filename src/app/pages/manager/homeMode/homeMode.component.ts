@@ -33,6 +33,7 @@ export class HomeModeComponent implements OnInit {
 	remotes$: ListRemotesFlow;
 
 	refresh() {
+		this.remotes$.clearCache();
 		this.remotesTrigger.next(1);
 	}
 	ngOnInit() {

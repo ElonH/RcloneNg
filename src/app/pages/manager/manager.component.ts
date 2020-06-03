@@ -198,6 +198,7 @@ export class ManagerComponent implements OnInit {
 	isMobile = false;
 	refresh() {
 		if (this.homeMode) this.home.refresh();
+		else if (this.fileMode) this.file.refresh();
 	}
 
 	addrJump(addr: NavigationFlowOutNode) {
