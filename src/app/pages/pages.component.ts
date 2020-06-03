@@ -11,11 +11,15 @@ import { MENU_ITEMS } from './pages-menu';
 			<nb-layout-header fixed>
 				<nb-actions>
 					<nb-action
+						style="padding: 0 0.5rem;"
 						icon="menu-outline"
 						(click)="toggleNav()"
 						*hideItBootstrap="['lg', 'xl']"
 					></nb-action>
-					<nb-action> <img src="./assets/favicon.svg" style="height: 3rem;" /> </nb-action>
+					<nb-action style="padding: 0 0.5rem;">
+						<img src="./assets/favicon.svg" style="height: 3rem;" />
+					</nb-action>
+					<nb-action style="padding: 0 0.5rem;"> <h3>RcloneNg</h3> </nb-action>
 				</nb-actions>
 			</nb-layout-header>
 
