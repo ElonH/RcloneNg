@@ -101,7 +101,7 @@ export class ListViewComponent implements OnInit, OnDestroy {
 
 	private listScrb: Subscription;
 	resetCurrentPage() {
-		this.checkAll = false;
+		this.checkAll = false; // TODO: not work around.
 		this.table.apiEvent({
 			type: API.setPaginationCurrentPage,
 			value: 1,
