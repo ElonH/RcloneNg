@@ -2,6 +2,44 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.3](https://github.com/ElonH/RcloneNg/compare/v0.2.2...v0.2.3) (2020-06-04)
+
+
+### Features
+
+* add title ([7d9eb98](https://github.com/ElonH/RcloneNg/commit/7d9eb9881ed32a8e043d6085a7eb7bdef5f83965))
+* fetch all module in pre-load stage ([8ea21ee](https://github.com/ElonH/RcloneNg/commit/8ea21eed335b19ce7d5d97bbe23237e495df90fe))
+* **core-bwlimit-flow:** enable limit speed ([8fedf35](https://github.com/ElonH/RcloneNg/commit/8fedf35f9ef09cdc2bcbfbb6d8501e3d0d52f8e8))
+* **core-memstats-flow:** implememt memory card ([fa96913](https://github.com/ElonH/RcloneNg/commit/fa969135d2e2ddf8e6015f451c7084cf95b92081))
+* **dashboard:** show velocity of memory ([42d5f4c](https://github.com/ElonH/RcloneNg/commit/42d5f4c5782d5327097b1f4be8cad9f0cac7c715))
+* **file-mode:** enable refresh list ([736add0](https://github.com/ElonH/RcloneNg/commit/736add0bc4f2c1a7bc79f7eab69c3d84a0492889))
+* **options:** enable fetch/set options of rclone server ([3bd7c45](https://github.com/ElonH/RcloneNg/commit/3bd7c45b50447316f3ad6a760e2d933a79e52e7b))
+* **rng-diff:** enable custom suffic string ([b2e6df3](https://github.com/ElonH/RcloneNg/commit/b2e6df39efcc33fc711930f439d233c25d34e920))
+* **rng-diff:** new state '-' ([077a7d2](https://github.com/ElonH/RcloneNg/commit/077a7d26559ecc4cbceacea2bfac5ecbf1d81050))
+
+
+### Bug Fixes
+
+* **cache-flow:** dynamically override cached data ([2a927ee](https://github.com/ElonH/RcloneNg/commit/2a927ee15672813a6a6b322ee66d8aa7fa4b136a))
+* **clipboard:** adapt to mobile view ([1d878c9](https://github.com/ElonH/RcloneNg/commit/1d878c9b32f6e173abd98661f3d30f2224061d2a))
+* **core-stats-flow:** some properties is option ([a81284b](https://github.com/ElonH/RcloneNg/commit/a81284b7b55370dd2c61f3ee303b1ec2de667113))
+* **dashboard:** adapt to mobie view ([760cf32](https://github.com/ElonH/RcloneNg/commit/760cf32af8e3673056ea4c11382f3662328553fc))
+* **dashboard:** continuously update memory stats ([f22ea05](https://github.com/ElonH/RcloneNg/commit/f22ea057cf1940bf94439d29248d190b74e56db8))
+* **dashboard:** seed chart responsive ([5728689](https://github.com/ElonH/RcloneNg/commit/5728689fa6772eea9ad005a5704c116b1bf06632))
+* **format-bytes:** condiction order error ([8af6baf](https://github.com/ElonH/RcloneNg/commit/8af6baf6e039099b8bc90ce2d997b5d618acd6b0))
+* **home-mode:** adapt to mobile view ([2377d2e](https://github.com/ElonH/RcloneNg/commit/2377d2ebe06dafaf468580e7925496e9d17dca10))
+* **home-mode:** color consistence ([704ab96](https://github.com/ElonH/RcloneNg/commit/704ab96c323952490b36db8fc4a3afe1d2facc6f))
+* **jobs:** adapt to mobile view ([b554476](https://github.com/ElonH/RcloneNg/commit/b5544765699ecc66bf6f78d332f0da6ad2453241))
+* adapt to mobie view ([74b71f6](https://github.com/ElonH/RcloneNg/commit/74b71f61c967bb697ade5a614dc1b46a5c497bce))
+* **jobs:** color consistence ([8383cf6](https://github.com/ElonH/RcloneNg/commit/8383cf6efe609f4fa6075c066d737ece360e668e))
+* **key-value-table:** expression has changed after it was checked in transferring ([1583a5a](https://github.com/ElonH/RcloneNg/commit/1583a5a6a24474c8064aa81cd961a76bbf0cceb1))
+* **manager:** adapt to mobile view ([dad3bb4](https://github.com/ElonH/RcloneNg/commit/dad3bb417b1d84035c78c68dd14dde7917f10c9c))
+* **manager:** connect delete event ([0cc5d72](https://github.com/ElonH/RcloneNg/commit/0cc5d727133a36d19fba0dfd02f5efc32b80b8c0))
+* **rng-diff:** strip decimal ([9a67874](https://github.com/ElonH/RcloneNg/commit/9a678740757cafae6ee98929cb9b588751670010))
+* **speed-char:** show tooltip by index ([a53c049](https://github.com/ElonH/RcloneNg/commit/a53c049b5a7881c4727e40eb7c64b83559514842))
+* **speed-chart:** more accurate in acceleration ([6308688](https://github.com/ElonH/RcloneNg/commit/6308688caf026bf106a93459d890c8bbce738455))
+* **users-config:** fix dataflow logical error ([3ca1458](https://github.com/ElonH/RcloneNg/commit/3ca1458d8097c62b28a7d2f7130ae5e6d8a35385))
+
 ### [0.2.2](https://github.com/ElonH/RcloneNg/compare/v0.2.1...v0.2.2) (2020-06-01)
 
 
