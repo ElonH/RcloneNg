@@ -63,7 +63,8 @@
 									"maximumWarning": "6kb",
 									"maximumError": "10kb"
 								}
-							]
+							],
+							"aot": true
 						}
 					}
 				},
@@ -122,6 +123,10 @@
 							"devServerTarget": "RcloneNg:serve:production"
 						}
 					}
+				},
+				"deploy": {
+					"builder": "angular-cli-ghpages:deploy",
+					"options": {}
 				}
 			}
 		}
