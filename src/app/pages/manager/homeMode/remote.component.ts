@@ -7,7 +7,7 @@ import { Component, Input, OnInit } from '@angular/core';
 			<tr>
 				<td rowspan="2" style="padding-right: 1rem;"><nb-icon icon="hard-drive"></nb-icon></td>
 				<td [attr.rowspan]="easyMode ? 2 : 1" style="width: 100%;">
-					<p>{{ title }}</p>
+					<p class="rng-noselect">{{ title }}</p>
 				</td>
 			</tr>
 			<ng-container *ngIf="!easyMode">

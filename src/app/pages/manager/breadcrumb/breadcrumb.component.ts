@@ -5,7 +5,7 @@ import { NavigationFlow, NavigationFlowOutNode } from '../../../@dataflow/extra'
 	selector: 'app-manager-breadcrumb',
 	template: `
 		<!-- <nav> -->
-		<ol class="breadcrumb">
+		<ol class="breadcrumb rng-noselect">
 			<li class="breadcrumb-item">
 				<a (click)="jump.emit({})"> <nb-icon icon="home-outline"></nb-icon> </a>
 			</li>

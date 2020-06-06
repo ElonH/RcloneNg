@@ -51,10 +51,10 @@ import { ClipboardService } from '../../clipboard/clipboard.service';
 					></nb-icon>
 				</td>
 				<td style="padding: 0;"><img [src]="'assets/icons/' + row.TypeIcon" /></td>
-				<td>{{ row.Name }}</td>
-				<td>{{ row.SizeHumanReadable }}</td>
-				<td>{{ row.ModTimeHumanReadable }}</td>
-				<td>{{ row.MimeType }}</td>
+				<td class="rng-noselect">{{ row.Name }}</td>
+				<td class="rng-noselect">{{ row.SizeHumanReadable }}</td>
+				<td class="rng-noselect">{{ row.ModTimeHumanReadable }}</td>
+				<td class="rng-noselect">{{ row.MimeType }}</td>
 			</ng-template>
 		</ngx-table>
 	`,
