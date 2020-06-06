@@ -1,6 +1,7 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { API, APIDefinition, Columns, Config, DefaultConfig } from 'ngx-easy-table';
-import { ClipboardItem, ClipboardService, IManipulate } from '../clipboard.service';
+import { ClipboardItem, IManipulate } from '../../../../@dataflow/extra';
+import { ClipboardService } from '../clipboard.service';
 
 interface IRemotesTableItem {
 	remote: string;

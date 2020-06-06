@@ -11,7 +11,12 @@ import {
 	withLatestFrom,
 } from 'rxjs/operators';
 import { CombErr, NothingFlow } from '../../../@dataflow/core';
-import { NavigationFlowOutNode } from '../../../@dataflow/extra';
+import {
+	Clipboard,
+	ClipboardItem,
+	IManipulate,
+	NavigationFlowOutNode,
+} from '../../../@dataflow/extra';
 import {
 	AsyncPostFlowOutNode,
 	OperationsCopyfileFlow,
@@ -28,12 +33,7 @@ import {
 	SyncMoveFlowInNode,
 } from '../../../@dataflow/rclone';
 import { ConnectionService } from '../../connection.service';
-import {
-	Clipboard,
-	ClipboardItem,
-	ClipboardService,
-	IManipulate,
-} from '../clipboard/clipboard.service';
+import { ClipboardService } from '../clipboard/clipboard.service';
 
 export interface TasksPoolNode {
 	failure: Clipboard;

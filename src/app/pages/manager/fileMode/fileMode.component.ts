@@ -2,16 +2,23 @@ import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angu
 import { combineLatest, Subject } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { CombErr } from '../../../@dataflow/core';
-import { NavigationFlow, NavigationFlowOutNode } from '../../../@dataflow/extra';
+import {
+	IManipulate,
+	NavigationFlow,
+	NavigationFlowOutNode,
+	OperationsListExtendsFlow,
+	OperationsListExtendsFlowInNode,
+} from '../../../@dataflow/extra';
 import { OperationsListFlow, OperationsListFlowInNode } from '../../../@dataflow/rclone';
 import { ConnectionService } from '../../connection.service';
-import { ClipboardService, IManipulate } from '../clipboard/clipboard.service';
+import { ClipboardService } from '../clipboard/clipboard.service';
 import { ListViewComponent } from './listView/listView.component';
 
 @Component({
 	selector: 'app-manager-file-mode',
 	template: `
-		<app-manager-list-view [list$]="list$" (jump)="jump.emit($event)"> </app-manager-list-view>
+		<app-manager-list-view [listExtends$]="listExtends$" (jump)="jump.emit($event)">
+		</app-manager-list-view>
 	`,
 	styles: [],
 })
@@ -23,7 +30,8 @@ export class FileModeComponent implements OnInit {
 	@Output() jump = new EventEmitter<NavigationFlowOutNode>();
 
 	private listTrigger = new Subject<number>();
-	list$: OperationsListFlow;
+	private list$: OperationsListFlow;
+	listExtends$: OperationsListExtendsFlow;
 
 	@ViewChild(ListViewComponent) listView: ListViewComponent;
 
@@ -55,6 +63,22 @@ export class FileModeComponent implements OnInit {
 			);
 		})();
 		this.list$.deploy();
+
+		this.listExtends$ = new (class extends OperationsListExtendsFlow {
+			public prerequest$ = combineLatest([
+				outer.list$.getSupersetOutput(),
+				outer.clipboard.clipboard$.getOutput(),
+			]).pipe(
+				map(
+					([listNode, cbNode]): CombErr<OperationsListExtendsFlowInNode> => [
+						{ ...listNode[0], ...cbNode[0] },
+						[].concat(listNode[1], cbNode[1]),
+					]
+				)
+			);
+		})();
+		this.listExtends$.deploy();
+
 		this.listTrigger.next(1);
 	}
 }

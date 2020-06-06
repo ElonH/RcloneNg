@@ -1,5 +1,6 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { ClipboardService, IManipulate } from './clipboard.service';
+import { IManipulate } from '../../../@dataflow/extra';
+import { ClipboardService } from './clipboard.service';
 
 @Component({
 	selector: 'app-manager-clipboard',

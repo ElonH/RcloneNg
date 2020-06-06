@@ -7,14 +7,16 @@ import {
 	Output,
 	ViewChild,
 } from '@angular/core';
-import * as moment from 'moment';
 import { API, APIDefinition, Columns, Config, DefaultConfig } from 'ngx-easy-table';
-import { combineLatest, Subscription } from 'rxjs';
-import { getIconForFile, getIconForFolder } from 'vscode-icons-js';
-import { NavigationFlowOutNode } from '../../../../@dataflow/extra';
-import { OperationsListFlow, OperationsListFlowOutItemNode } from '../../../../@dataflow/rclone';
-import { FormatBytes } from '../../../../utils/format-bytes';
-import { ClipboardService, IManipulate } from '../../clipboard/clipboard.service';
+import { Subscription } from 'rxjs';
+import {
+	IManipulate,
+	NavigationFlowOutNode,
+	OperationsListExtendsFlow,
+	OperationsListExtendsFlowOutItemNode,
+} from '../../../../@dataflow/extra';
+import { OperationsListFlowOutItemNode } from '../../../../@dataflow/rclone';
+import { ClipboardService } from '../../clipboard/clipboard.service';
 
 @Component({
 	selector: 'app-manager-list-view',
@@ -81,12 +83,8 @@ export class ListViewComponent implements OnInit, OnDestroy {
 		{ key: 'MimeType', title: 'MIME Type', width: '17%' },
 	];
 
-	public data: (OperationsListFlowOutItemNode & {
+	public data: (OperationsListExtendsFlowOutItemNode & {
 		check: boolean;
-		SizeHumanReadable: string;
-		ModTimeHumanReadable: string;
-		ModTimeMoment: moment.Moment;
-		TypeIcon: string;
 		ManipulateIcon: string;
 	})[];
 	public checkAll = false;
@@ -97,9 +95,10 @@ export class ListViewComponent implements OnInit, OnDestroy {
 	@Output() jump = new EventEmitter<NavigationFlowOutNode>();
 	private remote: string;
 
-	@Input() list$: OperationsListFlow;
+	@Input() listExtends$: OperationsListExtendsFlow;
 
 	private listScrb: Subscription;
+
 	resetCurrentPage() {
 		this.checkAll = false; // TODO: not work around.
 		this.table.apiEvent({
@@ -152,27 +151,17 @@ export class ListViewComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit() {
-		this.listScrb = combineLatest([
-			this.list$.getSupersetOutput(),
-			this.clipboardService.clipboard$.getOutput(),
-		]).subscribe(([listNode, cbNode]) => {
-			if (listNode[1].length !== 0 || cbNode[1].length !== 0) {
+		this.listScrb = this.listExtends$.getOutput().subscribe(listNode => {
+			if (listNode[1].length !== 0) {
 				this.data = undefined;
 				this.checkAll = false;
+				return;
 			}
 			this.remote = listNode[0].remote;
 			this.data = listNode[0].list as any;
-			this.data.forEach(item => {
-				item.check = false;
-				item.SizeHumanReadable = FormatBytes(item.Size);
-				item.ModTimeMoment = moment(item.ModTime);
-				item.ModTimeHumanReadable = item.ModTimeMoment.fromNow();
-				item.ManipulateIcon = this.manipulate2Icon(
-					cbNode[0].clipboard.getManipulation(this.remote, item.Path)
-				);
-				item.TypeIcon = item.IsDir
-					? getIconForFolder(item.Name)
-					: (item.TypeIcon = getIconForFile(item.Name));
+			this.data.forEach(x => {
+				x.check = false;
+				x.ManipulateIcon = this.manipulate2Icon(x.Manipulation);
 			});
 			this.checkAll = false;
 		});

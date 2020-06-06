@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Columns, Config } from 'ngx-easy-table';
-import { ClipboardItem, IManipulate } from '../clipboard/clipboard.service';
+import { ClipboardItem, IManipulate } from '../../../@dataflow/extra';
 import { TaskService } from './tasks.service';
 
 @Component({
