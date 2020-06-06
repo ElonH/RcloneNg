@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { EditorComponent as MonacoEditorComponent, NgxEditorModel } from 'ngx-monaco-editor';
 import { ResponsiveSizeInfoRx } from 'ngx-responsive';
 import { Subject, Subscription } from 'rxjs';
-import { IRcloneOptions } from 'src/app/@dataflow/rclone';
+import { IRcloneOptions } from '../../../@dataflow/rclone';
 import { ServerSettingService } from './server-setting.service';
 
 @Component({
