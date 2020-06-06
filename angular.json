@@ -31,6 +31,11 @@
 								"glob": "**/*",
 								"input": "./node_modules/vscode-icons/icons",
 								"output": "./assets/icons"
+							},
+							{
+								"glob": "**/*",
+								"input": "./node_modules/ngx-monaco-editor/assets/monaco",
+								"output": "./assets/monaco/"
 							}
 						],
 						"styles": ["src/styles.scss"],
@@ -99,6 +104,11 @@
 								"glob": "**/*",
 								"input": "./node_modules/vscode-icons/icons",
 								"output": "./assets/icons"
+							},
+							{
+								"glob": "**/*",
+								"input": "./node_modules/ngx-monaco-editor/assets/monaco",
+								"output": "./assets/monaco/"
 							}
 						],
 						"styles": ["src/styles.scss"],

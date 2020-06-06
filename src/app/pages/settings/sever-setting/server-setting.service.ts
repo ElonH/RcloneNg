@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { combineLatest, Subject } from 'rxjs';
 import { map, withLatestFrom } from 'rxjs/operators';
-import { CombErr } from '../@dataflow/core';
+import { CombErr } from '../../../@dataflow/core';
 import {
 	OptionsGetFlow,
 	OptionsSetFlow,
 	OptionsSetFlowInNode,
 	OptionsSetFlowParamsNode,
-} from '../@dataflow/rclone';
-import { ConnectionService } from './connection.service';
+} from '../../../@dataflow/rclone';
+import { ConnectionService } from '../../connection.service';
 
 @Injectable({
 	providedIn: 'root',

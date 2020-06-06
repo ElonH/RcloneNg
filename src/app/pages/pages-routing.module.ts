@@ -32,6 +32,10 @@ const routes: Routes = [
 				// loadChildren: () => import('./jobs/jobs.module').then(m => m.JobsModule),
 				loadChildren: () => JobsModule,
 			},
+			{
+				path: 'settings',
+				loadChildren: () => import('./settings/settings.module').then(m => m.SettingsModule),
+			},
 			{ path: '', redirectTo: 'dashboard', pathMatch: 'full' },
 			{ path: '**', redirectTo: 'dashboard' },
 		],

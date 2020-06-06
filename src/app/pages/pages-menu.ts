@@ -35,7 +35,8 @@ export const MENU_ITEMS: NbMenuItem[] = [
 	},
 	{
 		title: 'Server Setting',
-		icon: 'settings-2-outline', // todo: ng g module pages/settings/server --module app --route settings/server
+		icon: 'settings-2-outline',
+		link: 'settings/server',
 	},
 	{
 		title: 'Appearance Setting',

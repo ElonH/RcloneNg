@@ -53,6 +53,7 @@
     "nebular-icons": "^1.1.0",
     "ng2-charts": "^2.3.2",
     "ngx-easy-table": "^12.0.0",
+    "ngx-monaco-editor": "^9.0.0",
     "ngx-responsive": "^9.0.3",
     "popper.js": "^1.16.1",
     "rxjs": "~6.5.4",
