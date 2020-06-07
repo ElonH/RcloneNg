@@ -29,6 +29,8 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - name: npm install and npm run build
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           npm i
           npm run lint
