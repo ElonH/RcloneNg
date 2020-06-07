@@ -4,6 +4,13 @@
 @import '~bootstrap/dist/css/bootstrap.min.css';
 @import '~ngx-easy-table/style.scss';
 @import '~vex-js/dist/css/vex.css';
+@import '~vex-js/dist/css/vex-theme-bottom-right-corner.css';
+@import '~vex-js/dist/css/vex-theme-default.css';
+@import '~vex-js/dist/css/vex-theme-flat-attack.css';
+@import '~vex-js/dist/css/vex-theme-os.css';
+@import '~vex-js/dist/css/vex-theme-plain.css';
+@import '~vex-js/dist/css/vex-theme-top.css';
+@import '~vex-js/dist/css/vex-theme-wireframe.css';
 
 @include nb-install() {
 	@include nb-theme-global();
@@ -16,4 +23,9 @@
 	-moz-user-select: none; /* Old versions of Firefox */
 	-ms-user-select: none; /* Internet Explorer/Edge */
 	user-select: none; /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
+}
+
+.cdk-overlay-container {
+	/* hack for  between compatible nbTooltip and ngx-modialog-7 */
+	z-index: 3000 !important;
 }

@@ -11,6 +11,7 @@ import { IManipulate, NavigationFlow, NavigationFlowOutNode } from '../../@dataf
 import { OperationsMkdirFlow, OperationsMkdirFlowInNode } from '../../@dataflow/rclone';
 import { ConnectionService } from '../connection.service';
 import { ClipboardService } from './clipboard/clipboard.service';
+import { MkdirDialogComponent } from './dialogs/mkdir.dialog';
 import { FileModeComponent } from './fileMode/fileMode.component';
 import { HomeModeComponent } from './homeMode/homeMode.component';
 import { TaskService } from './tasks/tasks.service';
@@ -43,32 +44,7 @@ import { TaskService } from './tasks/tasks.service';
 				<nb-action icon="clipboard" (click)="paste()"></nb-action>
 			</nb-actions>
 			<nb-actions *ngIf="fileMode">
-				<ng-template #mkdirDialog let-ref="dialogRef">
-					<nb-card class="dialog-card">
-						<nb-card-header>
-							Create Directory
-							<nb-icon
-								class="push-to-right"
-								icon="info-outline"
-								style="font-size: 1.5rem;"
-								nbTooltip="support recursively create. (eg: a/b/c)"
-							></nb-icon>
-						</nb-card-header>
-						<nb-card-body><input #newDir nbInput /></nb-card-body>
-						<nb-card-footer>
-							<button nbButton (click)="ref.close()" status="danger">Close</button>
-							<button
-								class="push-to-right"
-								nbButton
-								(click)="mkdir(newDir.value); ref.close()"
-								status="success"
-							>
-								Confirm
-							</button>
-						</nb-card-footer>
-					</nb-card>
-				</ng-template>
-				<nb-action icon="folder-add" (click)="dialog(mkdirDialog)"></nb-action>
+				<nb-action icon="folder-add" (click)="mkdirDialog()"></nb-action>
 			</nb-actions>
 			<nb-actions class="push-to-right">
 				<nb-action
@@ -228,8 +204,15 @@ export class ManagerComponent implements OnInit {
 		this.navTrigger.next({});
 	}
 
-	mkdir(name: string) {
-		this.mkdirTrigger.next(name);
+	mkdirDialog() {
+		this.modal
+			.open(MkdirDialogComponent, overlayConfigFactory({ isBlocking: false }, VEXModalContext))
+			.result.then(
+				newDir => {
+					if (newDir && newDir !== '') this.mkdirTrigger.next(newDir);
+				},
+				() => {}
+			);
 	}
 
 	private mkdirDeploy() {
