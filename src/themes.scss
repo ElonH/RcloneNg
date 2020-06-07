@@ -1,5 +1,12 @@
 @import '~@nebular/theme/styles/theming';
 @import '~@nebular/theme/styles/themes/default';
+@import '~vex-js/dist/css/vex-theme-bottom-right-corner.css';
+@import '~vex-js/dist/css/vex-theme-default.css';
+@import '~vex-js/dist/css/vex-theme-flat-attack.css';
+@import '~vex-js/dist/css/vex-theme-os.css';
+@import '~vex-js/dist/css/vex-theme-plain.css';
+@import '~vex-js/dist/css/vex-theme-top.css';
+@import '~vex-js/dist/css/vex-theme-wireframe.css';
 
 $nb-themes: nb-register-theme(
 	(

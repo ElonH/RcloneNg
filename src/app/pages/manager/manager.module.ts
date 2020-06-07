@@ -8,7 +8,6 @@ import {
 	NbButtonModule,
 	NbCardModule,
 	NbCheckboxModule,
-	NbDialogModule,
 	NbIconModule,
 	NbInputModule,
 	NbLayoutModule,
@@ -54,7 +53,6 @@ import { TasksComponent } from './tasks/tasks.component';
 		NbCheckboxModule,
 		NbButtonModule,
 		NbInputModule,
-		NbDialogModule.forChild({ autoFocus: true, closeOnEsc: true }), // lazy module need it
 		NbTooltipModule,
 		NbBadgeModule,
 		NbTabsetModule,

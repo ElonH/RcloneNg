@@ -1,5 +1,8 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
-import { NbDialogService, NbToastrService } from '@nebular/theme';
+import { NbToastrService } from '@nebular/theme';
+import { overlayConfigFactory } from 'ngx-modialog-7';
+// tslint:disable-next-line: no-submodule-imports
+import { Modal, VEXModalContext } from 'ngx-modialog-7/plugins/vex';
 import { ResponsiveSizeInfoRx } from 'ngx-responsive';
 import { Observable, Subject } from 'rxjs';
 import { map, withLatestFrom } from 'rxjs/operators';
@@ -41,7 +44,7 @@ import { TaskService } from './tasks/tasks.service';
 			</nb-actions>
 			<nb-actions *ngIf="fileMode">
 				<ng-template #mkdirDialog let-ref="dialogRef">
-					<nb-card>
+					<nb-card class="dialog-card">
 						<nb-card-header>
 							Create Directory
 							<nb-icon
@@ -76,7 +79,7 @@ import { TaskService } from './tasks/tasks.service';
 					<nb-badge [text]="clipboardSize" status="info" position="top end"></nb-badge>
 				</nb-action>
 				<ng-template #clipboardDialog>
-					<nb-card class="clipboard">
+					<nb-card class="dialog-card">
 						<nb-card-header>
 							<nb-action>
 								<nb-icon icon="shopping-bag" class="clipboard-icon"></nb-icon>
@@ -97,7 +100,7 @@ import { TaskService } from './tasks/tasks.service';
 					<nb-badge [text]="orderCnt" status="info" position="top end"></nb-badge>
 				</nb-action>
 				<ng-template #tasksDialog>
-					<nb-card class="clipboard">
+					<nb-card class="dialog-card">
 						<nb-card-header>
 							<nb-action>
 								<nb-icon icon="email-outline" class="clipboard-icon"></nb-icon>
@@ -156,10 +159,8 @@ import { TaskService } from './tasks/tasks.service';
 			.subcolumn > nb-card {
 				margin: 0 1.25rem;
 			}
-			.clipboard {
-				height: 80vh;
-				width: 53vw;
-				min-width: 26rem;
+			.dialog-card {
+				margin: calc(-1em - 3px);
 			}
 			.clipboard-icon {
 				font-size: 1.5rem;
@@ -170,12 +171,12 @@ import { TaskService } from './tasks/tasks.service';
 })
 export class ManagerComponent implements OnInit {
 	constructor(
-		private dialogService: NbDialogService,
 		private connectService: ConnectionService,
 		private toastrService: NbToastrService,
 		private clipboard: ClipboardService,
 		private taskService: TaskService,
-		private resp: ResponsiveSizeInfoRx
+		private resp: ResponsiveSizeInfoRx,
+		public modal: Modal
 	) {}
 	homeMode = false;
 	fileMode = false;
@@ -298,6 +299,11 @@ export class ManagerComponent implements OnInit {
 	}
 
 	dialog(dialog: TemplateRef<any>) {
-		this.dialogService.open(dialog);
+		// new DialogPresetBuilder<DialogPreset>(this.modal)
+		// 	.className('default')
+		//   .contentClassName('vex-content rng-card-dialog')
+		//   .content(dialog)
+		// 	.open();
+		this.modal.open(dialog, overlayConfigFactory({ isBlocking: false }, VEXModalContext));
 	}
 }

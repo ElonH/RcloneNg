@@ -3,6 +3,7 @@
 @import '~nebular-icons/css/nebular-icons.css';
 @import '~bootstrap/dist/css/bootstrap.min.css';
 @import '~ngx-easy-table/style.scss';
+@import '~vex-js/dist/css/vex.css';
 
 @include nb-install() {
 	@include nb-theme-global();
