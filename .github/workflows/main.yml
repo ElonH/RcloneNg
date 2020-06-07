@@ -35,4 +35,4 @@ jobs:
           npm i
           npm run lint
           npm run build:prod
-          npm run deploy --  --name="ElonH" --email="elonhhuang@gmail.com" --no-silent
+          npm run deploy --  --name="ElonH" --email="elonhhuang@gmail.com"
