@@ -13,4 +13,8 @@ langService.addLanguage('shortEn', {
 	decimal: '',
 });
 export const ForamtDuration = new HumanizeDuration(langService);
-ForamtDuration.setOptions({ language: 'shortEn', round: true });
+ForamtDuration.setOptions({
+	language: 'shortEn',
+	round: true,
+	units: ['y', 'mo', 'd', 'h', 'm', 's'],
+});
