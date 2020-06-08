@@ -32,7 +32,7 @@ import { ServerSettingService } from './server-setting.service';
 	styles: [
 		`
 			nb-card {
-				margin: 1rem 1.25rem;
+				margin: 0;
 			}
 			nb-card-header {
 				display: flex;
@@ -48,8 +48,7 @@ import { ServerSettingService } from './server-setting.service';
 				overflow-y: hidden;
 			}
 			:host ngx-monaco-editor {
-				height: 40rem;
-				max-height: calc(100vh - 4.75rem - 2rem - 4.25rem - 1rem);
+				height: calc(100vh - 4.75rem - 4.25rem - 0.15rem);
 			}
 			:host ngx-monaco-editor ::ng-deep .editor-container {
 				height: 100%;
