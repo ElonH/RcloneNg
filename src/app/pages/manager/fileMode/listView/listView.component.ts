@@ -99,7 +99,8 @@ export class ListViewComponent implements OnInit, OnDestroy {
 
 	private listScrb: Subscription;
 
-	resetCurrentPage() {
+	loading() {
+		this.configuration.isLoading = true;
 		this.checkAll = false; // TODO: not work around.
 		this.table.apiEvent({
 			type: API.setPaginationCurrentPage,
@@ -113,7 +114,7 @@ export class ListViewComponent implements OnInit, OnDestroy {
 			const item = $event.value.row;
 			if (item.IsDir) {
 				this.jump.emit({ remote: this.remote, path: item.Path });
-				this.resetCurrentPage();
+				this.loading();
 			}
 		}
 	}
@@ -151,10 +152,16 @@ export class ListViewComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit() {
+		this.configuration = { ...DefaultConfig };
+		this.configuration.searchEnabled = true;
+		this.configuration.checkboxes = true;
+		this.configuration.isLoading = true;
+		// ... etc.
 		this.listScrb = this.listExtends$.getOutput().subscribe(listNode => {
+			this.checkAll = false;
+			this.configuration.isLoading = false;
 			if (listNode[1].length !== 0) {
 				this.data = undefined;
-				this.checkAll = false;
 				return;
 			}
 			this.remote = listNode[0].remote;
@@ -163,17 +170,10 @@ export class ListViewComponent implements OnInit, OnDestroy {
 				x.check = false;
 				x.ManipulateIcon = this.manipulate2Icon(x.Manipulation);
 			});
-			this.checkAll = false;
 		});
-
-		this.configuration = { ...DefaultConfig };
-		this.configuration.searchEnabled = true;
-		this.configuration.checkboxes = true;
-		// this.configuration.isLoading = true;
-		// ... etc.
 	}
 	ngOnDestroy() {
 		this.listScrb.unsubscribe();
-		this.resetCurrentPage();
+		this.loading();
 	}
 }

@@ -8,7 +8,13 @@ import { ConnectionService } from '../../connection.service';
 @Component({
 	selector: 'app-manager-home-mode',
 	template: `
-		<div class="row justify-content-start">
+		<div
+			class="row justify-content-start"
+			[nbSpinner]="isLoading"
+			nbSpinnerSize="giant"
+			nbSpinnerStatus="primary"
+			nbSpinnerMessage="Loading..."
+		>
 			<div class="cloud col-xl-3 col-md-4 col-sm-6" *ngFor="let remote of remotes">
 				<app-home-view-remote
 					[easyMode]="true"
@@ -32,11 +38,17 @@ export class HomeModeComponent implements OnInit {
 	remotesTrigger = new Subject<number>();
 	remotes$: ListRemotesFlow;
 
+	isLoading = true;
+	loading() {
+		this.isLoading = true;
+	}
 	refresh() {
+		this.loading();
 		this.remotes$.clearCache();
 		this.remotesTrigger.next(1);
 	}
 	ngOnInit() {
+		this.loading();
 		const outer = this;
 		this.remotes$ = new (class extends ListRemotesFlow {
 			public prerequest$ = combineLatest([
@@ -47,6 +59,7 @@ export class HomeModeComponent implements OnInit {
 		this.remotes$.deploy();
 		this.remotesTrigger.next(1);
 		this.remotes$.getOutput().subscribe(x => {
+			this.isLoading = false;
 			if (x[1].length !== 0) return;
 			this.remotes = x[0].remotes;
 		});

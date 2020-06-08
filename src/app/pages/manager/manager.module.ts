@@ -13,6 +13,7 @@ import {
 	NbLayoutModule,
 	NbProgressBarModule,
 	NbSidebarModule,
+	NbSpinnerModule,
 	NbTabsetModule,
 	NbTooltipModule,
 } from '@nebular/theme';
@@ -59,6 +60,7 @@ import { TasksDialogComponent } from './tasks/tasks.dialog';
 		NbBadgeModule,
 		NbTabsetModule,
 		NbAccordionModule,
+		NbSpinnerModule,
 	],
 })
 export class ManagerModule {}

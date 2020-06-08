@@ -146,12 +146,18 @@ export class ManagerComponent implements OnInit, OnDestroy {
 	isMobile = false;
 
 	visable = false;
+
+	loading() {
+		if (this.fileMode) this.file.loading();
+		else if (this.homeMode) this.home.loading();
+	}
 	refresh() {
 		if (this.homeMode) this.home.refresh();
 		else if (this.fileMode) this.file.refresh();
 	}
 
 	addrJump(addr: NavigationFlowOutNode) {
+		this.loading();
 		this.navTrigger.next(addr);
 	}
 

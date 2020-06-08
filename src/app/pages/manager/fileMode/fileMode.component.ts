@@ -35,7 +35,12 @@ export class FileModeComponent implements OnInit {
 
 	@ViewChild(ListViewComponent) listView: ListViewComponent;
 
+	loading() {
+		this.listView.loading();
+	}
+
 	refresh() {
+		this.loading();
 		this.list$.clearCache();
 		this.listTrigger.next(1);
 	}
