@@ -26,7 +26,7 @@ import { ConnectionService } from '../../connection.service';
 				<app-home-view-remote
 					[easyMode]="true"
 					[title]="remote"
-					(click)="jump.emit({ remote: remote })"
+					(dblclick)="jump.emit({ remote: remote })"
 				>
 				</app-home-view-remote>
 			</div>
