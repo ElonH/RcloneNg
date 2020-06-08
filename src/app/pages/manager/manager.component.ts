@@ -1,11 +1,12 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NbToastrService } from '@nebular/theme';
 import { overlayConfigFactory } from 'ngx-modialog-7';
 // tslint:disable-next-line: no-submodule-imports
 import { Modal, VEXModalContext } from 'ngx-modialog-7/plugins/vex';
 import { ResponsiveSizeInfoRx } from 'ngx-responsive';
 import { Observable, Subject } from 'rxjs';
-import { map, withLatestFrom } from 'rxjs/operators';
+import { distinctUntilChanged, map, takeWhile, withLatestFrom } from 'rxjs/operators';
 import { CombErr } from '../../@dataflow/core';
 import { IManipulate, NavigationFlow, NavigationFlowOutNode } from '../../@dataflow/extra';
 import { OperationsMkdirFlow, OperationsMkdirFlowInNode } from '../../@dataflow/rclone';
@@ -114,14 +115,16 @@ import { TaskService } from './tasks/tasks.service';
 		`,
 	],
 })
-export class ManagerComponent implements OnInit {
+export class ManagerComponent implements OnInit, OnDestroy {
 	constructor(
 		private connectService: ConnectionService,
 		private toastrService: NbToastrService,
 		private clipboard: ClipboardService,
 		private taskService: TaskService,
 		private resp: ResponsiveSizeInfoRx,
-		public modal: Modal
+		public modal: Modal,
+		private router: Router,
+		private route: ActivatedRoute
 	) {}
 	homeMode = false;
 	fileMode = false;
@@ -142,6 +145,8 @@ export class ManagerComponent implements OnInit {
 	public orderCnt = 0;
 
 	isMobile = false;
+
+	visable = false;
 	refresh() {
 		if (this.homeMode) this.home.refresh();
 		else if (this.fileMode) this.file.refresh();
@@ -155,6 +160,7 @@ export class ManagerComponent implements OnInit {
 		const outer = this;
 		this.nav$ = new (class extends NavigationFlow {
 			public prerequest$ = outer.navTrigger.pipe(
+				distinctUntilChanged((x, y) => JSON.stringify(x) === JSON.stringify(y)),
 				map(
 					(x): CombErr<NavigationFlowOutNode> => {
 						let remote = x['remote'];
@@ -257,14 +263,40 @@ export class ManagerComponent implements OnInit {
 				() => {}
 			);
 	}
+	routeDeploy() {
+		this.route.queryParams
+			.pipe(
+				takeWhile(() => this.visable),
+				distinctUntilChanged((x, y) => JSON.stringify(x) === JSON.stringify(y))
+			)
+			.subscribe(params => {
+				this.navTrigger.next(params);
+			});
+		this.nav$
+			.getOutput()
+			.pipe(takeWhile(() => this.visable))
+			.subscribe(navNode => {
+				if (navNode[1].length !== 0) return;
+				const params: any = {};
+				if (navNode[0].remote && navNode[0].remote !== '') params.remote = navNode[0].remote;
+				if (navNode[0].path && navNode[0].path !== '') params.path = navNode[0].path;
+				this.router.navigate([], { queryParams: params });
+			});
+	}
 	ngOnInit(): void {
+		this.visable = true;
 		this.resp.getResponsiveSize.subscribe(data => {
 			this.isMobile = data === 'xs' || data === 'sm' || data === 'md';
 		});
 		this.navDeploy();
+		this.routeDeploy();
 		this.mkdirDeploy();
 		this.clipboardDeploy();
 		this.pasteDeploy();
 		this.tasksDeploy();
+	}
+
+	ngOnDestroy() {
+		this.visable = false;
 	}
 }
