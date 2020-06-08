@@ -39,7 +39,15 @@ export interface OperationsFsinfoFlowOutItemNode {
 		WriteMimeType: boolean;
 	};
 	// Names of hashes available
-	Hashes: ('MD5' | 'SHA-1' | 'DropboxHash' | 'QuickXorHash')[];
+	Hashes: (
+		| 'MD5'
+		| 'SHA-1'
+		| 'DropboxHash'
+		| 'QuickXorHash'
+		| 'Whirlpool'
+		| 'CRC-32'
+		| 'MailruHash'
+	)[];
 	// Name as created
 	Name: string;
 	// Precision of timestamps in ns
