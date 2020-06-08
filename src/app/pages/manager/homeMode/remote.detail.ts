@@ -26,6 +26,16 @@ import { ConnectionService } from '../../connection.service';
 					</nb-list>
 				</nb-accordion-item-body>
 			</nb-accordion-item>
+			<nb-accordion-item *ngIf="hashes.length">
+				<nb-accordion-item-header>Hash Support</nb-accordion-item-header>
+				<nb-accordion-item-body>
+					<nb-list [nbSpinner]="loadingFsinfo" nbSpinnerSize="giant" nbSpinnerStatus="primary">
+						<nb-list-item *ngFor="let item of hashes">
+							<div>{{ item }}</div>
+						</nb-list-item>
+					</nb-list>
+				</nb-accordion-item-body>
+			</nb-accordion-item>
 		</nb-accordion>
 	`,
 	styles: [
@@ -54,6 +64,7 @@ export class RemoteDetailComponent implements OnInit {
 	protected _remote = '';
 	protected loadingFsinfo = false;
 	protected feature: { k: string; v: boolean }[] = [];
+	protected hashes: string[] = [];
 	set remote(x: NavigationFlowOutNode) {
 		this._remote = x.remote || '';
 		this.loadingFsinfo = true;
@@ -84,6 +95,7 @@ export class RemoteDetailComponent implements OnInit {
 			if (x[1].length !== 0) return;
 			const fsinfo = x[0]['fs-info'];
 			this.feature = Object.keys(fsinfo.Features).map(k => ({ k, v: fsinfo.Features[k] }));
+			this.hashes = fsinfo.Hashes;
 		});
 	}
 }
