@@ -6,6 +6,7 @@ import { NbLayoutModule, NbMenuModule, NbThemeModule, NbToastrModule } from '@ne
 import { ModalModule } from 'ngx-modialog-7';
 // tslint:disable-next-line: no-submodule-imports
 import { VexModalModule } from 'ngx-modialog-7/plugins/vex';
+import { PaginationService } from 'ngx-pagination';
 import { ResponsiveModule } from 'ngx-responsive';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -24,7 +25,7 @@ import { AppComponent } from './app.component';
 		ModalModule.forRoot(),
 		VexModalModule,
 	],
-	providers: [],
+	providers: [PaginationService],
 	bootstrap: [AppComponent],
 })
 export class AppModule {}

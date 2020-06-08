@@ -10,6 +10,7 @@ import { CombErr } from '../../@dataflow/core';
 import { IManipulate, NavigationFlow, NavigationFlowOutNode } from '../../@dataflow/extra';
 import { OperationsMkdirFlow, OperationsMkdirFlowInNode } from '../../@dataflow/rclone';
 import { ConnectionService } from '../connection.service';
+import { ClipboardDialogComponent } from './clipboard/clipboard.dialog';
 import { ClipboardService } from './clipboard/clipboard.service';
 import { MkdirDialogComponent } from './dialogs/mkdir.dialog';
 import { FileModeComponent } from './fileMode/fileMode.component';
@@ -47,26 +48,10 @@ import { TaskService } from './tasks/tasks.service';
 				<nb-action icon="folder-add" (click)="mkdirDialog()"></nb-action>
 			</nb-actions>
 			<nb-actions class="push-to-right">
-				<nb-action
-					style="padding-right: 1.5rem;padding-left: 0.5rem;"
-					(click)="dialog(clipboardDialog)"
-				>
+				<nb-action style="padding-right: 1.5rem;padding-left: 0.5rem;" (click)="clipboardDialog()">
 					<nb-icon icon="inbox" style="font-size: 1.5rem"> </nb-icon>
 					<nb-badge [text]="clipboardSize" status="info" position="top end"></nb-badge>
 				</nb-action>
-				<ng-template #clipboardDialog>
-					<nb-card class="dialog-card">
-						<nb-card-header>
-							<nb-action>
-								<nb-icon icon="shopping-bag" class="clipboard-icon"></nb-icon>
-							</nb-action>
-							Clipboard
-						</nb-card-header>
-						<nb-card-body>
-							<app-manager-clipboard (deleteConfirm)="del()"> </app-manager-clipboard>
-						</nb-card-body>
-					</nb-card>
-				</ng-template>
 				<nb-action
 					*ngIf="orderCnt !== 0"
 					style="padding-right: 1.5rem;padding-left: 0.5rem;"
@@ -134,13 +119,6 @@ import { TaskService } from './tasks/tasks.service';
 			}
 			.subcolumn > nb-card {
 				margin: 0 1.25rem;
-			}
-			.dialog-card {
-				margin: calc(-1em - 3px);
-			}
-			.clipboard-icon {
-				font-size: 1.5rem;
-				margin-right: 0.5rem;
 			}
 		`,
 	],
@@ -260,10 +238,17 @@ export class ManagerComponent implements OnInit {
 		this.pasteTrigger.next(['copy', 'move']);
 	}
 
-	del() {
-		this.pasteTrigger.next(['del']);
-		console.log('delete');
+	clipboardDialog() {
+		this.modal
+			.open(ClipboardDialogComponent, overlayConfigFactory({ isBlocking: false }, VEXModalContext))
+			.result.then(
+				confirm => {
+					if (confirm === true) this.pasteTrigger.next(['del']);
+				},
+				() => {}
+			);
 	}
+
 	private tasksDeploy() {
 		this.taskService.detail$.getOutput().subscribe(x => {
 			if (x[1].length !== 0) return;

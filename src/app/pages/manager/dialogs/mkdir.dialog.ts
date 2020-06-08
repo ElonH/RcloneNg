@@ -4,7 +4,6 @@ import { DialogRef, ModalComponent } from 'ngx-modialog-7';
 import { DialogPreset } from 'ngx-modialog-7/plugins/vex';
 
 @Component({
-	selector: 'app-rng-dialog',
 	template: `
 		<nb-card>
 			<nb-card-header>
