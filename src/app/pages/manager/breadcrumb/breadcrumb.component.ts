@@ -5,16 +5,21 @@ import { NavigationFlow, NavigationFlowOutNode } from '../../../@dataflow/extra'
 	selector: 'app-manager-breadcrumb',
 	template: `
 		<ol class="breadcrumb rng-noselect" style="flex-wrap: nowrap; overflow-x: auto;">
-			<li class="breadcrumb-item">
-				<a (click)="jump.emit({})"> <nb-icon icon="home-outline"></nb-icon> </a>
+			<li [ngClass]="{ 'breadcrumb-item': true, 'home-active': !path && !remote }">
+				<a (click)="jump.emit({})" *ngIf="remote"> <nb-icon icon="home-outline"></nb-icon> </a>
+				<nb-icon icon="home-outline" *ngIf="!remote"></nb-icon>
 			</li>
-			<li *ngIf="remote" class="breadcrumb-item">
-				<a (click)="jump.emit(genAddr(-1))">
+			<li *ngIf="remote" [ngClass]="{ 'breadcrumb-item': true, active: !path }">
+				<a (click)="jump.emit(genAddr(-1))" *ngIf="path">
 					<div style="display: flex;">
 						<nb-icon icon="google-outline"></nb-icon>
 						{{ remote }}
 					</div>
 				</a>
+				<div style="display: flex;" *ngIf="!path">
+					<nb-icon icon="google-outline"></nb-icon>
+					{{ remote }}
+				</div>
 			</li>
 			<li *ngFor="let dir of pathPrefix; index as i" class="breadcrumb-item">
 				<a (click)="jump.emit(genAddr(i))"> {{ dir }} </a>
@@ -36,11 +41,15 @@ import { NavigationFlow, NavigationFlowOutNode } from '../../../@dataflow/extra'
 			.active {
 				padding-right: 0.5rem;
 			}
+			.home-active {
+				padding: 0 0.5rem;
+			}
 		`,
 	],
 })
 export class BreadcrumbComponent implements OnInit {
 	remote: string;
+	path: string;
 	pathPrefix: string[];
 	pathSurfix: string;
 
@@ -70,6 +79,7 @@ export class BreadcrumbComponent implements OnInit {
 		this.nav$.getOutput().subscribe(x => {
 			this.remote = x[0].remote;
 			[this.pathPrefix, this.pathSurfix] = this.splitPath(x[0].path);
+			this.path = x[0].path;
 		});
 	}
 }
