@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NbToastrService } from '@nebular/theme';
+import { NbSidebarComponent, NbToastrService } from '@nebular/theme';
 import { overlayConfigFactory } from 'ngx-modialog-7';
 // tslint:disable-next-line: no-submodule-imports
 import { Modal, VEXModalContext } from 'ngx-modialog-7/plugins/vex';
@@ -26,19 +26,28 @@ import { TaskService } from './tasks/tasks.service';
 			<app-manager-breadcrumb [nav$]="nav$" (jump)="addrJump($event)"> </app-manager-breadcrumb>
 			<a class="push-to-right option" (click)="refresh()"><nb-icon icon="refresh"></nb-icon></a>
 			<a class="option"><nb-icon icon="list"></nb-icon></a>
-			<a class="option"><nb-icon icon="info"></nb-icon></a>
+			<a class="option" *ngIf="detailBar" (click)="toggleDetail()">
+				<nb-icon icon="info"></nb-icon>
+			</a>
 		</nb-layout-header>
-		<div class="subcolumn">
+		<div [ngClass]="{ subcolumn: true, 'subcolumn-right-bar': detailExpanded }">
 			<nb-card>
 				<nb-card-body>
-					<app-manager-home-mode *ngIf="homeMode" (jump)="addrJump($event)">
+					<app-manager-home-mode
+						*ngIf="homeMode"
+						[detail]="detailExpanded"
+						(jump)="addrJump($event)"
+					>
 					</app-manager-home-mode>
 					<app-manager-file-mode *ngIf="fileMode" [nav$]="nav$" (jump)="addrJump($event)">
 					</app-manager-file-mode>
 				</nb-card-body>
 			</nb-card>
 		</div>
-		<nb-layout-footer [ngClass]="{ mobile: isMobile, pc: !isMobile }">
+		<nb-sidebar fixed end class="right-bar" tag="detail">
+			123
+		</nb-sidebar>
+		<nb-layout-footer [ngClass]="{ mobile: !mainBar, pc: mainBar }">
 			<nb-actions>
 				<nb-action *ngIf="fileMode" icon="copy" (click)="file.manipulate('copy')"></nb-action>
 				<nb-action *ngIf="fileMode" icon="move" (click)="file.manipulate('move')"></nb-action>
@@ -64,9 +73,6 @@ import { TaskService } from './tasks/tasks.service';
 				</nb-action>
 			</nb-actions>
 		</nb-layout-footer>
-		<!-- <nb-sidebar fixed right>
-			<div>123</div>
-		</nb-sidebar> -->
 	`,
 	styles: [
 		`
@@ -81,14 +87,29 @@ import { TaskService } from './tasks/tasks.service';
 			.option {
 				padding: 0 0.3rem;
 			}
+			.right-bar {
+				top: calc(4.75rem * 2 + 0.05rem) !important;
+				bottom: 65px !important;
+				height: auto;
+				z-index: 699;
+			}
+			:host nb-sidebar ::ng-deep .main-container {
+				height: auto !important;
+				top: calc(4.75rem * 2 + 0.05rem) !important;
+				bottom: 65px !important;
+			}
 			.subcolumn {
 				margin-bottom: 4.75rem;
 				margin-top: 1.5rem;
+			}
+			.subcolumn-right-bar {
+				margin-right: 16rem;
 			}
 			/* nb-sidebar.right ::ng-deep .scrollable {
 				padding-top: 5rem;
 			} */
 			nb-layout-footer {
+				z-index: 1001;
 				position: fixed;
 				bottom: 0;
 			}
@@ -127,9 +148,12 @@ export class ManagerComponent implements OnInit, OnDestroy {
 	) {}
 	homeMode = false;
 	fileMode = false;
+	mainBar = false;
+	detailBar = true;
 
 	@ViewChild(FileModeComponent) file: FileModeComponent;
 	@ViewChild(HomeModeComponent) home: HomeModeComponent;
+	@ViewChild(NbSidebarComponent) detail: NbSidebarComponent;
 
 	private navTrigger = new Subject<NavigationFlowOutNode>();
 	nav$: NavigationFlow;
@@ -143,7 +167,7 @@ export class ManagerComponent implements OnInit, OnDestroy {
 
 	public orderCnt = 0;
 
-	isMobile = false;
+	detailExpanded = true;
 
 	visable = false;
 
@@ -268,7 +292,7 @@ export class ManagerComponent implements OnInit, OnDestroy {
 				() => {}
 			);
 	}
-	routeDeploy() {
+	private routeDeploy() {
 		this.route.queryParams
 			.pipe(
 				takeWhile(() => this.visable),
@@ -288,11 +312,26 @@ export class ManagerComponent implements OnInit, OnDestroy {
 				this.router.navigate([], { queryParams: params });
 			});
 	}
+
+	private sidebarDeploy() {
+		this.resp.getResponsiveSize.subscribe(data => {
+			this.mainBar = !(data === 'xs' || data === 'sm' || data === 'md');
+			this.detailBar = data !== 'xs';
+			if (!this.detailBar) {
+				this.detail.collapse();
+				this.detailExpanded = false;
+			}
+		});
+	}
+
+	toggleDetail() {
+		this.detail.toggle(false);
+		this.detailExpanded = this.detail.expanded;
+	}
+
 	ngOnInit(): void {
 		this.visable = true;
-		this.resp.getResponsiveSize.subscribe(data => {
-			this.isMobile = data === 'xs' || data === 'sm' || data === 'md';
-		});
+		this.sidebarDeploy();
 		this.navDeploy();
 		this.routeDeploy();
 		this.mkdirDeploy();

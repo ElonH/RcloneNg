@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { combineLatest, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { NavigationFlow, NavigationFlowOutNode } from '../../../@dataflow/extra';
+import { NavigationFlowOutNode } from '../../../@dataflow/extra';
 import { ListRemotesFlow } from '../../../@dataflow/rclone';
 import { ConnectionService } from '../../connection.service';
 
@@ -15,7 +15,14 @@ import { ConnectionService } from '../../connection.service';
 			nbSpinnerStatus="primary"
 			nbSpinnerMessage="Loading..."
 		>
-			<div class="cloud col-xl-3 col-md-4 col-sm-6" *ngFor="let remote of remotes">
+			<div
+				[ngClass]="{
+					'cloud col-sm-6': true,
+					'col-xl-3 col-md-4': !detail,
+					'col-lg-4 col-md-6': detail
+				}"
+				*ngFor="let remote of remotes"
+			>
 				<app-home-view-remote
 					[easyMode]="true"
 					[title]="remote"
@@ -32,7 +39,7 @@ export class HomeModeComponent implements OnInit {
 
 	remotes: string[] = [];
 
-	@Input() nav$: NavigationFlow;
+	@Input() detail: boolean;
 	@Output() jump = new EventEmitter<NavigationFlowOutNode>();
 
 	remotesTrigger = new Subject<number>();
