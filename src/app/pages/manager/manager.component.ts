@@ -16,6 +16,7 @@ import { ClipboardService } from './clipboard/clipboard.service';
 import { MkdirDialogComponent } from './dialogs/mkdir.dialog';
 import { FileModeComponent } from './fileMode/fileMode.component';
 import { HomeModeComponent } from './homeMode/homeMode.component';
+import { RemoteDetailComponent } from './homeMode/remote.detail';
 import { TasksDialogComponent } from './tasks/tasks.dialog';
 import { TaskService } from './tasks/tasks.service';
 
@@ -37,6 +38,7 @@ import { TaskService } from './tasks/tasks.service';
 						*ngIf="homeMode"
 						[detail]="detailExpanded"
 						(jump)="addrJump($event)"
+						(showDetail)="remoteDetail.remote = $event"
 					>
 					</app-manager-home-mode>
 					<app-manager-file-mode *ngIf="fileMode" [nav$]="nav$" (jump)="addrJump($event)">
@@ -45,7 +47,7 @@ import { TaskService } from './tasks/tasks.service';
 			</nb-card>
 		</div>
 		<nb-sidebar fixed end class="right-bar" tag="detail">
-			123
+			<app-home-remote-detail *ngIf="homeMode"> </app-home-remote-detail>
 		</nb-sidebar>
 		<nb-layout-footer [ngClass]="{ mobile: !mainBar, pc: mainBar }">
 			<nb-actions>
@@ -97,6 +99,9 @@ import { TaskService } from './tasks/tasks.service';
 				height: auto !important;
 				top: calc(4.75rem * 2 + 0.05rem) !important;
 				bottom: 65px !important;
+			}
+			:host nb-sidebar ::ng-deep .scrollable {
+				padding: 1.25rem 0 !important;
 			}
 			.subcolumn {
 				margin-bottom: 4.75rem;
@@ -154,6 +159,7 @@ export class ManagerComponent implements OnInit, OnDestroy {
 	@ViewChild(FileModeComponent) file: FileModeComponent;
 	@ViewChild(HomeModeComponent) home: HomeModeComponent;
 	@ViewChild(NbSidebarComponent) detail: NbSidebarComponent;
+	@ViewChild(RemoteDetailComponent) remoteDetail: RemoteDetailComponent;
 
 	private navTrigger = new Subject<NavigationFlowOutNode>();
 	nav$: NavigationFlow;

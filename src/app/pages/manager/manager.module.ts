@@ -11,6 +11,7 @@ import {
 	NbIconModule,
 	NbInputModule,
 	NbLayoutModule,
+	NbListModule,
 	NbProgressBarModule,
 	NbSidebarModule,
 	NbSpinnerModule,
@@ -26,6 +27,7 @@ import { FileModeComponent } from './fileMode/fileMode.component';
 import { ListViewComponent } from './fileMode/listView/listView.component';
 import { HomeModeComponent } from './homeMode/homeMode.component';
 import { RemoteComponent } from './homeMode/remote.component';
+import { RemoteDetailComponent } from './homeMode/remote.detail';
 import { ManagerRoutingModule } from './manager-routing.module';
 import { ManagerComponent } from './manager.component';
 import { TasksDialogComponent } from './tasks/tasks.dialog';
@@ -42,6 +44,7 @@ import { TasksDialogComponent } from './tasks/tasks.dialog';
 		ClipboardRemotesTableComponent,
 		TasksDialogComponent,
 		MkdirDialogComponent,
+		RemoteDetailComponent,
 	],
 	imports: [
 		CommonModule,
@@ -61,6 +64,7 @@ import { TasksDialogComponent } from './tasks/tasks.dialog';
 		NbTabsetModule,
 		NbAccordionModule,
 		NbSpinnerModule,
+		NbListModule,
 	],
 })
 export class ManagerModule {}

@@ -18,3 +18,4 @@ export * from './core-memstats-flow';
 export * from './core-bwlimit-flow';
 export * from './options-get-flow';
 export * from './options-set-flow';
+export * from './operations-fsinfo-flow';

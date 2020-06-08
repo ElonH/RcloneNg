@@ -26,6 +26,7 @@ import { ConnectionService } from '../../connection.service';
 				<app-home-view-remote
 					[easyMode]="true"
 					[title]="remote"
+					(click)="showDetail.emit({ remote: remote })"
 					(dblclick)="jump.emit({ remote: remote })"
 				>
 				</app-home-view-remote>
@@ -41,6 +42,7 @@ export class HomeModeComponent implements OnInit {
 
 	@Input() detail: boolean;
 	@Output() jump = new EventEmitter<NavigationFlowOutNode>();
+	@Output() showDetail = new EventEmitter<NavigationFlowOutNode>();
 
 	remotesTrigger = new Subject<number>();
 	remotes$: ListRemotesFlow;
