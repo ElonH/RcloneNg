@@ -8,6 +8,8 @@ An angular web application for rclone
 
 ![Screenshot 3](./assets/screenshot-3.png)
 
+![Screenshot 4](./assets/screenshot-4.png)
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.5.
 
 ## Development server
