@@ -39,27 +39,28 @@ import { TaskService } from './tasks/tasks.service';
 			</nb-card>
 		</div>
 		<nb-layout-footer [ngClass]="{ mobile: isMobile, pc: !isMobile }">
-			<nb-actions *ngIf="fileMode">
-				<nb-action icon="copy" (click)="file.manipulate('copy')"></nb-action>
-				<nb-action icon="move" (click)="file.manipulate('move')"></nb-action>
-				<nb-action icon="trash-2" (click)="file.manipulate('del')"></nb-action>
-				<nb-action icon="clipboard" (click)="paste()"></nb-action>
-			</nb-actions>
-			<nb-actions *ngIf="fileMode">
-				<nb-action icon="folder-add" (click)="mkdirDialog()"></nb-action>
-			</nb-actions>
-			<nb-actions class="push-to-right">
-				<nb-action style="padding-right: 1.5rem;padding-left: 0.5rem;" (click)="clipboardDialog()">
-					<nb-icon icon="inbox" style="font-size: 1.5rem"> </nb-icon>
-					<nb-badge [text]="clipboardSize" status="info" position="top end"></nb-badge>
-				</nb-action>
+			<nb-actions>
+				<nb-action *ngIf="fileMode" icon="copy" (click)="file.manipulate('copy')"></nb-action>
+				<nb-action *ngIf="fileMode" icon="move" (click)="file.manipulate('move')"></nb-action>
+				<nb-action *ngIf="fileMode" icon="trash-2" (click)="file.manipulate('del')"></nb-action>
+				<nb-action *ngIf="fileMode" icon="clipboard" (click)="paste()"></nb-action>
+				<nb-action *ngIf="fileMode" icon="folder-add" (click)="mkdirDialog()"></nb-action>
 				<nb-action
-					*ngIf="orderCnt !== 0"
+					class="push-to-right"
 					style="padding-right: 1.5rem;padding-left: 0.5rem;"
-					(click)="tasksDialog()"
+					(click)="clipboardDialog()"
 				>
+					<nb-icon icon="inbox" style="font-size: 1.5rem"> </nb-icon>
+					<nb-badge
+						*ngIf="clipboardSize"
+						[text]="clipboardSize"
+						status="info"
+						position="top end"
+					></nb-badge>
+				</nb-action>
+				<nb-action style="padding-right: 1.5rem;padding-left: 0.5rem;" (click)="tasksDialog()">
 					<nb-icon icon="email-outline" style="font-size: 1.5rem"> </nb-icon>
-					<nb-badge [text]="orderCnt" status="info" position="top end"></nb-badge>
+					<nb-badge *ngIf="orderCnt" [text]="orderCnt" status="info" position="top end"></nb-badge>
 				</nb-action>
 			</nb-actions>
 		</nb-layout-footer>
@@ -97,9 +98,11 @@ import { TaskService } from './tasks/tasks.service';
 			nb-layout-footer.pc {
 				width: calc(100% - 16rem);
 			}
-			nb-card-footer,
-			nb-card-header {
-				display: flex;
+			nb-layout-footer ::ng-deep nav {
+				overflow-x: auto;
+			}
+			nb-actions {
+				width: 100%;
 			}
 			.push-to-right {
 				margin-left: auto;
