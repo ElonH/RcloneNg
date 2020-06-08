@@ -61,10 +61,10 @@ import { ConnectionService } from '../../connection.service';
 })
 export class RemoteDetailComponent implements OnInit {
 	constructor(private cmdService: ConnectionService) {}
-	protected _remote = '';
-	protected loadingFsinfo = false;
-	protected feature: { k: string; v: boolean }[] = [];
-	protected hashes: string[] = [];
+	_remote = '';
+	loadingFsinfo = false;
+	feature: { k: string; v: boolean }[] = [];
+	hashes: string[] = [];
 	set remote(x: NavigationFlowOutNode) {
 		this._remote = x.remote || '';
 		this.loadingFsinfo = true;
