@@ -4,39 +4,37 @@ import { NavigationFlow, NavigationFlowOutNode } from '../../../@dataflow/extra'
 @Component({
 	selector: 'app-manager-breadcrumb',
 	template: `
-		<!-- <nav> -->
-		<ol class="breadcrumb rng-noselect">
+		<ol class="breadcrumb rng-noselect" style="flex-wrap: nowrap; overflow-x: auto;">
 			<li class="breadcrumb-item">
 				<a (click)="jump.emit({})"> <nb-icon icon="home-outline"></nb-icon> </a>
 			</li>
 			<li *ngIf="remote" class="breadcrumb-item">
 				<a (click)="jump.emit(genAddr(-1))">
-					<nb-icon icon="google-outline"></nb-icon>
-					<span class="breadcrumb-cloud">{{ remote }}</span>
+					<div style="display: flex;">
+						<nb-icon icon="google-outline"></nb-icon>
+						{{ remote }}
+					</div>
 				</a>
 			</li>
 			<li *ngFor="let dir of pathPrefix; index as i" class="breadcrumb-item">
-				<a (click)="jump.emit(genAddr(i))">
-					<span>{{ dir }}</span>
-				</a>
+				<a (click)="jump.emit(genAddr(i))"> {{ dir }} </a>
 			</li>
 			<li *ngIf="pathSurfix" class="breadcrumb-item active">{{ pathSurfix }}</li>
-			<ng-content> </ng-content>
 		</ol>
-		<!-- </nav> -->
 	`,
 	styles: [
 		`
 			.breadcrumb {
 				margin-bottom: 0;
+				width: -webkit-fill-available;
 			}
 			li > a {
 				background: white;
 				border-radius: 1rem;
 				padding: 0 0.5rem;
 			}
-			.breadcrumb-cloud {
-				padding-left: 0.5rem;
+			.active {
+				padding-right: 0.5rem;
 			}
 		`,
 	],

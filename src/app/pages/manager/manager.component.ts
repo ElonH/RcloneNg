@@ -23,11 +23,10 @@ import { TaskService } from './tasks/tasks.service';
 	selector: 'app-manager',
 	template: `
 		<nb-layout-header subheader>
-			<app-manager-breadcrumb [nav$]="nav$" (jump)="addrJump($event)">
-				<a class="push-to-right option" (click)="refresh()"><nb-icon icon="refresh"></nb-icon></a>
-				<a class="option"><nb-icon icon="list"></nb-icon></a>
-				<a class="option"><nb-icon icon="info"></nb-icon></a>
-			</app-manager-breadcrumb>
+			<app-manager-breadcrumb [nav$]="nav$" (jump)="addrJump($event)"> </app-manager-breadcrumb>
+			<a class="push-to-right option" (click)="refresh()"><nb-icon icon="refresh"></nb-icon></a>
+			<a class="option"><nb-icon icon="list"></nb-icon></a>
+			<a class="option"><nb-icon icon="info"></nb-icon></a>
 		</nb-layout-header>
 		<div class="subcolumn">
 			<nb-card>
@@ -77,7 +76,7 @@ import { TaskService } from './tasks/tasks.service';
 				z-index: 700;
 			}
 			app-manager-breadcrumb {
-				width: 100%;
+				display: contents;
 			}
 			.option {
 				padding: 0 0.3rem;
