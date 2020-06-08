@@ -18,7 +18,8 @@
   "author": "ElonH <elonhhuang@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "pre-commit": "pretty-quick --staged && ng lint --fix",
+    "format": "pretty-quick --staged",
+    "lint:fix": "ng lint --fix",
     "commit": "git-cz",
     "build:prod": "npm run build -- --prod --aot",
     "start": "ng serve",
