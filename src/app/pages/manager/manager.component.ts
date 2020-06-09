@@ -46,7 +46,7 @@ import { TaskService } from './tasks/tasks.service';
 				</nb-card-body>
 			</nb-card>
 		</div>
-		<nb-sidebar fixed end class="right-bar" tag="detail">
+		<nb-sidebar fixed end class="right-bar" tag="detail" state="collapsed">
 			<app-home-remote-detail *ngIf="homeMode"> </app-home-remote-detail>
 		</nb-sidebar>
 		<nb-layout-footer [ngClass]="{ mobile: !mainBar, pc: mainBar }">
@@ -173,7 +173,7 @@ export class ManagerComponent implements OnInit, OnDestroy {
 
 	public orderCnt = 0;
 
-	detailExpanded = true;
+	detailExpanded = false;
 
 	visable = false;
 

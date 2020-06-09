@@ -23,7 +23,7 @@ import { MENU_ITEMS } from './pages-menu';
 				</nb-actions>
 			</nb-layout-header>
 
-			<nb-sidebar class="main-sidebar" tag="nav" [fixed]="mainSideBarFixed">
+			<nb-sidebar class="main-sidebar" tag="nav" [fixed]="mainSideBarFixed" state="collapsed">
 				<nb-menu [items]="menu"> </nb-menu>
 			</nb-sidebar>
 
@@ -50,8 +50,7 @@ export class PagesComponent implements OnInit {
 	}
 	menu = MENU_ITEMS;
 
-	respSize = 'lg';
-	mainSideBarFixed = false;
+	mainSideBarFixed = true;
 
 	toggleNav() {
 		this.sidebarService.toggle(false, 'nav');
@@ -59,8 +58,6 @@ export class PagesComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.resp.getResponsiveSize.subscribe(data => {
-			this.respSize = data;
-
 			this.mainSideBarFixed = data === 'xs' || data === 'sm' || data === 'md';
 			if (!this.mainSideBarFixed) this.sidebarService.expand('nav');
 			else this.sidebarService.collapse('nav');
