@@ -2,6 +2,42 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.3.0](https://github.com/ElonH/RcloneNg/compare/v0.2.4...v0.3.0) (2020-06-09)
+
+
+### ⚠ BREAKING CHANGES
+
+* **manager:** Detail sidebar is not support in mobile
+
+### Features
+
+* **breadcurmb:** adapt to mobile view ([8546f49](https://github.com/ElonH/RcloneNg/commit/8546f49695886dfb8d128dcf0a52091695611b8e))
+* **manager:** bind remote, path with url params ([0a7b48c](https://github.com/ElonH/RcloneNg/commit/0a7b48cb2ac57ce4021e419b0388f24153ec0456))
+* **manager:** enable detail sidebar support ([74501dd](https://github.com/ElonH/RcloneNg/commit/74501dd2390de98e388dd17fa20357ed2504ae14))
+* **manager:** show snipper when loading ([078675a](https://github.com/ElonH/RcloneNg/commit/078675a26a43a4aa96c26bf4c88545f6b818d10e))
+* **manager:** show task button in bottom bar as default ([aa3fc66](https://github.com/ElonH/RcloneNg/commit/aa3fc660925e419ecaf87f4de5df038323a8eb85))
+* **operations-list-extends-flow:** share some common data ([380b46e](https://github.com/ElonH/RcloneNg/commit/380b46e43899566e472355b40b1254272021f065))
+* **remote.detail:** show available hashes ([154f1aa](https://github.com/ElonH/RcloneNg/commit/154f1aa7a35416b75e099a9f42fc1ad71f07800e))
+* **remote.detail:** show remote features in fs info ([6850ccc](https://github.com/ElonH/RcloneNg/commit/6850ccc9e6585192f74394fd4961d8dcfba34a69))
+* **remote.detail:** show remote usages ([091461b](https://github.com/ElonH/RcloneNg/commit/091461b3238e6a5dbc279e7f693259f84b72bed7))
+* **server-setting:** allow to edit rclone server configuration ([0898769](https://github.com/ElonH/RcloneNg/commit/0898769f1ac03f92785218bb61809a07b0156f71))
+
+
+### Bug Fixes
+
+* **breadcurmb:** disable click home in homeMode and root in root of fileMode ([62275dd](https://github.com/ElonH/RcloneNg/commit/62275dd918dc4bc74544d26dffc7f7fdbd6cde26))
+* **breadcurmb:** disable wrap text if direatory or file name too long ([2262391](https://github.com/ElonH/RcloneNg/commit/2262391f55dd66bf69ae4c15754a43d86bef2866))
+* **breadcurmb:** style change ([349baf2](https://github.com/ElonH/RcloneNg/commit/349baf29f33bd9942309ea49d146191bef2c3cc2))
+* **format-duration:** remove 'week' unit ([e7fa3ef](https://github.com/ElonH/RcloneNg/commit/e7fa3ef15a8a4caf66e2cc88eeac5b776150dcde))
+* **home-mode:** turn click to double click ([61a8872](https://github.com/ElonH/RcloneNg/commit/61a8872b86f27717babe9c772e80f74b5826649d))
+* **operations-fsinfo-flow:** append new hash types ([7a9960c](https://github.com/ElonH/RcloneNg/commit/7a9960cc15dc1e230469033f5640c098f127a847))
+* **remote.detail:** public member ([52bb80e](https://github.com/ElonH/RcloneNg/commit/52bb80ee2781d6b78e7555b0ebbbbfb78b91f5ab))
+* **server-setting:** fill available region ([618d0e0](https://github.com/ElonH/RcloneNg/commit/618d0e08b6e50c64d82ae6111a05c7f88fc826c4))
+* **server-setting:** lint fix ([e8d6adf](https://github.com/ElonH/RcloneNg/commit/e8d6adf6901bdde8589a3e891ffe2abf9b03722d))
+* **sidebar:** make all sidebar collapsed at initialization ([ac3681b](https://github.com/ElonH/RcloneNg/commit/ac3681bdcf14761f402367499846d64050585fc1))
+* disable select text when double click ([be3d365](https://github.com/ElonH/RcloneNg/commit/be3d3659b5935aa6d84779a3f456a20fc1257e00))
+* replace nebular dialog service ([9d91a99](https://github.com/ElonH/RcloneNg/commit/9d91a993c7bdefa6bb7f6c6558fb74a127f1e394))
+
 ### [0.2.4](https://github.com/ElonH/RcloneNg/compare/v0.2.3...v0.2.4) (2020-06-04)
 
 
