@@ -107,7 +107,6 @@ export class RemoteDetailComponent implements OnInit {
 					const value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
 					if (typeof value === 'number') label += FormatBytes(value, 3);
 					else label += value;
-					console.log(label);
 					return label;
 				},
 			},
