@@ -16,7 +16,7 @@ import { ConnectionService } from '../../connection.service';
 @Component({
 	selector: 'app-home-remote-detail',
 	template: `
-		<h5>{{ _remote }}</h5>
+		<h5>{{ remote }}</h5>
 		<div
 			[nbSpinner]="loadingAbout"
 			[ngStyle]="{
@@ -86,7 +86,7 @@ import { ConnectionService } from '../../connection.service';
 })
 export class RemoteDetailComponent implements OnInit {
 	constructor(private cmdService: ConnectionService) {}
-	_remote = '';
+	remote = '';
 	loadingFsinfo = false;
 	loadingAbout = false;
 	feature: { k: string; v: boolean }[] = [];
@@ -130,18 +130,18 @@ export class RemoteDetailComponent implements OnInit {
 		},
 	];
 
-	set remote(x: NavigationFlowOutNode) {
-		this._remote = x.remote || '';
-		this.loadingFsinfo = true;
-		this.loadingAbout = true;
-		this.trigger.next(x.remote);
-	}
-
 	private trigger = new Subject<string>();
 	fsinfo$: OperationsFsinfoFlow;
 	about$: OperationsAboutFlow;
 
 	@ViewChild(BaseChartDirective) chart: BaseChartDirective;
+
+	navNode(x: NavigationFlowOutNode) {
+		this.remote = x.remote || '';
+		this.loadingFsinfo = true;
+		this.loadingAbout = true;
+		this.trigger.next(x.remote);
+	}
 
 	ngOnInit() {
 		const outer = this;

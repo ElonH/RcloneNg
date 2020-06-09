@@ -38,7 +38,7 @@ import { TaskService } from './tasks/tasks.service';
 						*ngIf="homeMode"
 						[detail]="detailExpanded"
 						(jump)="addrJump($event)"
-						(showDetail)="remoteDetail.remote = $event"
+						(showDetail)="remoteDetail.navNode($event)"
 					>
 					</app-manager-home-mode>
 					<app-manager-file-mode *ngIf="fileMode" [nav$]="nav$" (jump)="addrJump($event)">
