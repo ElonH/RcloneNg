@@ -18,6 +18,7 @@ import {
 	NbTabsetModule,
 	NbTooltipModule,
 } from '@nebular/theme';
+import { ChartsModule } from 'ng2-charts';
 import { TableModule } from 'ngx-easy-table';
 import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
 import { ClipboardRemotesTableComponent } from './clipboard/clipboard-remotes-table/clipboard-remotes-table.component';
@@ -65,6 +66,7 @@ import { TasksDialogComponent } from './tasks/tasks.dialog';
 		NbAccordionModule,
 		NbSpinnerModule,
 		NbListModule,
+		ChartsModule,
 	],
 })
 export class ManagerModule {}
