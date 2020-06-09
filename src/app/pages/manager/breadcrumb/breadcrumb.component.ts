@@ -32,6 +32,7 @@ import { NavigationFlow, NavigationFlowOutNode } from '../../../@dataflow/extra'
 			.breadcrumb {
 				margin-bottom: 0;
 				width: -webkit-fill-available;
+				white-space: nowrap;
 			}
 			li > a {
 				background: white;
