@@ -5,26 +5,26 @@ import { NavigationFlow, NavigationFlowOutNode } from '../../../@dataflow/extra'
 	selector: 'app-manager-breadcrumb',
 	template: `
 		<ol class="breadcrumb rng-noselect" style="flex-wrap: nowrap; overflow-x: auto;">
-			<li [ngClass]="{ 'breadcrumb-item': true, 'home-active': !path && !remote }">
+			<li class="breadcrumb-item home">
 				<a (click)="jump.emit({})" *ngIf="remote"> <nb-icon icon="home-outline"></nb-icon> </a>
 				<nb-icon icon="home-outline" *ngIf="!remote"></nb-icon>
 			</li>
 			<li *ngIf="remote" [ngClass]="{ 'breadcrumb-item': true, active: !path }">
 				<a (click)="jump.emit(genAddr(-1))" *ngIf="path">
-					<div style="display: flex;">
-						<nb-icon icon="google-outline"></nb-icon>
-						{{ remote }}
-					</div>
+					<nb-icon icon="google-outline" style="vertical-align: middle;"></nb-icon>
+					{{ remote }}
 				</a>
-				<div style="display: flex;" *ngIf="!path">
-					<nb-icon icon="google-outline"></nb-icon>
+				<div style="display: inline-flex;" *ngIf="!path">
+					<nb-icon icon="google-outline" style="vertical-align: middle;"></nb-icon>
 					{{ remote }}
 				</div>
 			</li>
 			<li *ngFor="let dir of pathPrefix; index as i" class="breadcrumb-item">
 				<a (click)="jump.emit(genAddr(i))"> {{ dir }} </a>
 			</li>
-			<li *ngIf="pathSurfix" class="breadcrumb-item active">{{ pathSurfix }}</li>
+			<li *ngIf="pathSurfix" class="breadcrumb-item">
+				<span class="active">{{ pathSurfix }}</span>
+			</li>
 		</ol>
 	`,
 	styles: [
@@ -34,16 +34,24 @@ import { NavigationFlow, NavigationFlowOutNode } from '../../../@dataflow/extra'
 				width: -webkit-fill-available;
 				white-space: nowrap;
 			}
+			li {
+				display: flow-root;
+			}
 			li > a {
 				background: white;
 				border-radius: 1rem;
-				padding: 0 0.5rem;
+				padding: 0.1545rem 0.5rem;
+				text-decoration: unset;
+			}
+			li > a:hover {
+				background: #274bdb;
+				color: white;
 			}
 			.active {
-				padding-right: 0.5rem;
+				padding: 0.1545rem 1rem 0.1545rem 0;
 			}
-			.home-active {
-				padding: 0 0.5rem;
+			.home {
+				padding: 0.1545rem 0.5rem;
 			}
 		`,
 	],
