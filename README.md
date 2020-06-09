@@ -1,8 +1,27 @@
 # RcloneNg
 
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/elonh/rcloneng)
+![GitHub All Releases](https://img.shields.io/github/downloads/elonh/rcloneng/total)
+
 An angular web application for rclone
 
+## Features
+
+- Support multiple rclone server
+
+- Explore remote file system
+
+- Create **asynchronous** jobs of coping/moving objects between remotes
+
+- Observe the progress of running jobs (by groups)
+
+- Allow editing of rclone server configuration (power by [monaco editor](https://github.com/microsoft/monaco-editor), supporting lint)
+
+## Screenshots
+
 ![Screenshot 1](./assets/screenshot-1.png)
+
+![Screenshot 5](./assets/screenshot-5.png)
 
 ![Screenshot 2](./assets/screenshot-2.png)
 
@@ -10,28 +29,29 @@ An angular web application for rclone
 
 ![Screenshot 4](./assets/screenshot-4.png)
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.1.5.
+## Get Started
 
-## Development server
+1. running rclone as server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+```bash
+rclone rcd --rc-user=<user> --rc-pass=<password> --rc-allow-origin="*"
+```
 
-## Code scaffolding
+2. getting RcloneNg
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+```bash
+git clone https://github.com/ElonH/RcloneNg.git
+cd RcloneNg
+npm install
+npm run start
+```
 
-## Build
+> NB: if rclone is running in localhost, <https://elonh.github.io/RcloneNg> can be used directly.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+3. editing server connection in RcloneNg.
 
-## Running unit tests
+![Get started](./assets/get-started.png)
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## License
 
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+This project and its dependencies ( except Rxjs, Apache-2.0 ) follows MIT license.
