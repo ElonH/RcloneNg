@@ -28,7 +28,7 @@ import { TaskService } from './tasks/tasks.service';
 			<app-manager-breadcrumb [nav$]="nav$" (jump)="addrJump($event)"> </app-manager-breadcrumb>
 			<a class="push-to-right option" (click)="refresh()"><nb-icon icon="refresh"></nb-icon></a>
 			<a class="option"><nb-icon icon="list"></nb-icon></a>
-			<a class="option" *ngIf="detailBar" (click)="toggleDetail()">
+			<a class="option" *ngIf="detailBar || detailExpanded" (click)="toggleDetail()">
 				<nb-icon icon="info"></nb-icon>
 			</a>
 		</nb-layout-header>
