@@ -247,6 +247,7 @@ export class ManagerComponent implements OnInit, OnDestroy {
 						if (navNode[0].path) {
 							path = [navNode[0].path, path].join('/');
 						}
+						outer.toastrService.default('Creating directory', 'Waiting...');
 						return [{ ...cmdNode[0], remote: navNode[0].remote, path }, []];
 					}
 				)
