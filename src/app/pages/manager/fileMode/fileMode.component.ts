@@ -8,6 +8,7 @@ import {
 	NavigationFlowOutNode,
 	OperationsListExtendsFlow,
 	OperationsListExtendsFlowInNode,
+	OperationsListExtendsFlowOutItemNode,
 } from '../../../@dataflow/extra';
 import { OperationsListFlow, OperationsListFlowInNode } from '../../../@dataflow/rclone';
 import { ConnectionService } from '../../connection.service';
@@ -17,7 +18,11 @@ import { ListViewComponent } from './listView/listView.component';
 @Component({
 	selector: 'app-manager-file-mode',
 	template: `
-		<app-manager-list-view [listExtends$]="listExtends$" (jump)="jump.emit($event)">
+		<app-manager-list-view
+			[listExtends$]="listExtends$"
+			(jump)="jump.emit($event)"
+			(showDetail)="showDetail.emit($event)"
+		>
 		</app-manager-list-view>
 	`,
 	styles: [],
@@ -28,6 +33,7 @@ export class FileModeComponent implements OnInit {
 	@Input() nav$: NavigationFlow;
 
 	@Output() jump = new EventEmitter<NavigationFlowOutNode>();
+	@Output() showDetail = new EventEmitter<OperationsListExtendsFlowOutItemNode>();
 
 	private listTrigger = new Subject<number>();
 	private list$: OperationsListFlow;

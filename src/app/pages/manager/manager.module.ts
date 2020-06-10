@@ -20,10 +20,12 @@ import {
 } from '@nebular/theme';
 import { ChartsModule } from 'ng2-charts';
 import { TableModule } from 'ngx-easy-table';
+import { FileSaverModule } from 'ngx-filesaver';
 import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
 import { ClipboardRemotesTableComponent } from './clipboard/clipboard-remotes-table/clipboard-remotes-table.component';
 import { ClipboardDialogComponent } from './clipboard/clipboard.dialog';
 import { MkdirDialogComponent } from './dialogs/mkdir.dialog';
+import { FileDetailComponent } from './fileMode/file.detail';
 import { FileModeComponent } from './fileMode/fileMode.component';
 import { ListViewComponent } from './fileMode/listView/listView.component';
 import { HomeModeComponent } from './homeMode/homeMode.component';
@@ -46,6 +48,7 @@ import { TasksDialogComponent } from './tasks/tasks.dialog';
 		TasksDialogComponent,
 		MkdirDialogComponent,
 		RemoteDetailComponent,
+		FileDetailComponent,
 	],
 	imports: [
 		CommonModule,
@@ -67,6 +70,7 @@ import { TasksDialogComponent } from './tasks/tasks.dialog';
 		NbSpinnerModule,
 		NbListModule,
 		ChartsModule,
+		FileSaverModule,
 	],
 })
 export class ManagerModule {}

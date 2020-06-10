@@ -14,6 +14,7 @@ import { ConnectionService } from '../connection.service';
 import { ClipboardDialogComponent } from './clipboard/clipboard.dialog';
 import { ClipboardService } from './clipboard/clipboard.service';
 import { MkdirDialogComponent } from './dialogs/mkdir.dialog';
+import { FileDetailComponent } from './fileMode/file.detail';
 import { FileModeComponent } from './fileMode/fileMode.component';
 import { HomeModeComponent } from './homeMode/homeMode.component';
 import { RemoteDetailComponent } from './homeMode/remote.detail';
@@ -41,13 +42,19 @@ import { TaskService } from './tasks/tasks.service';
 						(showDetail)="remoteDetail.navNode($event)"
 					>
 					</app-manager-home-mode>
-					<app-manager-file-mode *ngIf="fileMode" [nav$]="nav$" (jump)="addrJump($event)">
+					<app-manager-file-mode
+						*ngIf="fileMode"
+						[nav$]="nav$"
+						(jump)="addrJump($event)"
+						(showDetail)="fileDetail.itemNode($event)"
+					>
 					</app-manager-file-mode>
 				</nb-card-body>
 			</nb-card>
 		</div>
 		<nb-sidebar fixed end class="right-bar" tag="detail" state="collapsed">
 			<app-home-remote-detail *ngIf="homeMode"> </app-home-remote-detail>
+			<app-file-file-detail *ngIf="fileMode"> </app-file-file-detail>
 		</nb-sidebar>
 		<nb-layout-footer [ngClass]="{ mobile: !mainBar, pc: mainBar }">
 			<nb-actions>
@@ -160,6 +167,7 @@ export class ManagerComponent implements OnInit, OnDestroy {
 	@ViewChild(HomeModeComponent) home: HomeModeComponent;
 	@ViewChild(NbSidebarComponent) detail: NbSidebarComponent;
 	@ViewChild(RemoteDetailComponent) remoteDetail: RemoteDetailComponent;
+	@ViewChild(FileDetailComponent) fileDetail: FileDetailComponent;
 
 	private navTrigger = new Subject<NavigationFlowOutNode>();
 	nav$: NavigationFlow;

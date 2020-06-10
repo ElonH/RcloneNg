@@ -2,7 +2,7 @@ import * as moment from 'moment';
 import { Observable, of } from 'rxjs';
 import { getIconForFile, getIconForFolder } from 'vscode-icons-js';
 import { FormatBytes } from '../../utils/format-bytes';
-import { BareFlow, CombErr, NothingFlow } from '../core';
+import { BareFlow, CombErr } from '../core';
 import {
 	OperationsListFlowInNode,
 	OperationsListFlowOutItemNode,
@@ -16,6 +16,7 @@ export interface OperationsListExtendsFlowInNode
 		ClipboardFlowNode {}
 
 export interface OperationsListExtendsFlowOutItemNode extends OperationsListFlowOutItemNode {
+	remote: string;
 	SizeHumanReadable: string;
 	ModTimeHumanReadable: string;
 	ModTimeMoment: moment.Moment;
@@ -41,6 +42,7 @@ export abstract class OperationsListExtendsFlow extends BareFlow<
 				const ModTimeMoment = moment(item.ModTime);
 				return {
 					...item,
+					remote: pre[0].remote,
 					SizeHumanReadable: FormatBytes(item.Size),
 					ModTimeMoment,
 					ModTimeHumanReadable: ModTimeMoment.fromNow(),

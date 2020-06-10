@@ -15,7 +15,6 @@ import {
 	OperationsListExtendsFlow,
 	OperationsListExtendsFlowOutItemNode,
 } from '../../../../@dataflow/extra';
-import { OperationsListFlowOutItemNode } from '../../../../@dataflow/rclone';
 import { ClipboardService } from '../../clipboard/clipboard.service';
 
 @Component({
@@ -99,6 +98,8 @@ export class ListViewComponent implements OnInit, OnDestroy {
 
 	private listScrb: Subscription;
 
+	@Output() showDetail = new EventEmitter<OperationsListExtendsFlowOutItemNode>();
+
 	loading() {
 		this.configuration.isLoading = true;
 		this.checkAll = false; // TODO: not work around.
@@ -107,7 +108,10 @@ export class ListViewComponent implements OnInit, OnDestroy {
 			value: 1,
 		});
 	}
-	eventEmitted($event: { event: string; value: { row: OperationsListFlowOutItemNode } }): void {
+	eventEmitted($event: {
+		event: string;
+		value: { row: OperationsListExtendsFlowOutItemNode };
+	}): void {
 		// console.log('$event', $event);
 		if ($event.event === 'onDoubleClick') {
 			// console.log($event.value);
@@ -116,6 +120,10 @@ export class ListViewComponent implements OnInit, OnDestroy {
 				this.jump.emit({ remote: this.remote, path: item.Path });
 				this.loading();
 			}
+		} else if ($event.event === 'onClick') {
+			// console.log($event.value);
+			const item = $event.value.row;
+			this.showDetail.emit(item);
 		}
 	}
 

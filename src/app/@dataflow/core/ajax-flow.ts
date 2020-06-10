@@ -5,6 +5,7 @@ import { CombErr, FlowInNode, FlowOutNode } from './bare-flow';
 import { CacheFlow } from './cache-flow';
 import { FlowSupNode } from './superset-flow';
 
+// TODO: rename
 export type AjaxFlowInteralNode = [{ ajaxRsp: AjaxResponse }, Error[]];
 
 export abstract class AjaxFlow<
