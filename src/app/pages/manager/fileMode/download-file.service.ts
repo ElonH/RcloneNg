@@ -8,8 +8,10 @@ import {
 	DownloadFileFlow,
 	DownloadFileFlowInNode,
 	DownloadFileFlowParamsNode,
+	NestedGet,
 } from '../../../@dataflow/rclone';
 import { ConnectionService } from '../../connection.service';
+import { ServerSettingService } from '../../settings/sever-setting/server-setting.service';
 
 @Injectable({
 	providedIn: 'root',
@@ -26,17 +28,27 @@ export class DownloadFileService {
 	constructor(
 		private cmdService: ConnectionService,
 		private toastr: NbToastrService,
-		private fileSaverService: FileSaverService
+		private fileSaverService: FileSaverService,
+		private serverSettingService: ServerSettingService
 	) {
 		const outer = this;
 		this.download$ = new (class extends DownloadFileFlow {
 			public prerequest$: Observable<CombErr<DownloadFileFlowInNode>> = outer.trigger.pipe(
-				withLatestFrom(outer.cmdService.connection$.getOutput()),
+				withLatestFrom(
+					outer.cmdService.connection$.getOutput(),
+					outer.serverSettingService.options$.getOutput()
+				),
 				map(
-					([item, connectNode]): CombErr<DownloadFileFlowInNode> => [
-						{ ...connectNode[0], ...item },
-						connectNode[1],
-					]
+					([item, connectNode, serverSettingNode]): CombErr<DownloadFileFlowInNode> => {
+						if (serverSettingNode[1].length !== 0) return [{}, serverSettingNode[1]] as any;
+						if (NestedGet(serverSettingNode[0].options, 'rc', 'Serve'))
+							return [{ ...connectNode[0], ...item }, connectNode[1]];
+						else
+							return [
+								{},
+								[new Error('rc-serve is closed. (Tip: Set server option: rc.Serve as true)')],
+							] as any;
+					}
 				)
 			);
 		})();
