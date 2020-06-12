@@ -3,10 +3,21 @@ import { NbToastrService } from '@nebular/theme';
 import { overlayConfigFactory } from 'ngx-modialog-7';
 // tslint:disable-next-line: no-submodule-imports
 import { Modal, VEXModalContext } from 'ngx-modialog-7/plugins/vex';
-import { Subject } from 'rxjs';
-import { withLatestFrom } from 'rxjs/operators';
-import { OperationsListExtendsFlowOutItemNode } from '../../../@dataflow/extra';
-import { NestedGet } from '../../../@dataflow/rclone';
+import { combineLatest, Subject } from 'rxjs';
+import { map, withLatestFrom } from 'rxjs/operators';
+import { CombErr } from '../../../@dataflow/core';
+import {
+	NavigationFlowOutNode,
+	OperationsListExtendsFlowOutItemNode,
+} from '../../../@dataflow/extra';
+import {
+	NestedGet,
+	OperationsAboutFlow,
+	OperationsFsinfoFlow,
+	OperationsFsinfoFlowInNode,
+} from '../../../@dataflow/rclone';
+import { RngSpaceUsageChartComponent } from '../../../components/space-usage-chart/space-usage-chart.component';
+import { ConnectionService } from '../../connection.service';
 import { ServerSettingService } from '../../settings/sever-setting/server-setting.service';
 import { DownloadFileService } from './download-file.service';
 
@@ -17,6 +28,8 @@ import { DownloadFileService } from './download-file.service';
 			<img [src]="'assets/icons/' + typeIcon" />
 			<h5>{{ name }}</h5>
 			<button nbButton (click)="download()" *ngIf="!isDir">download</button>
+			<app-rng-space-usage-chart *ngIf="isDir" [loading]="loadingAbout">
+			</app-rng-space-usage-chart>
 		</div>
 		<ng-template #EnableServe let-dialogRef="dialogRef" let-ctx="dialogRef.context">
 			<div class="vex-dialog-message">
@@ -72,7 +85,8 @@ export class FileDetailComponent implements OnInit {
 		private downloadService: DownloadFileService,
 		private serverSettingService: ServerSettingService,
 		public modal: Modal,
-		private toastrService: NbToastrService
+		private toastrService: NbToastrService,
+		private cmdService: ConnectionService
 	) {}
 
 	/** if user wasn't select any item, right sidebar can show current directory detail. */
@@ -85,8 +99,12 @@ export class FileDetailComponent implements OnInit {
 	typeIcon = '';
 
 	private downloadTrigger = new Subject<number>();
+	private aboutTrigger = new Subject<NavigationFlowOutNode>();
+	about$: OperationsAboutFlow;
+	loadingAbout = false;
 
 	@ViewChild('EnableServe') public EnableServe: TemplateRef<any>;
+	@ViewChild(RngSpaceUsageChartComponent) chart: RngSpaceUsageChartComponent;
 
 	itemNode(x: OperationsListExtendsFlowOutItemNode) {
 		this.remote = x.remote || '';
@@ -95,6 +113,10 @@ export class FileDetailComponent implements OnInit {
 		this.isDir = x.IsDir;
 		this.typeIcon = x.TypeIcon;
 		if (this.remote !== '' && this.path !== '' && this.name !== '') this.currentDirDetail = false;
+		if (!this.currentDirDetail && this.isDir) {
+			this.loadingAbout = true;
+			this.aboutTrigger.next({ remote: this.remote, path: this.path });
+		}
 	}
 
 	download() {
@@ -110,6 +132,35 @@ export class FileDetailComponent implements OnInit {
 	}
 
 	ngOnInit() {
+		const outer = this;
+		this.loadingAbout = true;
+		const fsinfo$ = new (class extends OperationsFsinfoFlow {
+			public prerequest$ = combineLatest([
+				outer.aboutTrigger,
+				outer.cmdService.listCmd$.verify(this.cmd),
+			]).pipe(
+				map(
+					([navNode, cmdNode]): CombErr<OperationsFsinfoFlowInNode> => {
+						if (cmdNode[1].length !== 0) return [{}, cmdNode[1]] as any;
+						return [{ ...cmdNode[0], ...navNode }, []];
+					}
+				)
+			);
+		})();
+		fsinfo$.deploy();
+		fsinfo$.getOutput().subscribe(x => {
+			if (x[1].length !== 0) return;
+			const fsinfo = x[0]['fs-info'];
+		});
+		this.about$ = new (class extends OperationsAboutFlow {
+			public prerequest$ = fsinfo$.getSupersetOutput();
+		})();
+		this.about$.deploy();
+		this.about$.getOutput().subscribe(x => {
+			this.loadingAbout = false;
+			if (x[1].length !== 0) return;
+			this.chart.data = x[0].about;
+		});
 		this.downloadTrigger
 			.pipe(withLatestFrom(this.serverSettingService.options$.getOutput()))
 			.subscribe(([, optionsNode]) => {

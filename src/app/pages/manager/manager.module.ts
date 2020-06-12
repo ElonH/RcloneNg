@@ -21,6 +21,7 @@ import {
 import { ChartsModule } from 'ng2-charts';
 import { TableModule } from 'ngx-easy-table';
 import { FileSaverModule } from 'ngx-filesaver';
+import { RngModule } from '../../components/rng.module';
 import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
 import { ClipboardRemotesTableComponent } from './clipboard/clipboard-remotes-table/clipboard-remotes-table.component';
 import { ClipboardDialogComponent } from './clipboard/clipboard.dialog';
@@ -71,6 +72,7 @@ import { TasksDialogComponent } from './tasks/tasks.dialog';
 		NbListModule,
 		ChartsModule,
 		FileSaverModule,
+		RngModule,
 	],
 })
 export class ManagerModule {}

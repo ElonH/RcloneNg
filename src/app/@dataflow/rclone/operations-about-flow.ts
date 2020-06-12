@@ -35,6 +35,7 @@ export abstract class OperationsAboutFlow extends PostFlow<
 	protected cacheSupport = true;
 	protected params = (pre: CombErr<OperationsAboutFlowInNode>): OperationsAboutFlowParamsNode => {
 		if (pre[1].length !== 0) return {} as any;
+		if (pre[0].path) return { fs: `${pre[0].remote}:${pre[0].path}` };
 		return { fs: `${pre[0].remote}:` };
 	};
 	protected reconstructAjaxResult(x: AjaxFlowInteralNode): CombErr<OperationsAboutFlowOutNode> {

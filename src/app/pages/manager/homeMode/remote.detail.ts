@@ -1,6 +1,4 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ChartDataSets, ChartOptions } from 'chart.js';
-import { BaseChartDirective, Label } from 'ng2-charts';
 import { combineLatest, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { CombErr } from '../../../@dataflow/core';
@@ -10,31 +8,14 @@ import {
 	OperationsFsinfoFlow,
 	OperationsFsinfoFlowInNode,
 } from '../../../@dataflow/rclone';
-import { FormatBytes } from '../../../utils/format-bytes';
+import { RngSpaceUsageChartComponent } from '../../../components/space-usage-chart/space-usage-chart.component';
 import { ConnectionService } from '../../connection.service';
 
 @Component({
 	selector: 'app-home-remote-detail',
 	template: `
 		<h5>{{ remote }}</h5>
-		<div
-			[nbSpinner]="loadingAbout"
-			[ngStyle]="{
-				display: 'block',
-				'background-color': doughnutChartData[1].data[0] ? '' : 'aliceblue'
-			}"
-		>
-			<canvas
-				baseChart
-				width="250"
-				height="250"
-				[datasets]="doughnutChartData"
-				[options]="doughnutChartOptions"
-				[labels]="doughnutChartLabels"
-				chartType="doughnut"
-			>
-			</canvas>
-		</div>
+		<app-rng-space-usage-chart [loading]="loadingAbout"> </app-rng-space-usage-chart>
 		<nb-accordion>
 			<nb-accordion-item *ngIf="feature.length">
 				<nb-accordion-item-header>Feature</nb-accordion-item-header>
@@ -92,49 +73,11 @@ export class RemoteDetailComponent implements OnInit {
 	feature: { k: string; v: boolean }[] = [];
 	hashes: string[] = [];
 
-	// Doughnut
-	public doughnutChartOptions: ChartOptions = {
-		legend: { display: false },
-		cutoutPercentage: 0,
-		animation: { animateScale: true },
-		tooltips: {
-			callbacks: {
-				label(tooltipItem, data) {
-					let label = (data.labels[tooltipItem.index] as string) || '';
-					if (label) {
-						label += ': ';
-					}
-					const value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
-					if (typeof value === 'number') label += FormatBytes(value, 3);
-					else label += value;
-					return label;
-				},
-			},
-		},
-	};
-	public doughnutChartLabels: Label[] = ['Totol', 'Used', 'Other', 'Trashed', 'Free'];
-	public doughnutChartData: ChartDataSets[] = [
-		{
-			data: [null, 0, 0, 0, 0],
-			backgroundColor: ['', '#3366ff', '#0095ff', '#ffaa00', '#00d68f'],
-			hoverBackgroundColor: ['', '#598bff', '#42aaff', '#ffc94d', '#2ce69b'],
-			borderWidth: 0,
-			label: 'Outside',
-		},
-		{
-			data: [0],
-			backgroundColor: '#ffffff',
-			hoverBackgroundColor: '#c5cee0',
-			borderWidth: 0,
-			label: 'Inside',
-		},
-	];
-
 	private trigger = new Subject<string>();
 	fsinfo$: OperationsFsinfoFlow;
 	about$: OperationsAboutFlow;
 
-	@ViewChild(BaseChartDirective) chart: BaseChartDirective;
+	@ViewChild(RngSpaceUsageChartComponent) chart: RngSpaceUsageChartComponent;
 
 	navNode(x: NavigationFlowOutNode) {
 		this.remote = x.remote || '';
@@ -175,10 +118,7 @@ export class RemoteDetailComponent implements OnInit {
 		this.about$.getOutput().subscribe(x => {
 			this.loadingAbout = false;
 			if (x[1].length !== 0) return;
-			const about = x[0].about;
-			this.doughnutChartData[0].data = [null, about.used, about.other, about.trashed, about.free];
-			this.doughnutChartData[1].data = [about.total ? about.total : null];
-			this.chart.update();
+			this.chart.data = x[0].about;
 		});
 	}
 }
