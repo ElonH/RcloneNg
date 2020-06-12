@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { EditorComponent as MonacoEditorComponent, NgxEditorModel } from 'ngx-monaco-editor';
 import { ResponsiveSizeInfoRx } from 'ngx-responsive';
 import { Subject, Subscription } from 'rxjs';
+import * as serverSettingSchema from '../../../@dataflow/extra/server-setting-schema.json';
 import { IRcloneOptions } from '../../../@dataflow/rclone';
 import { ServerSettingService } from './server-setting.service';
 
@@ -70,6 +71,7 @@ export class SeverSettingComponent implements OnInit {
 	editorModel: NgxEditorModel = {
 		value: '',
 		language: 'json',
+		// uri: monaco.Uri.parse('server-setting.json'),
 	};
 
 	private connector: Subscription[] = [];
@@ -87,6 +89,16 @@ export class SeverSettingComponent implements OnInit {
 	}
 
 	editorOnInit(editor: monaco.editor.IStandaloneCodeEditor) {
+		monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
+			validate: true,
+			schemas: [
+				{
+					uri: 'server-setting-schema.json',
+					fileMatch: [''],
+					schema: { ...serverSettingSchema.definitions.IRcloneOptions },
+				},
+			],
+		});
 		function updateValue(v: IRcloneOptions) {
 			editor.setValue(JSON.stringify(v, null, 4));
 			editor.trigger('', 'editor.action.formatDocument', {});

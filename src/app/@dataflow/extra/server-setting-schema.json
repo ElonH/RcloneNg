@@ -1,0 +1,1441 @@
+{
+	"$ref": "#/definitions/IRcloneOptions",
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"definitions": {
+		"IRcloneOptions": {
+			"additionalProperties": false,
+			"properties": {
+				"dlna": {
+					"additionalProperties": false,
+					"properties": {
+						"FriendlyName": {
+							"type": "string"
+						},
+						"ListenAddr": {
+							"type": "string"
+						},
+						"LogTrace": {
+							"anyOf": [
+								{
+									"enum": [false],
+									"type": "boolean"
+								},
+								{
+									"type": "boolean"
+								}
+							]
+						}
+					},
+					"type": "object"
+				},
+				"filter": {
+					"additionalProperties": false,
+					"properties": {
+						"DeleteExcluded": {
+							"anyOf": [
+								{
+									"enum": [false],
+									"type": "boolean"
+								},
+								{
+									"type": "boolean"
+								}
+							]
+						},
+						"ExcludeFile": {
+							"type": "string"
+						},
+						"ExcludeFrom": {
+							"type": ["null", "boolean", "string", "number"]
+						},
+						"ExcludeRule": {
+							"type": ["null", "boolean", "string", "number"]
+						},
+						"FilesFrom": {
+							"type": ["null", "boolean", "string", "number"]
+						},
+						"FilesFromRaw": {
+							"type": ["null", "boolean", "string", "number"]
+						},
+						"FilterFrom": {
+							"type": ["null", "boolean", "string", "number"]
+						},
+						"FilterRule": {
+							"type": ["null", "boolean", "string", "number"]
+						},
+						"IgnoreCase": {
+							"anyOf": [
+								{
+									"enum": [false],
+									"type": "boolean"
+								},
+								{
+									"type": "boolean"
+								}
+							]
+						},
+						"IncludeFrom": {
+							"type": ["null", "boolean", "string", "number"]
+						},
+						"IncludeRule": {
+							"type": ["null", "boolean", "string", "number"]
+						},
+						"MaxAge": {
+							"description": "default?: 9223372036854775807",
+							"type": "number"
+						},
+						"MaxSize": {
+							"anyOf": [
+								{
+									"enum": [-1],
+									"type": "number"
+								},
+								{
+									"type": "number"
+								}
+							]
+						},
+						"MinAge": {
+							"description": "default?: 9223372036854775807",
+							"type": "number"
+						},
+						"MinSize": {
+							"anyOf": [
+								{
+									"enum": [-1],
+									"type": "number"
+								},
+								{
+									"type": "number"
+								}
+							]
+						}
+					},
+					"type": "object"
+				},
+				"ftp": {
+					"additionalProperties": false,
+					"properties": {
+						"BasicPass": {
+							"type": "string"
+						},
+						"BasicUser": {
+							"type": "string"
+						},
+						"ListenAddr": {
+							"type": "string"
+						},
+						"PassivePorts": {
+							"type": "string"
+						},
+						"PublicIP": {
+							"type": "string"
+						}
+					},
+					"type": "object"
+				},
+				"http": {
+					"additionalProperties": false,
+					"properties": {
+						"BaseURL": {
+							"type": "string"
+						},
+						"BasicPass": {
+							"type": "string"
+						},
+						"BasicUser": {
+							"type": "string"
+						},
+						"ClientCA": {
+							"type": "string"
+						},
+						"HtPasswd": {
+							"type": "string"
+						},
+						"ListenAddr": {
+							"type": "string"
+						},
+						"MaxHeaderBytes": {
+							"anyOf": [
+								{
+									"enum": [4096],
+									"type": "number"
+								},
+								{
+									"type": "number"
+								}
+							]
+						},
+						"Realm": {
+							"type": "string"
+						},
+						"ServerReadTimeout": {
+							"anyOf": [
+								{
+									"enum": [3600000000000],
+									"type": "number"
+								},
+								{
+									"type": "number"
+								}
+							]
+						},
+						"ServerWriteTimeout": {
+							"anyOf": [
+								{
+									"enum": [3600000000000],
+									"type": "number"
+								},
+								{
+									"type": "number"
+								}
+							]
+						},
+						"SslCert": {
+							"type": "string"
+						},
+						"SslKey": {
+							"type": "string"
+						},
+						"Template": {
+							"type": "string"
+						}
+					},
+					"type": "object"
+				},
+				"log": {
+					"additionalProperties": false,
+					"properties": {
+						"File": {
+							"type": "string"
+						},
+						"Format": {
+							"type": "string"
+						},
+						"SyslogFacility": {
+							"type": "string"
+						},
+						"UseSyslog": {
+							"anyOf": [
+								{
+									"enum": [false],
+									"type": "boolean"
+								},
+								{
+									"type": "boolean"
+								}
+							]
+						}
+					},
+					"type": "object"
+				},
+				"main": {
+					"additionalProperties": false,
+					"properties": {
+						"AskPassword": {
+							"anyOf": [
+								{
+									"enum": [true],
+									"type": "boolean"
+								},
+								{
+									"type": "boolean"
+								}
+							]
+						},
+						"AutoConfirm": {
+							"anyOf": [
+								{
+									"enum": [false],
+									"type": "boolean"
+								},
+								{
+									"type": "boolean"
+								}
+							]
+						},
+						"BackupDir": {
+							"type": "string"
+						},
+						"BindAddr": {
+							"type": "string"
+						},
+						"BufferSize": {
+							"anyOf": [
+								{
+									"enum": [16777216],
+									"type": "number"
+								},
+								{
+									"type": "number"
+								}
+							]
+						},
+						"BwLimit": {
+							"type": ["null", "boolean", "string", "number"]
+						},
+						"CaCert": {
+							"type": "string"
+						},
+						"CheckSum": {
+							"anyOf": [
+								{
+									"enum": [false],
+									"type": "boolean"
+								},
+								{
+									"type": "boolean"
+								}
+							]
+						},
+						"Checkers": {
+							"anyOf": [
+								{
+									"enum": [8],
+									"type": "number"
+								},
+								{
+									"type": "number"
+								}
+							]
+						},
+						"ClientCert": {
+							"type": "string"
+						},
+						"ClientKey": {
+							"type": "string"
+						},
+						"CompareDest": {
+							"type": "string"
+						},
+						"ConnectTimeout": {
+							"anyOf": [
+								{
+									"enum": [60000000000],
+									"type": "number"
+								},
+								{
+									"type": "number"
+								}
+							]
+						},
+						"Cookie": {
+							"anyOf": [
+								{
+									"enum": [false],
+									"type": "boolean"
+								},
+								{
+									"type": "boolean"
+								}
+							]
+						},
+						"CopyDest": {
+							"type": "string"
+						},
+						"CutoffMode": {
+							"anyOf": [
+								{
+									"enum": [0],
+									"type": "number"
+								},
+								{
+									"type": "number"
+								}
+							]
+						},
+						"DataRateUnit": {
+							"type": "string"
+						},
+						"DeleteMode": {
+							"anyOf": [
+								{
+									"enum": [3],
+									"type": "number"
+								},
+								{
+									"type": "number"
+								}
+							]
+						},
+						"DisableFeatures": {
+							"type": ["null", "boolean", "string", "number"]
+						},
+						"DownloadHeaders": {
+							"type": ["null", "boolean", "string", "number"]
+						},
+						"DryRun": {
+							"anyOf": [
+								{
+									"enum": [false],
+									"type": "boolean"
+								},
+								{
+									"type": "boolean"
+								}
+							]
+						},
+						"Dump": {
+							"anyOf": [
+								{
+									"enum": [0],
+									"type": "number"
+								},
+								{
+									"type": "number"
+								}
+							]
+						},
+						"ErrorOnNoTransfer": {
+							"anyOf": [
+								{
+									"enum": [false],
+									"type": "boolean"
+								},
+								{
+									"type": "boolean"
+								}
+							]
+						},
+						"ExpectContinueTimeout": {
+							"anyOf": [
+								{
+									"enum": [1000000000],
+									"type": "number"
+								},
+								{
+									"type": "number"
+								}
+							]
+						},
+						"Headers": {
+							"type": ["null", "boolean", "string", "number"]
+						},
+						"IgnoreCaseSync": {
+							"anyOf": [
+								{
+									"enum": [false],
+									"type": "boolean"
+								},
+								{
+									"type": "boolean"
+								}
+							]
+						},
+						"IgnoreChecksum": {
+							"anyOf": [
+								{
+									"enum": [false],
+									"type": "boolean"
+								},
+								{
+									"type": "boolean"
+								}
+							]
+						},
+						"IgnoreErrors": {
+							"anyOf": [
+								{
+									"enum": [false],
+									"type": "boolean"
+								},
+								{
+									"type": "boolean"
+								}
+							]
+						},
+						"IgnoreExisting": {
+							"anyOf": [
+								{
+									"enum": [false],
+									"type": "boolean"
+								},
+								{
+									"type": "boolean"
+								}
+							]
+						},
+						"IgnoreSize": {
+							"anyOf": [
+								{
+									"enum": [false],
+									"type": "boolean"
+								},
+								{
+									"type": "boolean"
+								}
+							]
+						},
+						"IgnoreTimes": {
+							"anyOf": [
+								{
+									"enum": [false],
+									"type": "boolean"
+								},
+								{
+									"type": "boolean"
+								}
+							]
+						},
+						"Immutable": {
+							"anyOf": [
+								{
+									"enum": [false],
+									"type": "boolean"
+								},
+								{
+									"type": "boolean"
+								}
+							]
+						},
+						"InsecureSkipVerify": {
+							"anyOf": [
+								{
+									"enum": [false],
+									"type": "boolean"
+								},
+								{
+									"type": "boolean"
+								}
+							]
+						},
+						"LogLevel": {
+							"anyOf": [
+								{
+									"enum": [7],
+									"type": "number"
+								},
+								{
+									"type": "number"
+								}
+							]
+						},
+						"LowLevelRetries": {
+							"anyOf": [
+								{
+									"enum": [10],
+									"type": "number"
+								},
+								{
+									"type": "number"
+								}
+							]
+						},
+						"MaxBacklog": {
+							"anyOf": [
+								{
+									"enum": [10000],
+									"type": "number"
+								},
+								{
+									"type": "number"
+								}
+							]
+						},
+						"MaxDelete": {
+							"anyOf": [
+								{
+									"enum": [-1],
+									"type": "number"
+								},
+								{
+									"type": "number"
+								}
+							]
+						},
+						"MaxDepth": {
+							"anyOf": [
+								{
+									"enum": [-1],
+									"type": "number"
+								},
+								{
+									"type": "number"
+								}
+							]
+						},
+						"MaxDuration": {
+							"anyOf": [
+								{
+									"enum": [0],
+									"type": "number"
+								},
+								{
+									"type": "number"
+								}
+							]
+						},
+						"MaxStatsGroups": {
+							"anyOf": [
+								{
+									"enum": [1000],
+									"type": "number"
+								},
+								{
+									"type": "number"
+								}
+							]
+						},
+						"MaxTransfer": {
+							"anyOf": [
+								{
+									"enum": [-1],
+									"type": "number"
+								},
+								{
+									"type": "number"
+								}
+							]
+						},
+						"ModifyWindow": {
+							"anyOf": [
+								{
+									"enum": [1],
+									"type": "number"
+								},
+								{
+									"type": "number"
+								}
+							]
+						},
+						"MultiThreadCutoff": {
+							"anyOf": [
+								{
+									"enum": [262144000],
+									"type": "number"
+								},
+								{
+									"type": "number"
+								}
+							]
+						},
+						"MultiThreadSet": {
+							"anyOf": [
+								{
+									"enum": [false],
+									"type": "boolean"
+								},
+								{
+									"type": "boolean"
+								}
+							]
+						},
+						"MultiThreadStreams": {
+							"anyOf": [
+								{
+									"enum": [4],
+									"type": "number"
+								},
+								{
+									"type": "number"
+								}
+							]
+						},
+						"NoCheckDest": {
+							"anyOf": [
+								{
+									"enum": [false],
+									"type": "boolean"
+								},
+								{
+									"type": "boolean"
+								}
+							]
+						},
+						"NoGzip": {
+							"anyOf": [
+								{
+									"enum": [false],
+									"type": "boolean"
+								},
+								{
+									"type": "boolean"
+								}
+							]
+						},
+						"NoTraverse": {
+							"anyOf": [
+								{
+									"enum": [false],
+									"type": "boolean"
+								},
+								{
+									"type": "boolean"
+								}
+							]
+						},
+						"NoUpdateModTime": {
+							"anyOf": [
+								{
+									"enum": [false],
+									"type": "boolean"
+								},
+								{
+									"type": "boolean"
+								}
+							]
+						},
+						"OrderBy": {
+							"type": "string"
+						},
+						"PasswordCommand": {
+							"type": ["null", "boolean", "string", "number"]
+						},
+						"Progress": {
+							"anyOf": [
+								{
+									"enum": [false],
+									"type": "boolean"
+								},
+								{
+									"type": "boolean"
+								}
+							]
+						},
+						"SizeOnly": {
+							"anyOf": [
+								{
+									"enum": [false],
+									"type": "boolean"
+								},
+								{
+									"type": "boolean"
+								}
+							]
+						},
+						"StatsFileNameLength": {
+							"anyOf": [
+								{
+									"enum": [45],
+									"type": "number"
+								},
+								{
+									"type": "number"
+								}
+							]
+						},
+						"StatsLogLevel": {
+							"anyOf": [
+								{
+									"enum": [6],
+									"type": "number"
+								},
+								{
+									"type": "number"
+								}
+							]
+						},
+						"StatsOneLine": {
+							"anyOf": [
+								{
+									"enum": [false],
+									"type": "boolean"
+								},
+								{
+									"type": "boolean"
+								}
+							]
+						},
+						"StatsOneLineDate": {
+							"anyOf": [
+								{
+									"enum": [false],
+									"type": "boolean"
+								},
+								{
+									"type": "boolean"
+								}
+							]
+						},
+						"StatsOneLineDateFormat": {
+							"type": "string"
+						},
+						"StreamingUploadCutoff": {
+							"anyOf": [
+								{
+									"enum": [102400],
+									"type": "number"
+								},
+								{
+									"type": "number"
+								}
+							]
+						},
+						"Suffix": {
+							"type": "string"
+						},
+						"SuffixKeepExtension": {
+							"anyOf": [
+								{
+									"enum": [false],
+									"type": "boolean"
+								},
+								{
+									"type": "boolean"
+								}
+							]
+						},
+						"TPSLimit": {
+							"anyOf": [
+								{
+									"enum": [0],
+									"type": "number"
+								},
+								{
+									"type": "number"
+								}
+							]
+						},
+						"TPSLimitBurst": {
+							"anyOf": [
+								{
+									"enum": [1],
+									"type": "number"
+								},
+								{
+									"type": "number"
+								}
+							]
+						},
+						"Timeout": {
+							"anyOf": [
+								{
+									"enum": [300000000000],
+									"type": "number"
+								},
+								{
+									"type": "number"
+								}
+							]
+						},
+						"TrackRenames": {
+							"anyOf": [
+								{
+									"enum": [false],
+									"type": "boolean"
+								},
+								{
+									"type": "boolean"
+								}
+							]
+						},
+						"TrackRenamesStrategy": {
+							"type": "string"
+						},
+						"Transfers": {
+							"anyOf": [
+								{
+									"enum": [4],
+									"type": "number"
+								},
+								{
+									"type": "number"
+								}
+							]
+						},
+						"UpdateOlder": {
+							"anyOf": [
+								{
+									"enum": [false],
+									"type": "boolean"
+								},
+								{
+									"type": "boolean"
+								}
+							]
+						},
+						"UploadHeaders": {
+							"type": ["null", "boolean", "string", "number"]
+						},
+						"UseJSONLog": {
+							"anyOf": [
+								{
+									"enum": [false],
+									"type": "boolean"
+								},
+								{
+									"type": "boolean"
+								}
+							]
+						},
+						"UseListR": {
+							"anyOf": [
+								{
+									"enum": [false],
+									"type": "boolean"
+								},
+								{
+									"type": "boolean"
+								}
+							]
+						},
+						"UseMmap": {
+							"anyOf": [
+								{
+									"enum": [false],
+									"type": "boolean"
+								},
+								{
+									"type": "boolean"
+								}
+							]
+						},
+						"UseServerModTime": {
+							"anyOf": [
+								{
+									"enum": [false],
+									"type": "boolean"
+								},
+								{
+									"type": "boolean"
+								}
+							]
+						},
+						"UserAgent": {
+							"type": "string"
+						}
+					},
+					"type": "object"
+				},
+				"rc": {
+					"additionalProperties": false,
+					"properties": {
+						"AccessControlAllowOrigin": {
+							"description": "Set the allowed origin for CORS.",
+							"type": "string"
+						},
+						"EnableMetrics": {
+							"anyOf": [
+								{
+									"enum": [false],
+									"type": "boolean"
+								},
+								{
+									"type": "boolean"
+								}
+							],
+							"description": "Enable prometheus metrics on /metrics"
+						},
+						"Enabled": {
+							"anyOf": [
+								{
+									"enum": [true],
+									"type": "boolean"
+								},
+								{
+									"type": "boolean"
+								}
+							],
+							"description": "Enable the remote control server."
+						},
+						"Files": {
+							"description": "Path to local files to serve on the HTTP server.",
+							"type": "string"
+						},
+						"HTTPOptions": {
+							"additionalProperties": false,
+							"properties": {
+								"BaseURL": {
+									"type": "string"
+								},
+								"BasicPass": {
+									"type": "string"
+								},
+								"BasicUser": {
+									"type": "string"
+								},
+								"ClientCA": {
+									"type": "string"
+								},
+								"HtPasswd": {
+									"type": "string"
+								},
+								"ListenAddr": {
+									"type": "string"
+								},
+								"MaxHeaderBytes": {
+									"anyOf": [
+										{
+											"enum": [4096],
+											"type": "number"
+										},
+										{
+											"type": "number"
+										}
+									]
+								},
+								"Realm": {
+									"type": "string"
+								},
+								"ServerReadTimeout": {
+									"anyOf": [
+										{
+											"enum": [3600000000000],
+											"type": "number"
+										},
+										{
+											"type": "number"
+										}
+									]
+								},
+								"ServerWriteTimeout": {
+									"anyOf": [
+										{
+											"enum": [3600000000000],
+											"type": "number"
+										},
+										{
+											"type": "number"
+										}
+									]
+								},
+								"SslCert": {
+									"type": "string"
+								},
+								"SslKey": {
+									"type": "string"
+								},
+								"Template": {
+									"type": "string"
+								}
+							},
+							"type": "object"
+						},
+						"JobExpireDuration": {
+							"anyOf": [
+								{
+									"enum": [60000000000],
+									"type": "number"
+								},
+								{
+									"type": "number"
+								}
+							],
+							"description": "expire finished async jobs older than this value"
+						},
+						"JobExpireInterval": {
+							"anyOf": [
+								{
+									"enum": [10000000000],
+									"type": "number"
+								},
+								{
+									"type": "number"
+								}
+							],
+							"description": "interval to check for expired async jobs"
+						},
+						"NoAuth": {
+							"anyOf": [
+								{
+									"enum": [false],
+									"type": "boolean"
+								},
+								{
+									"type": "boolean"
+								}
+							],
+							"description": "Don't require auth for certain methods."
+						},
+						"Serve": {
+							"anyOf": [
+								{
+									"enum": [true],
+									"type": "boolean"
+								},
+								{
+									"type": "boolean"
+								}
+							],
+							"description": "Enable the serving of remote objects."
+						},
+						"WebGUIFetchURL": {
+							"description": "URL to fetch the releases for webgui.",
+							"type": "string"
+						},
+						"WebGUIForceUpdate": {
+							"anyOf": [
+								{
+									"enum": [false],
+									"type": "boolean"
+								},
+								{
+									"type": "boolean"
+								}
+							],
+							"description": "Force update to latest version of web gui"
+						},
+						"WebGUINoOpenBrowser": {
+							"anyOf": [
+								{
+									"enum": [false],
+									"type": "boolean"
+								},
+								{
+									"type": "boolean"
+								}
+							],
+							"description": "Don't open the browser automatically"
+						},
+						"WebGUIUpdate": {
+							"anyOf": [
+								{
+									"enum": [false],
+									"type": "boolean"
+								},
+								{
+									"type": "boolean"
+								}
+							],
+							"description": "Check and update to latest version of web gui"
+						},
+						"WebUI": {
+							"anyOf": [
+								{
+									"enum": [false],
+									"type": "boolean"
+								},
+								{
+									"type": "boolean"
+								}
+							],
+							"description": "Launch WebGUI on localhost"
+						}
+					},
+					"type": "object"
+				},
+				"rc-http": {
+					"additionalProperties": false,
+					"properties": {
+						"BaseURL": {
+							"type": "string"
+						},
+						"BasicPass": {
+							"type": "string"
+						},
+						"BasicUser": {
+							"type": "string"
+						},
+						"ClientCA": {
+							"type": "string"
+						},
+						"HtPasswd": {
+							"type": "string"
+						},
+						"ListenAddr": {
+							"type": "string"
+						},
+						"MaxHeaderBytes": {
+							"anyOf": [
+								{
+									"enum": [4096],
+									"type": "number"
+								},
+								{
+									"type": "number"
+								}
+							]
+						},
+						"Realm": {
+							"type": "string"
+						},
+						"ServerReadTimeout": {
+							"anyOf": [
+								{
+									"enum": [3600000000000],
+									"type": "number"
+								},
+								{
+									"type": "number"
+								}
+							]
+						},
+						"ServerWriteTimeout": {
+							"anyOf": [
+								{
+									"enum": [3600000000000],
+									"type": "number"
+								},
+								{
+									"type": "number"
+								}
+							]
+						},
+						"SslCert": {
+							"type": "string"
+						},
+						"SslKey": {
+							"type": "string"
+						},
+						"Template": {
+							"type": "string"
+						}
+					},
+					"type": "object"
+				},
+				"sftp": {
+					"additionalProperties": false,
+					"properties": {
+						"AuthorizedKeys": {
+							"type": "string"
+						},
+						"HostKeys": {
+							"type": ["null", "boolean", "string", "number"]
+						},
+						"Key": {
+							"type": "string"
+						},
+						"ListenAddr": {
+							"type": "string"
+						},
+						"NoAuth": {
+							"anyOf": [
+								{
+									"enum": [false],
+									"type": "boolean"
+								},
+								{
+									"type": "boolean"
+								}
+							]
+						},
+						"Pass": {
+							"type": "string"
+						},
+						"User": {
+							"type": "string"
+						}
+					},
+					"type": "object"
+				},
+				"vfs": {
+					"additionalProperties": false,
+					"properties": {
+						"CacheMaxAge": {
+							"anyOf": [
+								{
+									"enum": [3600000000000],
+									"type": "number"
+								},
+								{
+									"type": "number"
+								}
+							]
+						},
+						"CacheMaxSize": {
+							"anyOf": [
+								{
+									"enum": [-1],
+									"type": "number"
+								},
+								{
+									"type": "number"
+								}
+							]
+						},
+						"CacheMode": {
+							"anyOf": [
+								{
+									"enum": [0],
+									"type": "number"
+								},
+								{
+									"type": "number"
+								}
+							]
+						},
+						"CachePollInterval": {
+							"anyOf": [
+								{
+									"enum": [60000000000],
+									"type": "number"
+								},
+								{
+									"type": "number"
+								}
+							]
+						},
+						"CaseInsensitive": {
+							"anyOf": [
+								{
+									"enum": [false],
+									"type": "boolean"
+								},
+								{
+									"type": "boolean"
+								}
+							]
+						},
+						"ChunkSize": {
+							"anyOf": [
+								{
+									"enum": [134217728],
+									"type": "number"
+								},
+								{
+									"type": "number"
+								}
+							]
+						},
+						"ChunkSizeLimit": {
+							"anyOf": [
+								{
+									"enum": [-1],
+									"type": "number"
+								},
+								{
+									"type": "number"
+								}
+							]
+						},
+						"DirCacheTime": {
+							"anyOf": [
+								{
+									"enum": [300000000000],
+									"type": "number"
+								},
+								{
+									"type": "number"
+								}
+							]
+						},
+						"DirPerms": {
+							"anyOf": [
+								{
+									"enum": [511],
+									"type": "number"
+								},
+								{
+									"type": "number"
+								}
+							]
+						},
+						"FilePerms": {
+							"anyOf": [
+								{
+									"enum": [438],
+									"type": "number"
+								},
+								{
+									"type": "number"
+								}
+							]
+						},
+						"GID": {
+							"anyOf": [
+								{
+									"enum": [1000],
+									"type": "number"
+								},
+								{
+									"type": "number"
+								}
+							]
+						},
+						"NoChecksum": {
+							"anyOf": [
+								{
+									"enum": [false],
+									"type": "boolean"
+								},
+								{
+									"type": "boolean"
+								}
+							]
+						},
+						"NoModTime": {
+							"anyOf": [
+								{
+									"enum": [false],
+									"type": "boolean"
+								},
+								{
+									"type": "boolean"
+								}
+							]
+						},
+						"NoSeek": {
+							"anyOf": [
+								{
+									"enum": [false],
+									"type": "boolean"
+								},
+								{
+									"type": "boolean"
+								}
+							]
+						},
+						"PollInterval": {
+							"anyOf": [
+								{
+									"enum": [60000000000],
+									"type": "number"
+								},
+								{
+									"type": "number"
+								}
+							]
+						},
+						"ReadOnly": {
+							"anyOf": [
+								{
+									"enum": [false],
+									"type": "boolean"
+								},
+								{
+									"type": "boolean"
+								}
+							]
+						},
+						"ReadWait": {
+							"anyOf": [
+								{
+									"enum": [5000000],
+									"type": "number"
+								},
+								{
+									"type": "number"
+								}
+							]
+						},
+						"UID": {
+							"anyOf": [
+								{
+									"enum": [1000],
+									"type": "number"
+								},
+								{
+									"type": "number"
+								}
+							]
+						},
+						"Umask": {
+							"anyOf": [
+								{
+									"enum": [18],
+									"type": "number"
+								},
+								{
+									"type": "number"
+								}
+							]
+						},
+						"WriteWait": {
+							"anyOf": [
+								{
+									"enum": [1000000000],
+									"type": "number"
+								},
+								{
+									"type": "number"
+								}
+							]
+						}
+					},
+					"type": "object"
+				}
+			},
+			"type": "object"
+		}
+	}
+}
