@@ -7,11 +7,14 @@
 			"properties": {
 				"dlna": {
 					"additionalProperties": false,
+					"description": "DLNA serving options.",
 					"properties": {
 						"FriendlyName": {
+							"description": "choose the friendly server name,\nwhich is by default \"rclone (hostname)",
 							"type": "string"
 						},
 						"ListenAddr": {
+							"description": "specify which IP address and port the server should listen on.\neg `1.2.3.4:8000` or `:8080` to listen to all IPs.",
 							"type": "string"
 						},
 						"LogTrace": {
@@ -23,13 +26,15 @@
 								{
 									"type": "boolean"
 								}
-							]
+							],
+							"description": "enable additional debug logging of all UPNP traffic."
 						}
 					},
 					"type": "object"
 				},
 				"filter": {
 					"additionalProperties": false,
+					"description": "configures the filter",
 					"properties": {
 						"DeleteExcluded": {
 							"anyOf": [
@@ -40,28 +45,96 @@
 								{
 									"type": "boolean"
 								}
-							]
+							],
+							"description": "Delete files on dest excluded from sync"
 						},
 						"ExcludeFile": {
+							"description": "Exclude directories if filename is present",
 							"type": "string"
 						},
 						"ExcludeFrom": {
-							"type": ["null", "boolean", "string", "number"]
+							"anyOf": [
+								{
+									"type": "null"
+								},
+								{
+									"items": {
+										"type": "string"
+									},
+									"type": "array"
+								}
+							],
+							"description": "Read exclude patterns from file (use - to read from stdin)"
 						},
 						"ExcludeRule": {
-							"type": ["null", "boolean", "string", "number"]
+							"anyOf": [
+								{
+									"type": "null"
+								},
+								{
+									"items": {
+										"type": "string"
+									},
+									"type": "array"
+								}
+							],
+							"description": "Exclude files matching pattern"
 						},
 						"FilesFrom": {
-							"type": ["null", "boolean", "string", "number"]
+							"anyOf": [
+								{
+									"type": "null"
+								},
+								{
+									"items": {
+										"type": "string"
+									},
+									"type": "array"
+								}
+							],
+							"description": "Read list of source-file names from file (use - to read from stdin)"
 						},
 						"FilesFromRaw": {
-							"type": ["null", "boolean", "string", "number"]
+							"anyOf": [
+								{
+									"type": "null"
+								},
+								{
+									"items": {
+										"type": "string"
+									},
+									"type": "array"
+								}
+							],
+							"description": "Read list of source-file names from file without any processing of lines (use - to read from stdin)"
 						},
 						"FilterFrom": {
-							"type": ["null", "boolean", "string", "number"]
+							"anyOf": [
+								{
+									"type": "null"
+								},
+								{
+									"items": {
+										"type": "string"
+									},
+									"type": "array"
+								}
+							],
+							"description": "Read filtering patterns from a file (use - to read from stdin)"
 						},
 						"FilterRule": {
-							"type": ["null", "boolean", "string", "number"]
+							"anyOf": [
+								{
+									"type": "null"
+								},
+								{
+									"items": {
+										"type": "string"
+									},
+									"type": "array"
+								}
+							],
+							"description": "Add a file-filtering rule"
 						},
 						"IgnoreCase": {
 							"anyOf": [
@@ -72,16 +145,39 @@
 								{
 									"type": "boolean"
 								}
-							]
+							],
+							"description": "Ignore case in filters (case insensitive)"
 						},
 						"IncludeFrom": {
-							"type": ["null", "boolean", "string", "number"]
+							"anyOf": [
+								{
+									"type": "null"
+								},
+								{
+									"items": {
+										"type": "string"
+									},
+									"type": "array"
+								}
+							],
+							"description": "Read include patterns from file (use - to read from stdin)"
 						},
 						"IncludeRule": {
-							"type": ["null", "boolean", "string", "number"]
+							"anyOf": [
+								{
+									"type": "null"
+								},
+								{
+									"items": {
+										"type": "string"
+									},
+									"type": "array"
+								}
+							],
+							"description": "Include files matching pattern"
 						},
 						"MaxAge": {
-							"description": "default?: 9223372036854775807",
+							"description": "Only transfer files younger than this in s or suffix ms|s|m|h|d|w|M|y",
 							"type": "number"
 						},
 						"MaxSize": {
@@ -93,10 +189,11 @@
 								{
 									"type": "number"
 								}
-							]
+							],
+							"description": "Only transfer files smaller than this in k or suffix b|k|M|G"
 						},
 						"MinAge": {
-							"description": "default?: 9223372036854775807",
+							"description": "Only transfer files older than this in s or suffix ms|s|m|h|d|w|M|y",
 							"type": "number"
 						},
 						"MinSize": {
@@ -108,27 +205,34 @@
 								{
 									"type": "number"
 								}
-							]
+							],
+							"description": "Only transfer files bigger than this in k or suffix b|k|M|G"
 						}
 					},
 					"type": "object"
 				},
 				"ftp": {
 					"additionalProperties": false,
+					"description": "options for the ftp Server",
 					"properties": {
 						"BasicPass": {
+							"description": "Password for BasicUser authentication.\n(empty value allow every password)",
 							"type": "string"
 						},
 						"BasicUser": {
+							"description": "User name for authentication.\nsingle username for basic auth if not using Htpasswd",
 							"type": "string"
 						},
 						"ListenAddr": {
+							"description": "IPaddress:Port or :Port to bind server to.",
 							"type": "string"
 						},
 						"PassivePorts": {
+							"description": "Passive port range to use.",
 							"type": "string"
 						},
 						"PublicIP": {
+							"description": "Public IP address to advertise for passive connections.",
 							"type": "string"
 						}
 					},
@@ -136,23 +240,30 @@
 				},
 				"http": {
 					"additionalProperties": false,
+					"description": "options for the http Server",
 					"properties": {
 						"BaseURL": {
+							"description": "prefix to strip from URLs\n--baseurl controls the URL prefix that rclone serves from.\nBy default rclone will serve from the root.\nIf you used --baseurl \"/rclone\" then rclone would serve from a URL\nstarting with \"/rclone/\".\nThis is useful if you wish to proxy rclone serve.\nRclone automatically inserts leading and trailing \"/\" on --baseurl,\nso --baseurl \"rclone\", --baseurl \"/rclone\" and --baseurl \"/rclone/\"\nare all treated identically.",
 							"type": "string"
 						},
 						"BasicPass": {
+							"description": "password for BasicUser",
 							"type": "string"
 						},
 						"BasicUser": {
+							"description": "single username for basic auth if not using Htpasswd",
 							"type": "string"
 						},
 						"ClientCA": {
+							"description": "Client certificate authority to verify clients with",
 							"type": "string"
 						},
 						"HtPasswd": {
+							"description": "htpasswd file - if not provided no authentication is done\nThis is in standard apache format and supports MD5, SHA1 and BCrypt for basic\nauthentication.  Bcrypt is recommended.\nTo create an htpasswd file:\n\n    touch htpasswd\n    htpasswd -B htpasswd user\n    htpasswd -B htpasswd anotherUser\n\nThe password file can be updated while rclone is running.",
 							"type": "string"
 						},
 						"ListenAddr": {
+							"description": "Port to listen on\nUse --addr to specify which IP address and port\nthe server should listen on,\neg --addr 1.2.3.4:8000 or --addr :8080 to listen to all IPs.\nBy default it only listens on localhost.\nYou can use port :0 to let the OS choose an available port.\n\nIf you set --addr to listen on a public or LAN accessible IP address\nthen using Authentication is advised - see the next section for info.",
 							"type": "string"
 						},
 						"MaxHeaderBytes": {
@@ -164,9 +275,11 @@
 								{
 									"type": "number"
 								}
-							]
+							],
+							"description": "Maximum size of request header\n--max-header-bytes controls the maximum number of bytes the server will\naccept in the HTTP header."
 						},
 						"Realm": {
+							"description": "realm for authentication",
 							"type": "string"
 						},
 						"ServerReadTimeout": {
@@ -178,7 +291,8 @@
 								{
 									"type": "number"
 								}
-							]
+							],
+							"description": "Timeout for server reading data\nNote that this is the total time for a transfer."
 						},
 						"ServerWriteTimeout": {
 							"anyOf": [
@@ -189,15 +303,19 @@
 								{
 									"type": "number"
 								}
-							]
+							],
+							"description": "Timeout for server writing data\nNote that this is the total time for a transfer."
 						},
 						"SslCert": {
+							"description": "SSL PEM key (concatenation of certificate and CA certificate)",
 							"type": "string"
 						},
 						"SslKey": {
+							"description": "SSL PEM Private key",
 							"type": "string"
 						},
 						"Template": {
+							"description": "User specified template\n--template allows a user to specify a custom markup template for http\nand webdav serve functions.  The server exports the following markup\nto be used within the template to server pages:\n\n| Parameter   | Description |\n| :---------- | :---------- |\n| .Name       | The full path of a file/directory. |\n| .Title      | Directory listing of .Name |\n| .Sort       | The current sort used.  This is changeable via ?sort= parameter |\n|             | Sort Options: namedirfist,name,size,time (default namedirfirst) |\n| .Order      | The current ordering used.  This is changeable via ?order= parameter |\n|             | Order Options: asc,desc (default asc) |\n| .Query      | Currently unused. |\n| .Breadcrumb | Allows for creating a relative navigation |\n|-- .Link     | The relative to the root link of the Text. |\n|-- .Text     | The Name of the directory. |\n| .Entries    | Information about a specific file/directory. |\n|-- .URL      | The 'url' of an entry.  |\n|-- .Leaf     | Currently same as 'URL' but intended to be 'just' the name. |\n|-- .IsDir    | Boolean for if an entry is a directory or not. |\n|-- .Size     | Size in Bytes of the entry. |\n|-- .ModTime  | The UTC timestamp of an entry. |",
 							"type": "string"
 						}
 					},
@@ -205,14 +323,18 @@
 				},
 				"log": {
 					"additionalProperties": false,
+					"description": "options for the logger",
 					"properties": {
 						"File": {
+							"description": "Log everything to this file",
 							"type": "string"
 						},
 						"Format": {
+							"description": "Comma separated list of log format options",
 							"type": "string"
 						},
 						"SyslogFacility": {
+							"description": "Facility for syslog, eg KERN,USER,...",
 							"type": "string"
 						},
 						"UseSyslog": {
@@ -224,13 +346,15 @@
 								{
 									"type": "boolean"
 								}
-							]
+							],
+							"description": "Use Syslog for logging"
 						}
 					},
 					"type": "object"
 				},
 				"main": {
 					"additionalProperties": false,
+					"description": "filesystem config options",
 					"properties": {
 						"AskPassword": {
 							"anyOf": [
@@ -241,7 +365,8 @@
 								{
 									"type": "boolean"
 								}
-							]
+							],
+							"description": "Allow prompt for password for encrypted configuration."
 						},
 						"AutoConfirm": {
 							"anyOf": [
@@ -252,12 +377,15 @@
 								{
 									"type": "boolean"
 								}
-							]
+							],
+							"description": "If enabled, do not request console confirmation."
 						},
 						"BackupDir": {
+							"description": "Make backups into hierarchy based in DIR.",
 							"type": "string"
 						},
 						"BindAddr": {
+							"description": "Local address to bind to for outgoing connections, IPv4, IPv6 or name.",
 							"type": "string"
 						},
 						"BufferSize": {
@@ -269,12 +397,14 @@
 								{
 									"type": "number"
 								}
-							]
+							],
+							"description": "In memory buffer size when reading files for each --transfer."
 						},
 						"BwLimit": {
 							"type": ["null", "boolean", "string", "number"]
 						},
 						"CaCert": {
+							"description": "Client Side CA\nCA certificate used to verify servers",
 							"type": "string"
 						},
 						"CheckSum": {
@@ -286,7 +416,8 @@
 								{
 									"type": "boolean"
 								}
-							]
+							],
+							"description": "Skip based on checksum (if available) & size, not mod-time & size"
 						},
 						"Checkers": {
 							"anyOf": [
@@ -297,15 +428,19 @@
 								{
 									"type": "number"
 								}
-							]
+							],
+							"description": "Number of checkers to run in parallel."
 						},
 						"ClientCert": {
+							"description": "Client Side Cert\nClient SSL certificate (PEM) for mutual TLS auth",
 							"type": "string"
 						},
 						"ClientKey": {
+							"description": "Client Side Key\nClient SSL private key (PEM) for mutual TLS auth",
 							"type": "string"
 						},
 						"CompareDest": {
+							"description": "Include additional server-side path during comparison.",
 							"type": "string"
 						},
 						"ConnectTimeout": {
@@ -317,7 +452,8 @@
 								{
 									"type": "number"
 								}
-							]
+							],
+							"description": "Connect timeout"
 						},
 						"Cookie": {
 							"anyOf": [
@@ -328,9 +464,11 @@
 								{
 									"type": "boolean"
 								}
-							]
+							],
+							"description": "Enable session cookiejar."
 						},
 						"CopyDest": {
+							"description": "Implies --compare-dest but also copies files from path into destination.",
 							"type": "string"
 						},
 						"CutoffMode": {
@@ -342,7 +480,8 @@
 								{
 									"type": "number"
 								}
-							]
+							],
+							"description": "Mode to stop transfers when reaching the max transfer limit HARD|SOFT|CAUTIOUS\n0    Hard\n1    Soft\n2    Cautious"
 						},
 						"DataRateUnit": {
 							"type": "string"
@@ -356,13 +495,26 @@
 								{
 									"type": "number"
 								}
-							]
+							],
+							"description": "the possible delete modes in the config\nDeleteModeOff DeleteMode = iota\n0    DeleteModeBefore\n1    DeleteModeDuring\n2    DeleteModeAfter\n3    DeleteModeOnly"
 						},
 						"DisableFeatures": {
+							"description": "Disable a comma separated list of features.  Use help to see a list.",
 							"type": ["null", "boolean", "string", "number"]
 						},
 						"DownloadHeaders": {
-							"type": ["null", "boolean", "string", "number"]
+							"anyOf": [
+								{
+									"type": "null"
+								},
+								{
+									"items": {
+										"type": "string"
+									},
+									"type": "array"
+								}
+							],
+							"description": "Set HTTP header for download transactions"
 						},
 						"DryRun": {
 							"anyOf": [
@@ -373,7 +525,8 @@
 								{
 									"type": "boolean"
 								}
-							]
+							],
+							"description": "Do a trial run with no permanent changes"
 						},
 						"Dump": {
 							"anyOf": [
@@ -384,7 +537,8 @@
 								{
 									"type": "number"
 								}
-							]
+							],
+							"description": "List of items to dump from: headers,bodies,requests,responses,auth,filters,goroutines,openfiles"
 						},
 						"ErrorOnNoTransfer": {
 							"anyOf": [
@@ -395,7 +549,8 @@
 								{
 									"type": "boolean"
 								}
-							]
+							],
+							"description": "Set appropriate exit code if no files transferred\nSets exit code 9 if no files are transferred, useful in scripts"
 						},
 						"ExpectContinueTimeout": {
 							"anyOf": [
@@ -406,10 +561,22 @@
 								{
 									"type": "number"
 								}
-							]
+							],
+							"description": "Timeout when using expect / 100-continue in HTTP"
 						},
 						"Headers": {
-							"type": ["null", "boolean", "string", "number"]
+							"anyOf": [
+								{
+									"type": "null"
+								},
+								{
+									"items": {
+										"type": "string"
+									},
+									"type": "array"
+								}
+							],
+							"description": "Set HTTP header for all transactions"
 						},
 						"IgnoreCaseSync": {
 							"anyOf": [
@@ -420,7 +587,8 @@
 								{
 									"type": "boolean"
 								}
-							]
+							],
+							"description": "Ignore case when synchronizing"
 						},
 						"IgnoreChecksum": {
 							"anyOf": [
@@ -431,7 +599,8 @@
 								{
 									"type": "boolean"
 								}
-							]
+							],
+							"description": "Skip post copy check of checksums."
 						},
 						"IgnoreErrors": {
 							"anyOf": [
@@ -442,7 +611,8 @@
 								{
 									"type": "boolean"
 								}
-							]
+							],
+							"description": "delete even if there are I/O errors"
 						},
 						"IgnoreExisting": {
 							"anyOf": [
@@ -453,7 +623,8 @@
 								{
 									"type": "boolean"
 								}
-							]
+							],
+							"description": "Skip all files that exist on destination"
 						},
 						"IgnoreSize": {
 							"anyOf": [
@@ -464,7 +635,8 @@
 								{
 									"type": "boolean"
 								}
-							]
+							],
+							"description": "Ignore size when skipping use mod-time or checksum"
 						},
 						"IgnoreTimes": {
 							"anyOf": [
@@ -475,7 +647,8 @@
 								{
 									"type": "boolean"
 								}
-							]
+							],
+							"description": "Don't skip files that match size and time - transfer all files"
 						},
 						"Immutable": {
 							"anyOf": [
@@ -486,7 +659,8 @@
 								{
 									"type": "boolean"
 								}
-							]
+							],
+							"description": "Do not modify files. Fail if existing files have been modified."
 						},
 						"InsecureSkipVerify": {
 							"anyOf": [
@@ -497,7 +671,8 @@
 								{
 									"type": "boolean"
 								}
-							]
+							],
+							"description": "Do not verify the server SSL certificate. Insecure."
 						},
 						"LogLevel": {
 							"anyOf": [
@@ -508,7 +683,8 @@
 								{
 									"type": "number"
 								}
-							]
+							],
+							"description": "Log level DEBUG|INFO|NOTICE|ERROR\n\n  Log levels.  These are the syslog levels of which we only use a\n  subset.\n\n  0   LOG_EMERG      system is unusable\n  1   LOG_ALERT      action must be taken immediately\n  2   LOG_CRIT       critical conditions\n  3   LOG_ERR        error conditions\n  4   LOG_WARNING    warning conditions\n  5   LOG_NOTICE     normal, but significant, condition\n  6   LOG_INFO       informational message\n  7   LOG_DEBUG      debug-level message"
 						},
 						"LowLevelRetries": {
 							"anyOf": [
@@ -519,7 +695,8 @@
 								{
 									"type": "number"
 								}
-							]
+							],
+							"description": "Number of low level retries to do."
 						},
 						"MaxBacklog": {
 							"anyOf": [
@@ -530,7 +707,8 @@
 								{
 									"type": "number"
 								}
-							]
+							],
+							"description": "Maximum number of objects in sync or check backlog."
 						},
 						"MaxDelete": {
 							"anyOf": [
@@ -541,7 +719,8 @@
 								{
 									"type": "number"
 								}
-							]
+							],
+							"description": "When synchronizing, limit the number of deletes"
 						},
 						"MaxDepth": {
 							"anyOf": [
@@ -552,7 +731,8 @@
 								{
 									"type": "number"
 								}
-							]
+							],
+							"description": "If set limits the recursion depth to this."
 						},
 						"MaxDuration": {
 							"anyOf": [
@@ -563,7 +743,8 @@
 								{
 									"type": "number"
 								}
-							]
+							],
+							"description": "Maximum duration rclone will transfer data for."
 						},
 						"MaxStatsGroups": {
 							"anyOf": [
@@ -574,7 +755,8 @@
 								{
 									"type": "number"
 								}
-							]
+							],
+							"description": "Maximum number of stats groups to keep in memory. On max oldest is discarded."
 						},
 						"MaxTransfer": {
 							"anyOf": [
@@ -585,7 +767,8 @@
 								{
 									"type": "number"
 								}
-							]
+							],
+							"description": "Maximum size of data to transfer."
 						},
 						"ModifyWindow": {
 							"anyOf": [
@@ -596,7 +779,8 @@
 								{
 									"type": "number"
 								}
-							]
+							],
+							"description": "Max time diff to be considered the same"
 						},
 						"MultiThreadCutoff": {
 							"anyOf": [
@@ -607,7 +791,8 @@
 								{
 									"type": "number"
 								}
-							]
+							],
+							"description": "Use multi-thread downloads for files above this size."
 						},
 						"MultiThreadSet": {
 							"anyOf": [
@@ -618,7 +803,8 @@
 								{
 									"type": "boolean"
 								}
-							]
+							],
+							"description": "whether MultiThreadStreams was set (set in fs/config/configflags)"
 						},
 						"MultiThreadStreams": {
 							"anyOf": [
@@ -629,7 +815,8 @@
 								{
 									"type": "number"
 								}
-							]
+							],
+							"description": "Max number of streams to use for multi-thread downloads."
 						},
 						"NoCheckDest": {
 							"anyOf": [
@@ -640,7 +827,8 @@
 								{
 									"type": "boolean"
 								}
-							]
+							],
+							"description": "Don't check the destination, copy regardless."
 						},
 						"NoGzip": {
 							"anyOf": [
@@ -651,7 +839,8 @@
 								{
 									"type": "boolean"
 								}
-							]
+							],
+							"description": "Don't set Accept-Encoding: gzip."
 						},
 						"NoTraverse": {
 							"anyOf": [
@@ -662,7 +851,8 @@
 								{
 									"type": "boolean"
 								}
-							]
+							],
+							"description": "Don't traverse destination file system on copy."
 						},
 						"NoUpdateModTime": {
 							"anyOf": [
@@ -673,12 +863,15 @@
 								{
 									"type": "boolean"
 								}
-							]
+							],
+							"description": "Don't update destination mod-time if files identical."
 						},
 						"OrderBy": {
+							"description": "Instructions on how to order the transfers, eg 'size,descending'",
 							"type": "string"
 						},
 						"PasswordCommand": {
+							"description": "Command for supplying password for encrypted configuration.",
 							"type": ["null", "boolean", "string", "number"]
 						},
 						"Progress": {
@@ -690,7 +883,8 @@
 								{
 									"type": "boolean"
 								}
-							]
+							],
+							"description": "Show progress during transfer."
 						},
 						"SizeOnly": {
 							"anyOf": [
@@ -701,7 +895,8 @@
 								{
 									"type": "boolean"
 								}
-							]
+							],
+							"description": "Skip based on size only, not mod-time or checksum"
 						},
 						"StatsFileNameLength": {
 							"anyOf": [
@@ -712,7 +907,8 @@
 								{
 									"type": "number"
 								}
-							]
+							],
+							"description": "Max file name length in stats. 0 for no limit"
 						},
 						"StatsLogLevel": {
 							"anyOf": [
@@ -723,7 +919,8 @@
 								{
 									"type": "number"
 								}
-							]
+							],
+							"description": "Log level to show --stats output DEBUG|INFO|NOTICE|ERROR\n\n  Log levels.  These are the syslog levels of which we only use a\n  subset.\n\n  0   LOG_EMERG      system is unusable\n  1   LOG_ALERT      action must be taken immediately\n  2   LOG_CRIT       critical conditions\n  3   LOG_ERR        error conditions\n  4   LOG_WARNING    warning conditions\n  5   LOG_NOTICE     normal, but significant, condition\n  6   LOG_INFO       informational message\n  7   LOG_DEBUG      debug-level message"
 						},
 						"StatsOneLine": {
 							"anyOf": [
@@ -734,7 +931,8 @@
 								{
 									"type": "boolean"
 								}
-							]
+							],
+							"description": "Make the stats fit on one line."
 						},
 						"StatsOneLineDate": {
 							"anyOf": [
@@ -745,9 +943,11 @@
 								{
 									"type": "boolean"
 								}
-							]
+							],
+							"description": "If we want a date prefix at all\nEnables --stats-one-line and add current date/time prefix."
 						},
 						"StatsOneLineDateFormat": {
+							"description": "If we want to customize the prefix\nEnables --stats-one-line-date and uses custom formatted date.\nEnclose date string in double quotes (\\\").\nSee https://golang.org/pkg/time/#Time.Format",
 							"type": "string"
 						},
 						"StreamingUploadCutoff": {
@@ -759,9 +959,11 @@
 								{
 									"type": "number"
 								}
-							]
+							],
+							"description": "Cutoff for switching to chunked upload if file size is unknown.\nUpload starts after reaching cutoff or when file ends."
 						},
 						"Suffix": {
+							"description": "Suffix to add to changed files.",
 							"type": "string"
 						},
 						"SuffixKeepExtension": {
@@ -773,7 +975,8 @@
 								{
 									"type": "boolean"
 								}
-							]
+							],
+							"description": "Preserve the extension when using --suffix."
 						},
 						"TPSLimit": {
 							"anyOf": [
@@ -784,7 +987,8 @@
 								{
 									"type": "number"
 								}
-							]
+							],
+							"description": "Bandwidth limit in kBytes/s, or use suffix b|k|M|G or a full timetable."
 						},
 						"TPSLimitBurst": {
 							"anyOf": [
@@ -795,7 +999,8 @@
 								{
 									"type": "number"
 								}
-							]
+							],
+							"description": "Max burst of transactions for --tpslimit."
 						},
 						"Timeout": {
 							"anyOf": [
@@ -806,7 +1011,8 @@
 								{
 									"type": "number"
 								}
-							]
+							],
+							"description": "IO idle timeout"
 						},
 						"TrackRenames": {
 							"anyOf": [
@@ -817,9 +1023,12 @@
 								{
 									"type": "boolean"
 								}
-							]
+							],
+							"description": "When synchronizing, track file renames and do a server side move if possible"
 						},
 						"TrackRenamesStrategy": {
+							"description": "Strategies to use when synchronizing using track-renames hash|modtime",
+							"enum": ["hash", "modtime"],
 							"type": "string"
 						},
 						"Transfers": {
@@ -831,7 +1040,8 @@
 								{
 									"type": "number"
 								}
-							]
+							],
+							"description": "Number of file transfers to run in parallel."
 						},
 						"UpdateOlder": {
 							"anyOf": [
@@ -842,10 +1052,22 @@
 								{
 									"type": "boolean"
 								}
-							]
+							],
+							"description": "Skip files that are newer on the destination."
 						},
 						"UploadHeaders": {
-							"type": ["null", "boolean", "string", "number"]
+							"anyOf": [
+								{
+									"type": "null"
+								},
+								{
+									"items": {
+										"type": "string"
+									},
+									"type": "array"
+								}
+							],
+							"description": "Set HTTP header for upload transactions"
 						},
 						"UseJSONLog": {
 							"anyOf": [
@@ -856,7 +1078,8 @@
 								{
 									"type": "boolean"
 								}
-							]
+							],
+							"description": "Use json log format."
 						},
 						"UseListR": {
 							"anyOf": [
@@ -867,7 +1090,8 @@
 								{
 									"type": "boolean"
 								}
-							]
+							],
+							"description": "Use recursive list if available. Uses more memory but fewer transactions."
 						},
 						"UseMmap": {
 							"anyOf": [
@@ -878,7 +1102,8 @@
 								{
 									"type": "boolean"
 								}
-							]
+							],
+							"description": "Use mmap allocator (see docs)."
 						},
 						"UseServerModTime": {
 							"anyOf": [
@@ -889,9 +1114,11 @@
 								{
 									"type": "boolean"
 								}
-							]
+							],
+							"description": "Use server modified time instead of object metadata"
 						},
 						"UserAgent": {
+							"description": "Set the user-agent to a specified string. The default is rclone/ version",
 							"type": "string"
 						}
 					},
@@ -899,6 +1126,7 @@
 				},
 				"rc": {
 					"additionalProperties": false,
+					"description": "options for the remote control server",
 					"properties": {
 						"AccessControlAllowOrigin": {
 							"description": "Set the allowed origin for CORS.",
@@ -934,23 +1162,30 @@
 						},
 						"HTTPOptions": {
 							"additionalProperties": false,
+							"description": "equal to rc-http",
 							"properties": {
 								"BaseURL": {
+									"description": "prefix to strip from URLs\n--baseurl controls the URL prefix that rclone serves from.\nBy default rclone will serve from the root.\nIf you used --baseurl \"/rclone\" then rclone would serve from a URL\nstarting with \"/rclone/\".\nThis is useful if you wish to proxy rclone serve.\nRclone automatically inserts leading and trailing \"/\" on --baseurl,\nso --baseurl \"rclone\", --baseurl \"/rclone\" and --baseurl \"/rclone/\"\nare all treated identically.",
 									"type": "string"
 								},
 								"BasicPass": {
+									"description": "password for BasicUser",
 									"type": "string"
 								},
 								"BasicUser": {
+									"description": "single username for basic auth if not using Htpasswd",
 									"type": "string"
 								},
 								"ClientCA": {
+									"description": "Client certificate authority to verify clients with",
 									"type": "string"
 								},
 								"HtPasswd": {
+									"description": "htpasswd file - if not provided no authentication is done\nThis is in standard apache format and supports MD5, SHA1 and BCrypt for basic\nauthentication.  Bcrypt is recommended.\nTo create an htpasswd file:\n\n    touch htpasswd\n    htpasswd -B htpasswd user\n    htpasswd -B htpasswd anotherUser\n\nThe password file can be updated while rclone is running.",
 									"type": "string"
 								},
 								"ListenAddr": {
+									"description": "Port to listen on\nUse --addr to specify which IP address and port\nthe server should listen on,\neg --addr 1.2.3.4:8000 or --addr :8080 to listen to all IPs.\nBy default it only listens on localhost.\nYou can use port :0 to let the OS choose an available port.\n\nIf you set --addr to listen on a public or LAN accessible IP address\nthen using Authentication is advised - see the next section for info.",
 									"type": "string"
 								},
 								"MaxHeaderBytes": {
@@ -962,9 +1197,11 @@
 										{
 											"type": "number"
 										}
-									]
+									],
+									"description": "Maximum size of request header\n--max-header-bytes controls the maximum number of bytes the server will\naccept in the HTTP header."
 								},
 								"Realm": {
+									"description": "realm for authentication",
 									"type": "string"
 								},
 								"ServerReadTimeout": {
@@ -976,7 +1213,8 @@
 										{
 											"type": "number"
 										}
-									]
+									],
+									"description": "Timeout for server reading data\nNote that this is the total time for a transfer."
 								},
 								"ServerWriteTimeout": {
 									"anyOf": [
@@ -987,15 +1225,19 @@
 										{
 											"type": "number"
 										}
-									]
+									],
+									"description": "Timeout for server writing data\nNote that this is the total time for a transfer."
 								},
 								"SslCert": {
+									"description": "SSL PEM key (concatenation of certificate and CA certificate)",
 									"type": "string"
 								},
 								"SslKey": {
+									"description": "SSL PEM Private key",
 									"type": "string"
 								},
 								"Template": {
+									"description": "User specified template\n--template allows a user to specify a custom markup template for http\nand webdav serve functions.  The server exports the following markup\nto be used within the template to server pages:\n\n| Parameter   | Description |\n| :---------- | :---------- |\n| .Name       | The full path of a file/directory. |\n| .Title      | Directory listing of .Name |\n| .Sort       | The current sort used.  This is changeable via ?sort= parameter |\n|             | Sort Options: namedirfist,name,size,time (default namedirfirst) |\n| .Order      | The current ordering used.  This is changeable via ?order= parameter |\n|             | Order Options: asc,desc (default asc) |\n| .Query      | Currently unused. |\n| .Breadcrumb | Allows for creating a relative navigation |\n|-- .Link     | The relative to the root link of the Text. |\n|-- .Text     | The Name of the directory. |\n| .Entries    | Information about a specific file/directory. |\n|-- .URL      | The 'url' of an entry.  |\n|-- .Leaf     | Currently same as 'URL' but intended to be 'just' the name. |\n|-- .IsDir    | Boolean for if an entry is a directory or not. |\n|-- .Size     | Size in Bytes of the entry. |\n|-- .ModTime  | The UTC timestamp of an entry. |",
 									"type": "string"
 								}
 							},
@@ -1106,23 +1348,30 @@
 				},
 				"rc-http": {
 					"additionalProperties": false,
+					"description": "same as rc.HTTPOptions",
 					"properties": {
 						"BaseURL": {
+							"description": "prefix to strip from URLs\n--baseurl controls the URL prefix that rclone serves from.\nBy default rclone will serve from the root.\nIf you used --baseurl \"/rclone\" then rclone would serve from a URL\nstarting with \"/rclone/\".\nThis is useful if you wish to proxy rclone serve.\nRclone automatically inserts leading and trailing \"/\" on --baseurl,\nso --baseurl \"rclone\", --baseurl \"/rclone\" and --baseurl \"/rclone/\"\nare all treated identically.",
 							"type": "string"
 						},
 						"BasicPass": {
+							"description": "password for BasicUser",
 							"type": "string"
 						},
 						"BasicUser": {
+							"description": "single username for basic auth if not using Htpasswd",
 							"type": "string"
 						},
 						"ClientCA": {
+							"description": "Client certificate authority to verify clients with",
 							"type": "string"
 						},
 						"HtPasswd": {
+							"description": "htpasswd file - if not provided no authentication is done\nThis is in standard apache format and supports MD5, SHA1 and BCrypt for basic\nauthentication.  Bcrypt is recommended.\nTo create an htpasswd file:\n\n    touch htpasswd\n    htpasswd -B htpasswd user\n    htpasswd -B htpasswd anotherUser\n\nThe password file can be updated while rclone is running.",
 							"type": "string"
 						},
 						"ListenAddr": {
+							"description": "Port to listen on\nUse --addr to specify which IP address and port\nthe server should listen on,\neg --addr 1.2.3.4:8000 or --addr :8080 to listen to all IPs.\nBy default it only listens on localhost.\nYou can use port :0 to let the OS choose an available port.\n\nIf you set --addr to listen on a public or LAN accessible IP address\nthen using Authentication is advised - see the next section for info.",
 							"type": "string"
 						},
 						"MaxHeaderBytes": {
@@ -1134,9 +1383,11 @@
 								{
 									"type": "number"
 								}
-							]
+							],
+							"description": "Maximum size of request header\n--max-header-bytes controls the maximum number of bytes the server will\naccept in the HTTP header."
 						},
 						"Realm": {
+							"description": "realm for authentication",
 							"type": "string"
 						},
 						"ServerReadTimeout": {
@@ -1148,7 +1399,8 @@
 								{
 									"type": "number"
 								}
-							]
+							],
+							"description": "Timeout for server reading data\nNote that this is the total time for a transfer."
 						},
 						"ServerWriteTimeout": {
 							"anyOf": [
@@ -1159,15 +1411,19 @@
 								{
 									"type": "number"
 								}
-							]
+							],
+							"description": "Timeout for server writing data\nNote that this is the total time for a transfer."
 						},
 						"SslCert": {
+							"description": "SSL PEM key (concatenation of certificate and CA certificate)",
 							"type": "string"
 						},
 						"SslKey": {
+							"description": "SSL PEM Private key",
 							"type": "string"
 						},
 						"Template": {
+							"description": "User specified template\n--template allows a user to specify a custom markup template for http\nand webdav serve functions.  The server exports the following markup\nto be used within the template to server pages:\n\n| Parameter   | Description |\n| :---------- | :---------- |\n| .Name       | The full path of a file/directory. |\n| .Title      | Directory listing of .Name |\n| .Sort       | The current sort used.  This is changeable via ?sort= parameter |\n|             | Sort Options: namedirfist,name,size,time (default namedirfirst) |\n| .Order      | The current ordering used.  This is changeable via ?order= parameter |\n|             | Order Options: asc,desc (default asc) |\n| .Query      | Currently unused. |\n| .Breadcrumb | Allows for creating a relative navigation |\n|-- .Link     | The relative to the root link of the Text. |\n|-- .Text     | The Name of the directory. |\n| .Entries    | Information about a specific file/directory. |\n|-- .URL      | The 'url' of an entry.  |\n|-- .Leaf     | Currently same as 'URL' but intended to be 'just' the name. |\n|-- .IsDir    | Boolean for if an entry is a directory or not. |\n|-- .Size     | Size in Bytes of the entry. |\n|-- .ModTime  | The UTC timestamp of an entry. |",
 							"type": "string"
 						}
 					},
@@ -1175,17 +1431,28 @@
 				},
 				"sftp": {
 					"additionalProperties": false,
+					"description": "options for the Sftp Server",
 					"properties": {
 						"AuthorizedKeys": {
+							"description": "Path to authorized keys file",
 							"type": "string"
 						},
 						"HostKeys": {
-							"type": ["null", "boolean", "string", "number"]
-						},
-						"Key": {
-							"type": "string"
+							"anyOf": [
+								{
+									"type": "null"
+								},
+								{
+									"items": {
+										"type": "string"
+									},
+									"type": "array"
+								}
+							],
+							"description": "Paths to private host keys\nSSH private host key file (Can be multi-valued, leave blank to auto generate)"
 						},
 						"ListenAddr": {
+							"description": "Port to listen on\nIPaddress:Port or :Port to bind server to.",
 							"type": "string"
 						},
 						"NoAuth": {
@@ -1197,12 +1464,15 @@
 								{
 									"type": "boolean"
 								}
-							]
+							],
+							"description": "Allow connections with no authentication if set."
 						},
 						"Pass": {
+							"description": "password for user\nPassword for authentication.",
 							"type": "string"
 						},
 						"User": {
+							"description": "single username\nUser name for authentication.",
 							"type": "string"
 						}
 					},
@@ -1210,6 +1480,7 @@
 				},
 				"vfs": {
 					"additionalProperties": false,
+					"description": "options for creating the vfs",
 					"properties": {
 						"CacheMaxAge": {
 							"anyOf": [
@@ -1220,7 +1491,8 @@
 								{
 									"type": "number"
 								}
-							]
+							],
+							"description": "Max age of objects in the cache."
 						},
 						"CacheMaxSize": {
 							"anyOf": [
@@ -1231,7 +1503,8 @@
 								{
 									"type": "number"
 								}
-							]
+							],
+							"description": "Max total size of objects in the cache."
 						},
 						"CacheMode": {
 							"anyOf": [
@@ -1242,7 +1515,8 @@
 								{
 									"type": "number"
 								}
-							]
+							],
+							"description": "Cache mode off|minimal|writes|full\n0       \"off\"  cache nothing - return errors for writes which can't be satisfied\n1   \"minimal\"  cache only the minimum, eg read/write opens\n2     \"writes\" cache all files opened with write intent\n3       \"full\" cache all files opened in any mode"
 						},
 						"CachePollInterval": {
 							"anyOf": [
@@ -1253,7 +1527,8 @@
 								{
 									"type": "number"
 								}
-							]
+							],
+							"description": "Interval to poll the cache for stale objects."
 						},
 						"CaseInsensitive": {
 							"anyOf": [
@@ -1264,7 +1539,8 @@
 								{
 									"type": "boolean"
 								}
-							]
+							],
+							"description": "If a file name not found, find a case insensitive match."
 						},
 						"ChunkSize": {
 							"anyOf": [
@@ -1275,7 +1551,8 @@
 								{
 									"type": "number"
 								}
-							]
+							],
+							"description": "if > 0 read files in chunks\nRead the source objects in chunks."
 						},
 						"ChunkSizeLimit": {
 							"anyOf": [
@@ -1286,7 +1563,8 @@
 								{
 									"type": "number"
 								}
-							]
+							],
+							"description": "if > ChunkSize double the chunk size after each chunk until reached\nIf greater than --vfs-read-chunk-size,\ndouble the chunk size after each chunk read,\nuntil the limit is reached.\n'off' is unlimited."
 						},
 						"DirCacheTime": {
 							"anyOf": [
@@ -1297,7 +1575,8 @@
 								{
 									"type": "number"
 								}
-							]
+							],
+							"description": "how long to consider directory listing cache valid\nTime to cache directory entries for."
 						},
 						"DirPerms": {
 							"anyOf": [
@@ -1308,7 +1587,8 @@
 								{
 									"type": "number"
 								}
-							]
+							],
+							"description": "Directory permissions"
 						},
 						"FilePerms": {
 							"anyOf": [
@@ -1319,7 +1599,8 @@
 								{
 									"type": "number"
 								}
-							]
+							],
+							"description": "File permissions"
 						},
 						"GID": {
 							"anyOf": [
@@ -1341,7 +1622,8 @@
 								{
 									"type": "boolean"
 								}
-							]
+							],
+							"description": "don't check checksums if set\nDon't compare checksums on up/download."
 						},
 						"NoModTime": {
 							"anyOf": [
@@ -1352,7 +1634,8 @@
 								{
 									"type": "boolean"
 								}
-							]
+							],
+							"description": "Don't read/write the modification time (can speed things up)."
 						},
 						"NoSeek": {
 							"anyOf": [
@@ -1363,7 +1646,8 @@
 								{
 									"type": "boolean"
 								}
-							]
+							],
+							"description": "don't allow seeking if set\nDon't allow seeking in files."
 						},
 						"PollInterval": {
 							"anyOf": [
@@ -1374,7 +1658,8 @@
 								{
 									"type": "number"
 								}
-							]
+							],
+							"description": "Time to wait between polling for changes.\nMust be smaller than dir-cache-time.\nOnly on supported remotes.\nSet to 0 to disable."
 						},
 						"ReadOnly": {
 							"anyOf": [
@@ -1385,7 +1670,8 @@
 								{
 									"type": "boolean"
 								}
-							]
+							],
+							"description": "if set VFS is read only\nMount read-only."
 						},
 						"ReadWait": {
 							"anyOf": [
@@ -1396,7 +1682,8 @@
 								{
 									"type": "number"
 								}
-							]
+							],
+							"description": "Time to wait for in-sequence read before seeking."
 						},
 						"UID": {
 							"anyOf": [
@@ -1429,7 +1716,8 @@
 								{
 									"type": "number"
 								}
-							]
+							],
+							"description": "Time to wait for in-sequence write before giving error."
 						}
 					},
 					"type": "object"
