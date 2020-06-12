@@ -17,7 +17,7 @@ An angular web application for rclone
 
 - Observe the progress of running jobs (by groups)
 
-- Allow editing of rclone server configuration (power by [monaco editor](https://github.com/microsoft/monaco-editor), supporting lint)
+- Allow editing of rclone server configuration (power by [monaco editor](https://github.com/microsoft/monaco-editor), supporting lint, document description)
 
 ## Screenshots
 
@@ -38,7 +38,7 @@ An angular web application for rclone
 1. running rclone as server
 
 ```bash
-rclone rcd --rc-user=<user> --rc-pass=<password> --rc-allow-origin="*"
+rclone rcd --rc-user=<user> --rc-pass=<password> --rc-allow-origin="http://localhost:4200"
 ```
 
 2. getting RcloneNg
@@ -50,7 +50,7 @@ npm install
 npm run start
 ```
 
-> NB: if rclone is running in localhost, <https://elonh.github.io/RcloneNg> can be used directly.
+> NB: if set `--rc-allow-origin="https://elonh.github.io"`, <https://elonh.github.io/RcloneNg> can be used directly.
 
 3. editing server connection in RcloneNg.
 
