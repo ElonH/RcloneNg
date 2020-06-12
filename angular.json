@@ -28,6 +28,11 @@
 							"src/favicon.ico",
 							"src/assets",
 							{
+								"glob": "**/CHANGELOG.md",
+								"input": ".",
+								"output": "/"
+							},
+							{
 								"glob": "**/*",
 								"input": "./node_modules/vscode-icons/icons",
 								"output": "./assets/icons"
@@ -100,6 +105,11 @@
 						"assets": [
 							"src/favicon.ico",
 							"src/assets",
+							{
+								"glob": "**/CHANGELOG.md",
+								"input": ".",
+								"output": "/"
+							},
 							{
 								"glob": "**/*",
 								"input": "./node_modules/vscode-icons/icons",

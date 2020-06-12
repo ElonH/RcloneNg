@@ -35,4 +35,5 @@ jobs:
           npm i
           npm run lint
           npm run build:prod
+          npm run release -- -p dev && git reset HEAD~
           npm run deploy --  --name="ElonH" --email="elonhhuang@gmail.com"
