@@ -28,12 +28,18 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - name: npm install and npm run build
+      - name: install dependencies
+        run: |
+          npm i
+      - name: lint
+        run: |
+          npm run lint
+      - name: build production
+        run: |
+          npm run build:prod
+      - name: deploy github page
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          npm i
-          npm run lint
-          npm run build:prod
           npm run release -- -p dev && git reset HEAD~
           npm run deploy --  --name="ElonH" --email="elonhhuang@gmail.com"
