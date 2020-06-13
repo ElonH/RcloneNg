@@ -28,7 +28,7 @@
 							"src/favicon.ico",
 							"src/assets",
 							{
-								"glob": "**/CHANGELOG.md",
+								"glob": "./CHANGELOG.md",
 								"input": ".",
 								"output": "/"
 							},
@@ -106,7 +106,7 @@
 							"src/favicon.ico",
 							"src/assets",
 							{
-								"glob": "**/CHANGELOG.md",
+								"glob": "./CHANGELOG.md",
 								"input": ".",
 								"output": "/"
 							},
