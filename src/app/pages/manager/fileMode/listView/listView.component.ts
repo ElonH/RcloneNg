@@ -48,7 +48,9 @@ import { ClipboardService } from '../../clipboard/clipboard.service';
 						[icon]="row.ManipulateIcon"
 					></nb-icon>
 				</td>
-				<td style="padding: 0;"><img [src]="'assets/icons/' + row.TypeIcon" /></td>
+				<td class="rng-noselect" style="padding: 0;">
+					<img [src]="'assets/icons/' + row.TypeIcon" />
+				</td>
 				<td class="rng-noselect">{{ row.Name }}</td>
 				<td class="rng-noselect">{{ row.SizeHumanReadable }}</td>
 				<td class="rng-noselect">{{ row.ModTimeHumanReadable }}</td>
