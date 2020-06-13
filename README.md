@@ -46,7 +46,7 @@ rclone rcd --rc-user=<user> --rc-pass=<password> --rc-allow-origin="http://local
 ```bash
 git clone https://github.com/ElonH/RcloneNg.git
 cd RcloneNg
-npm install
+npm install # NodeJs version >= 10
 npm run start
 ```
 
