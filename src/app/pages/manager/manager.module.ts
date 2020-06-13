@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
+import { FormsModule } from '@angular/forms';
 import {
 	NbAccordionModule,
 	NbActionsModule,
@@ -73,6 +74,7 @@ import { TasksDialogComponent } from './tasks/tasks.dialog';
 		ChartsModule,
 		FileSaverModule,
 		RngModule,
+		FormsModule,
 	],
 })
 export class ManagerModule {}
