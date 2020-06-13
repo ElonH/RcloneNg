@@ -40,7 +40,7 @@ import { ClipboardService } from '../../clipboard/clipboard.service';
 				<td (dblclick)="$event.stopPropagation()" (click)="toggle(idx); $event.preventDefault()">
 					<nb-checkbox [(checked)]="row.check" (checkedChange)="onToggle()"> </nb-checkbox>
 				</td>
-				<td (click)="toggle(idx)">
+				<td (click)="toggle(idx)" (dblclick)="$event.stopPropagation()">
 					<nb-icon
 						*ngIf="row.ManipulateIcon"
 						class="manipulation"
