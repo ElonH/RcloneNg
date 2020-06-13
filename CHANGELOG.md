@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-### [0.3.1-dev.0](https://github.com/ElonH/RcloneNg/compare/v0.3.0...v0.3.1-dev.0) (2020-06-12)
+### [0.3.1-dev.0](https://github.com/ElonH/RcloneNg/compare/v0.3.0...v0.3.1-dev.0) (2020-06-13)
 
 
 ### Features
@@ -17,6 +17,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Bug Fixes
 
+* **changelog.md:** copy RcloneNg CHANGELOG.md only ([ef76e1e](https://github.com/ElonH/RcloneNg/commit/ef76e1e5892cd805128101b9cc389d62d454007e))
 * **manager:** show detail button when right sidebar is expended ([d69179e](https://github.com/ElonH/RcloneNg/commit/d69179e36e2d76fac6e6462a685636b1acf1f377))
 * check if "rc.Serve" is enabled in server options before downloading file ([6a484ca](https://github.com/ElonH/RcloneNg/commit/6a484ca3a7d2e727a17db5cb20f5ea90cee10576))
 * remove debug code ([b5cb23c](https://github.com/ElonH/RcloneNg/commit/b5cb23c9db1dabbcd61217e1cda575f703c6b471))
