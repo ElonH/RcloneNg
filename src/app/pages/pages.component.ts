@@ -21,6 +21,15 @@ import { MENU_ITEMS } from './pages-menu';
 					</nb-action>
 					<nb-action style="padding: 0 0.5rem;"> <h3>RcloneNg</h3> </nb-action>
 				</nb-actions>
+				<button
+					nbButton
+					*showItSizes="{ min: 370 }"
+					size="tiny"
+					class="star"
+					onClick="window.open('https://github.com/ElonH/RcloneNg','_blank')"
+				>
+					<nb-icon icon="github"></nb-icon> Star
+				</button>
 			</nb-layout-header>
 
 			<nb-sidebar class="main-sidebar" tag="nav" [fixed]="mainSideBarFixed" state="collapsed">
@@ -36,6 +45,10 @@ import { MENU_ITEMS } from './pages-menu';
 		`
 			.main-sidebar {
 				z-index: 1039;
+			}
+			:host .star {
+				margin-left: auto;
+				text-transform: none;
 			}
 		`,
 	],

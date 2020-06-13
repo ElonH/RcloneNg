@@ -2,7 +2,14 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
 import { NbEvaIconsModule } from '@nebular/eva-icons';
-import { NbActionsModule, NbLayoutModule, NbMenuModule, NbSidebarModule } from '@nebular/theme';
+import {
+	NbActionsModule,
+	NbButtonModule,
+	NbIconModule,
+	NbLayoutModule,
+	NbMenuModule,
+	NbSidebarModule,
+} from '@nebular/theme';
 import { ResponsiveModule } from 'ngx-responsive';
 import { PagesRoutingModule } from './pages-routing.module';
 import { PagesComponent } from './pages.component';
@@ -18,6 +25,8 @@ import { PagesComponent } from './pages.component';
 		NbSidebarModule.forRoot(),
 		NbEvaIconsModule,
 		NbMenuModule,
+		NbIconModule,
+		NbButtonModule,
 	],
 })
 export class PagesModule {}
