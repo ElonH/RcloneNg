@@ -37,9 +37,8 @@ import { ClipboardService } from '../../clipboard/clipboard.service';
 			(event)="eventEmitted($event)"
 		>
 			<ng-template let-row>
-				<td>
+				<td (dblclick)="$event.stopPropagation()">
 					<nb-checkbox [(checked)]="row.check" (checkedChange)="onToggle()"> </nb-checkbox>
-					<!-- todo: disable double click event here-->
 				</td>
 				<td>
 					<nb-icon
