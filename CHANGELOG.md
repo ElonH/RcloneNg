@@ -11,6 +11,7 @@ All notable changes to this project will be documented in this file. See [standa
 * **file.detail:** enable download file ([1f578f7](https://github.com/ElonH/RcloneNg/commit/1f578f7d54ca772eec85a5eab744d7e7de91a1ce))
 * **file.detail:** show spaces usage in file detail if selected is directory ([ff27df9](https://github.com/ElonH/RcloneNg/commit/ff27df91615c515b56f44fde5a7aa9de0462dd04))
 * **manager:** push a message to toastr before creating directory ([9e1091a](https://github.com/ElonH/RcloneNg/commit/9e1091a1f1a2e84d97416d2213b80b83dd8b43d1))
+* **pages:** add star button ([5c23b9b](https://github.com/ElonH/RcloneNg/commit/5c23b9bfe3bfb0e4891f0674450ad8af39281797))
 * **server-setting:** adding more description in schema ([4eee2f5](https://github.com/ElonH/RcloneNg/commit/4eee2f55d9ca2ff246114027a4041533d26b4993))
 * **server-setting:** provide a powerful schema for server setting ([67223bf](https://github.com/ElonH/RcloneNg/commit/67223bf7e4a26b80893f6a16dc7afcb7216ed5bf))
 
