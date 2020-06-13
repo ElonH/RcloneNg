@@ -36,11 +36,11 @@ import { ClipboardService } from '../../clipboard/clipboard.service';
 			[selectAllTemplate]="secAll"
 			(event)="eventEmitted($event)"
 		>
-			<ng-template let-row>
-				<td (dblclick)="$event.stopPropagation()">
+			<ng-template let-row let-idx="index">
+				<td (dblclick)="$event.stopPropagation()" (click)="toggle(idx); $event.preventDefault()">
 					<nb-checkbox [(checked)]="row.check" (checkedChange)="onToggle()"> </nb-checkbox>
 				</td>
-				<td>
+				<td (click)="toggle(idx)">
 					<nb-icon
 						*ngIf="row.ManipulateIcon"
 						class="manipulation"
@@ -142,6 +142,10 @@ export class ListViewComponent implements OnInit, OnDestroy {
 			this.checkAll = false;
 			this.checAllInteral = true;
 		}
+	}
+	toggle(idx: number) {
+		this.data[idx].check = !this.data[idx].check;
+		this.onToggle();
 	}
 
 	manipulate(o: IManipulate) {
