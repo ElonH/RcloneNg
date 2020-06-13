@@ -46,6 +46,7 @@ import { NavigationFlow, NavigationFlowOutNode } from '../../../@dataflow/extra'
 			li > a:hover {
 				background: #274bdb;
 				color: white;
+				cursor: pointer;
 			}
 			.active {
 				padding: 0.1545rem 1rem 0.1545rem 0;
