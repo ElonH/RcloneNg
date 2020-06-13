@@ -2,6 +2,33 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.1](https://github.com/ElonH/RcloneNg/compare/v0.3.0...v0.3.1) (2020-06-13)
+
+
+### Features
+
+* **about:** show changelog ([9d7bea5](https://github.com/ElonH/RcloneNg/commit/9d7bea5f62a04560601ef37c371bcef8f1834182))
+* **breadcurmb:** edit mode, double click to edit path. double again, back to normal ([60c57b4](https://github.com/ElonH/RcloneNg/commit/60c57b4368bea4b9cd9be39524e59a32a90014ff))
+* **file.detail:** enable download file ([1f578f7](https://github.com/ElonH/RcloneNg/commit/1f578f7d54ca772eec85a5eab744d7e7de91a1ce))
+* **file.detail:** show spaces usage in file detail if selected is directory ([ff27df9](https://github.com/ElonH/RcloneNg/commit/ff27df91615c515b56f44fde5a7aa9de0462dd04))
+* **list-view:** expend click area of checkbox to improving user experience ([988a219](https://github.com/ElonH/RcloneNg/commit/988a219dbb874e722b7f65bc6b1f8a17be3b58a1))
+* **manager:** push a message to toastr before creating directory ([9e1091a](https://github.com/ElonH/RcloneNg/commit/9e1091a1f1a2e84d97416d2213b80b83dd8b43d1))
+* **pages:** add star button ([5c23b9b](https://github.com/ElonH/RcloneNg/commit/5c23b9bfe3bfb0e4891f0674450ad8af39281797))
+* **server-setting:** adding more description in schema ([4eee2f5](https://github.com/ElonH/RcloneNg/commit/4eee2f55d9ca2ff246114027a4041533d26b4993))
+* **server-setting:** provide a powerful schema for server setting ([67223bf](https://github.com/ElonH/RcloneNg/commit/67223bf7e4a26b80893f6a16dc7afcb7216ed5bf))
+
+
+### Bug Fixes
+
+* check if "rc.Serve" is enabled in server options before downloading file ([6a484ca](https://github.com/ElonH/RcloneNg/commit/6a484ca3a7d2e727a17db5cb20f5ea90cee10576))
+* remove debug code ([b5cb23c](https://github.com/ElonH/RcloneNg/commit/b5cb23c9db1dabbcd61217e1cda575f703c6b471))
+* **breadcurmb:** set cursor as poniter in breadcurmb item ([f014edc](https://github.com/ElonH/RcloneNg/commit/f014edc11e9b7c31c81f6d23c59f76b3a0f10d16))
+* **changelog.md:** copy RcloneNg CHANGELOG.md only ([ef76e1e](https://github.com/ElonH/RcloneNg/commit/ef76e1e5892cd805128101b9cc389d62d454007e))
+* **list-view:** disable double click in manipulations column ([0e0d825](https://github.com/ElonH/RcloneNg/commit/0e0d825f57ecd90307d2da02b2441d541bb56042))
+* **list-view:** disable double click surrounding area of checkbox ([bf03dd1](https://github.com/ElonH/RcloneNg/commit/bf03dd173ffd1ba00c4b07cd2966956e3f769bac))
+* **list-view:** disable select types icon ([2ea540e](https://github.com/ElonH/RcloneNg/commit/2ea540ec15901d103a47a92c1f1742da92e03dd8))
+* **manager:** show detail button when right sidebar is expended ([d69179e](https://github.com/ElonH/RcloneNg/commit/d69179e36e2d76fac6e6462a685636b1acf1f377))
+
 ## [0.3.0](https://github.com/ElonH/RcloneNg/compare/v0.2.4...v0.3.0) (2020-06-09)
 
 
