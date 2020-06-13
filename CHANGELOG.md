@@ -2,7 +2,9 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-### [0.3.1-dev.0](https://github.com/ElonH/RcloneNg/compare/v0.3.0...v0.3.1-dev.0) (2020-06-13)
+### [0.3.2-dev.0](https://github.com/ElonH/RcloneNg/compare/v0.3.1...v0.3.2-dev.0) (2020-06-13)
+
+### [0.3.1](https://github.com/ElonH/RcloneNg/compare/v0.3.0...v0.3.1) (2020-06-13)
 
 
 ### Features
@@ -20,14 +22,14 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Bug Fixes
 
+* check if "rc.Serve" is enabled in server options before downloading file ([6a484ca](https://github.com/ElonH/RcloneNg/commit/6a484ca3a7d2e727a17db5cb20f5ea90cee10576))
+* remove debug code ([b5cb23c](https://github.com/ElonH/RcloneNg/commit/b5cb23c9db1dabbcd61217e1cda575f703c6b471))
 * **breadcurmb:** set cursor as poniter in breadcurmb item ([f014edc](https://github.com/ElonH/RcloneNg/commit/f014edc11e9b7c31c81f6d23c59f76b3a0f10d16))
 * **changelog.md:** copy RcloneNg CHANGELOG.md only ([ef76e1e](https://github.com/ElonH/RcloneNg/commit/ef76e1e5892cd805128101b9cc389d62d454007e))
 * **list-view:** disable double click in manipulations column ([0e0d825](https://github.com/ElonH/RcloneNg/commit/0e0d825f57ecd90307d2da02b2441d541bb56042))
 * **list-view:** disable double click surrounding area of checkbox ([bf03dd1](https://github.com/ElonH/RcloneNg/commit/bf03dd173ffd1ba00c4b07cd2966956e3f769bac))
 * **list-view:** disable select types icon ([2ea540e](https://github.com/ElonH/RcloneNg/commit/2ea540ec15901d103a47a92c1f1742da92e03dd8))
 * **manager:** show detail button when right sidebar is expended ([d69179e](https://github.com/ElonH/RcloneNg/commit/d69179e36e2d76fac6e6462a685636b1acf1f377))
-* check if "rc.Serve" is enabled in server options before downloading file ([6a484ca](https://github.com/ElonH/RcloneNg/commit/6a484ca3a7d2e727a17db5cb20f5ea90cee10576))
-* remove debug code ([b5cb23c](https://github.com/ElonH/RcloneNg/commit/b5cb23c9db1dabbcd61217e1cda575f703c6b471))
 
 ## [0.3.0](https://github.com/ElonH/RcloneNg/compare/v0.2.4...v0.3.0) (2020-06-09)
 
