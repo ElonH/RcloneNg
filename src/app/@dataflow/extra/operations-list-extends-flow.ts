@@ -28,6 +28,7 @@ export interface OperationsListExtendsFlowOutNode extends OperationsListFlowInNo
 	list: OperationsListExtendsFlowOutItemNode[];
 }
 
+// TODO: using cache flow?
 export abstract class OperationsListExtendsFlow extends BareFlow<
 	OperationsListExtendsFlowInNode,
 	OperationsListExtendsFlowOutNode
