@@ -1,6 +1,6 @@
 {
   "name": "rclone-ng",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "An angular web application for rclone",
   "repository": {
     "type": "git",
