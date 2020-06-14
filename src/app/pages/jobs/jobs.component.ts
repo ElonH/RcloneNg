@@ -1,9 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { overlayConfigFactory } from 'ngx-modialog-7';
+// tslint:disable-next-line: no-submodule-imports
+import { Modal, VEXModalContext } from 'ngx-modialog-7/plugins/vex';
 import { combineLatest, Subject } from 'rxjs';
 import { map, takeWhile } from 'rxjs/operators';
 import { CombErr } from '../../@dataflow/core';
 import { CoreStatsFlow, CoreStatsFlowInNode, ListGroupFlow } from '../../@dataflow/rclone';
 import { ConnectionService } from '../connection.service';
+import { CleanFinishedGroupDialogComponent } from './dialogs/clean-finished-groups.dialog';
 
 @Component({
 	selector: 'app-jobs',
@@ -12,6 +16,7 @@ import { ConnectionService } from '../connection.service';
 			<nb-sidebar tag="group" *showItBootstrap="['xl', 'lg', 'md']">
 				<nb-card-header>
 					Groups
+					<nb-icon icon="trash-2-outline" (click)="clearGroups()"></nb-icon>
 					<nb-icon
 						[ngClass]="{ 'infinte-rotate': refreshing }"
 						icon="refresh"
@@ -38,9 +43,14 @@ import { ConnectionService } from '../connection.service';
 			<nb-layout-column>
 				<nb-card *hideItBootstrap="['xl', 'lg', 'md']">
 					<nb-card-header>
+						<nb-icon
+							icon="trash-2-outline"
+							style="margin: auto auto auto 0;"
+							(click)="clearGroups()"
+						></nb-icon>
 						<nb-select
 							placeholder="Groups"
-							style="max-width: calc(100% - 1em - 1.5rem); width: calc(100% - 1em - 1.5rem);"
+							style="max-width: calc(100% - 2em - 3rem); width: calc(100% - 2em - 3rem);"
 							[(selected)]="activeGroup"
 							(selectedChange)="activateGroup(activeGroup)"
 						>
@@ -100,6 +110,9 @@ import { ConnectionService } from '../connection.service';
 				border-color: #edf1f7;
 				border-left-width: 0.0668rem;
 			}
+			:host nb-select ::ng-deep button {
+				min-width: unset;
+			}
 			:host ::ng-deep .scrollable {
 				display: contents;
 			}
@@ -125,7 +138,7 @@ import { ConnectionService } from '../connection.service';
 	],
 })
 export class JobsComponent implements OnInit, OnDestroy {
-	constructor(private cmdService: ConnectionService) {}
+	constructor(private cmdService: ConnectionService, public modal: Modal) {}
 	public activeGroup = '';
 	public groups: string[] = [];
 
@@ -142,6 +155,33 @@ export class JobsComponent implements OnInit, OnDestroy {
 		this.activeGroup = group;
 		this.statsTrigger.next(group);
 	}
+
+	public clearGroups() {
+		this.modal
+			.confirm()
+			.className('flat-attack')
+			.message(`Cleaning finished groups?`)
+			.isBlocking(true)
+			.open()
+			.result.then(
+				ok => {
+					if (!ok) return;
+					this.modal
+						.open(
+							CleanFinishedGroupDialogComponent,
+							overlayConfigFactory({ isBlocking: true }, VEXModalContext)
+						)
+						.result.then(
+							confirm => {
+								if (confirm) this.refreshList();
+							},
+							() => {}
+						);
+				},
+				() => {}
+			);
+	}
+
 	ngOnInit(): void {
 		const outer = this;
 		this.visable = true;
