@@ -24,8 +24,8 @@ const routes: Routes = [
 			},
 			{
 				path: 'manager',
-				// loadChildren: () => import('./manager/manager.module').then(m => m.ManagerModule),
-				loadChildren: () => ManagerModule,
+				loadChildren: () => import('./manager/manager.module').then(m => m.ManagerModule),
+				// loadChildren: () => ManagerModule,
 			},
 			{
 				path: 'jobs',
