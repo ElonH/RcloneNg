@@ -2,18 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-### [0.3.3-dev.0](https://github.com/ElonH/RcloneNg/compare/v0.3.2...v0.3.3-dev.0) (2020-06-14)
+## [0.4.0-dev.0](https://github.com/ElonH/RcloneNg/compare/v0.3.2...v0.4.0-dev.0) (2020-06-14)
 
+
+### ⚠ BREAKING CHANGES
+
+* **list-view:** In Mobile View, double click to open directory, lomg press it to popup detail log.
+* **home-mode:** In Mobile View, click remote item to enter file system,and long press it to popup
+detail dialog.
 
 ### Features
 
+* **home-mode:** support remote detail on mobile view ([aa97788](https://github.com/ElonH/RcloneNg/commit/aa97788ec7fc2ca943a0ac6fd9517bc35d706fab))
 * **jobs-manager:** clean finished groups ([188fcdf](https://github.com/ElonH/RcloneNg/commit/188fcdf56cc00ab0f9be5520714ea09677c15259))
 * **jobs-manager:** enable reset stats ([ec025bd](https://github.com/ElonH/RcloneNg/commit/ec025bd8d4a0322f7bcf3b1bfd7cf1f4303f9e1a))
+* **list-view:** support file detail on mobile view ([0ad4660](https://github.com/ElonH/RcloneNg/commit/0ad466043e58c7f31fb84e14ad41d991706a5e56))
 
 
 ### Bug Fixes
 
 * **jobs-manager:** no animation on refresh button in mobile view ([b0d21d7](https://github.com/ElonH/RcloneNg/commit/b0d21d74161a45847b461fe763b23dd701a0e746))
+* **list-view:** prevent showing detail when checking item ([fc73893](https://github.com/ElonH/RcloneNg/commit/fc738935caeb6554629a7db3df474d94d419d262))
 * cancel underline in <a> ([6c179fa](https://github.com/ElonH/RcloneNg/commit/6c179fa3e7a7d26042dfbbf28d97e9f4462629e9))
 
 ### [0.3.2](https://github.com/ElonH/RcloneNg/compare/v0.3.1...v0.3.2) (2020-06-14)
