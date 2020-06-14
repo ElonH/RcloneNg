@@ -29,3 +29,7 @@
 	/* hack for  between compatible nbTooltip and ngx-modialog-7 */
 	z-index: 3000 !important;
 }
+
+.infinte-rotate {
+	animation: rotation 1.5s infinite linear;
+}

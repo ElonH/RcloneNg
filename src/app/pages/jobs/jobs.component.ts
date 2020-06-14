@@ -12,7 +12,11 @@ import { ConnectionService } from '../connection.service';
 			<nb-sidebar tag="group" *showItBootstrap="['xl', 'lg', 'md']">
 				<nb-card-header>
 					Groups
-					<nb-icon icon="refresh" (click)="refreshList()"></nb-icon>
+					<nb-icon
+						[ngClass]="{ 'infinte-rotate': refreshing }"
+						icon="refresh"
+						(click)="refreshList()"
+					></nb-icon>
 				</nb-card-header>
 				<nb-list>
 					<nb-list-item
@@ -132,6 +136,7 @@ export class JobsComponent implements OnInit, OnDestroy {
 	public stats$: CoreStatsFlow;
 
 	private visable = false;
+	refreshing = false;
 
 	public activateGroup(group: string) {
 		this.activeGroup = group;
@@ -148,9 +153,11 @@ export class JobsComponent implements OnInit, OnDestroy {
 		})();
 		this.listGroup$.deploy();
 		this.listGroup$.getOutput().subscribe(x => {
+			this.refreshing = false;
 			if (x[1].length !== 0) return;
 			this.groups = x[0].groups;
 		});
+		this.refreshing = true;
 		this.listTrigger.next(1);
 
 		this.stats$ = new (class extends CoreStatsFlow {
@@ -175,6 +182,7 @@ export class JobsComponent implements OnInit, OnDestroy {
 
 	public refreshList() {
 		this.listGroup$.clearCache();
+		this.refreshing = true;
 		this.listTrigger.next(1);
 	}
 	ngOnDestroy() {
