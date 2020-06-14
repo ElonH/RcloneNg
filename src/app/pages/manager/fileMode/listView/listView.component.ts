@@ -37,10 +37,10 @@ import { ClipboardService } from '../../clipboard/clipboard.service';
 			(event)="eventEmitted($event)"
 		>
 			<ng-template let-row>
-				<td (dblclick)="$event.stopPropagation()" (click)="toggle(row); $event.preventDefault()">
+				<td (dblclick)="$event.stopPropagation()" (click)="toggle(row); stopEvent($event)">
 					<nb-checkbox [(checked)]="row.check" (checkedChange)="onToggle()"> </nb-checkbox>
 				</td>
-				<td (click)="toggle(row)" (dblclick)="$event.stopPropagation()">
+				<td (click)="toggle(row); stopEvent($event)" (dblclick)="stopEvent($event)">
 					<nb-icon
 						*ngIf="row.ManipulateIcon"
 						class="manipulation"
@@ -188,5 +188,10 @@ export class ListViewComponent implements OnInit, OnDestroy {
 	ngOnDestroy() {
 		this.listScrb.unsubscribe();
 		this.loading();
+	}
+
+	stopEvent($event: any) {
+		$event.stopPropagation();
+		$event.preventDefault();
 	}
 }
