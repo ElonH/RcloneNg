@@ -8,6 +8,13 @@ All notable changes to this project will be documented in this file. See [standa
 ### Features
 
 * **jobs-manager:** clean finished groups ([188fcdf](https://github.com/ElonH/RcloneNg/commit/188fcdf56cc00ab0f9be5520714ea09677c15259))
+* **jobs-manager:** enable reset stats ([ec025bd](https://github.com/ElonH/RcloneNg/commit/ec025bd8d4a0322f7bcf3b1bfd7cf1f4303f9e1a))
+
+
+### Bug Fixes
+
+* **jobs-manager:** no animation on refresh button in mobile view ([b0d21d7](https://github.com/ElonH/RcloneNg/commit/b0d21d74161a45847b461fe763b23dd701a0e746))
+* cancel underline in <a> ([6c179fa](https://github.com/ElonH/RcloneNg/commit/6c179fa3e7a7d26042dfbbf28d97e9f4462629e9))
 
 ### [0.3.2](https://github.com/ElonH/RcloneNg/compare/v0.3.1...v0.3.2) (2020-06-14)
 
