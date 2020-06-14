@@ -20,6 +20,7 @@ import { ListViewComponent } from './listView/listView.component';
 	template: `
 		<app-manager-list-view
 			[listExtends$]="listExtends$"
+			[pcDetailViewEnable]="pcDetailViewEnable"
 			(jump)="jump.emit($event)"
 			(showDetail)="showDetail.emit($event)"
 		>
@@ -31,6 +32,7 @@ export class FileModeComponent implements OnInit {
 	constructor(private connectService: ConnectionService, private clipboard: ClipboardService) {}
 
 	@Input() nav$: NavigationFlow;
+	@Input() pcDetailViewEnable: boolean;
 
 	@Output() jump = new EventEmitter<NavigationFlowOutNode>();
 	@Output() showDetail = new EventEmitter<OperationsListExtendsFlowOutItemNode>();

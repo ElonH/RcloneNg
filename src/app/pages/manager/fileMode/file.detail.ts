@@ -1,4 +1,4 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { NbToastrService } from '@nebular/theme';
 import { overlayConfigFactory } from 'ngx-modialog-7';
 // tslint:disable-next-line: no-submodule-imports
@@ -106,6 +106,8 @@ export class FileDetailComponent implements OnInit {
 	@ViewChild('EnableServe') public EnableServe: TemplateRef<any>;
 	@ViewChild(RngSpaceUsageChartComponent) chart: RngSpaceUsageChartComponent;
 
+	@Input() initNode: OperationsListExtendsFlowOutItemNode;
+	// TODO: replace as initNode?
 	itemNode(x: OperationsListExtendsFlowOutItemNode) {
 		this.remote = x.remote || '';
 		this.path = x.Path || '';
@@ -194,5 +196,9 @@ export class FileDetailComponent implements OnInit {
 						);
 				}
 			});
+		if (this.initNode)
+			setTimeout(() => {
+				this.itemNode(this.initNode);
+			}, 100);
 	}
 }

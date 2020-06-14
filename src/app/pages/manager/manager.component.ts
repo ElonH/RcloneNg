@@ -50,6 +50,7 @@ import { TaskService } from './tasks/tasks.service';
 					</app-manager-home-mode>
 					<app-manager-file-mode
 						*ngIf="fileMode"
+						[pcDetailViewEnable]="pcDetailViewEnable"
 						[nav$]="nav$"
 						(jump)="addrJump($event)"
 						(showDetail)="openFileDetail($event)"
@@ -72,6 +73,9 @@ import { TaskService } from './tasks/tasks.service';
 		</nb-sidebar>
 		<ng-template #MobileRemoteDetail let-ctx="dialogRef.context">
 			<app-home-remote-detail [initNode]="ctx.navNode"> </app-home-remote-detail>
+		</ng-template>
+		<ng-template #MobileFileDetail let-ctx="dialogRef.context">
+			<app-file-file-detail [initNode]="ctx.itemNode"> </app-file-file-detail>
 		</ng-template>
 		<nb-layout-footer [ngClass]="{ mobile: !mainBar, pc: mainBar }">
 			<nb-actions>
@@ -185,6 +189,7 @@ export class ManagerComponent implements OnInit, OnDestroy {
 	@ViewChild(RemoteDetailComponent) remoteDetail: RemoteDetailComponent;
 	@ViewChild('MobileRemoteDetail') remoteDetailMobile: TemplateRef<any>;
 	@ViewChild(FileDetailComponent) fileDetail: FileDetailComponent;
+	@ViewChild('MobileFileDetail') fileDetailMobile: TemplateRef<any>;
 
 	private navTrigger = new Subject<NavigationFlowOutNode>();
 	nav$: NavigationFlow;
@@ -365,7 +370,6 @@ export class ManagerComponent implements OnInit, OnDestroy {
 	openRemoteDetail(item: NavigationFlowOutNode) {
 		if (this.pcDetailView) this.remoteDetail.navNode(item);
 		if (!this.pcDetailViewEnable) {
-			console.log('remote detail');
 			this.modal.open(
 				this.remoteDetailMobile,
 				overlayConfigFactory({ isBlocking: false, navNode: item }, VEXModalContext)
@@ -374,7 +378,12 @@ export class ManagerComponent implements OnInit, OnDestroy {
 	}
 	openFileDetail(item: OperationsListExtendsFlowOutItemNode) {
 		if (this.pcDetailView) this.fileDetail.itemNode(item);
-		if (!this.pcDetailViewEnable) console.log('file detail');
+		if (!this.pcDetailViewEnable) {
+			this.modal.open(
+				this.fileDetailMobile,
+				overlayConfigFactory({ isBlocking: false, itemNode: item }, VEXModalContext)
+			);
+		}
 	}
 
 	ngOnInit(): void {

@@ -96,6 +96,7 @@ export class ListViewComponent implements OnInit, OnDestroy {
 	private remote: string;
 
 	@Input() listExtends$: OperationsListExtendsFlow;
+	@Input() pcDetailViewEnable: boolean;
 
 	private listScrb: Subscription;
 
@@ -121,7 +122,11 @@ export class ListViewComponent implements OnInit, OnDestroy {
 				this.jump.emit({ remote: this.remote, path: item.Path });
 				this.loading();
 			}
-		} else if ($event.event === 'onClick') {
+		} else if ($event.event === 'onClick' && this.pcDetailViewEnable) {
+			// console.log($event.value);
+			const item = $event.value.row;
+			this.showDetail.emit(item);
+		} else if ($event.event === 'onRowContextMenu' && !this.pcDetailViewEnable) {
 			// console.log($event.value);
 			const item = $event.value.row;
 			this.showDetail.emit(item);
@@ -169,6 +174,7 @@ export class ListViewComponent implements OnInit, OnDestroy {
 		this.configuration.searchEnabled = true;
 		this.configuration.checkboxes = true;
 		this.configuration.isLoading = true;
+		this.configuration.showContextMenu = true;
 		// ... etc.
 		this.listScrb = this.listExtends$.getOutput().subscribe(listNode => {
 			this.checkAll = false;
