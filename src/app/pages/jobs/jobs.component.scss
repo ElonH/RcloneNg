@@ -1,0 +1,39 @@
+nb-card-header {
+	display: flex;
+}
+nb-card-header > nb-icon {
+	margin-left: auto;
+	margin-top: auto;
+	margin-bottom: auto;
+	font-size: 1.5rem;
+	cursor: pointer;
+}
+nb-sidebar {
+	border-left: solid;
+	border-color: #edf1f7;
+	border-left-width: 0.0668rem;
+}
+:host nb-select ::ng-deep button {
+	min-width: unset;
+}
+:host ::ng-deep .scrollable {
+	display: contents;
+}
+ul {
+	list-style-type: none;
+}
+li {
+	border-bottom: 1px solid #edf1f7;
+}
+div.row {
+	padding-top: 1rem;
+}
+.active-group {
+	background-color: #598bff88;
+	border-radius: 0.25rem;
+}
+.speed-body {
+	padding: 0;
+	min-height: 10rem;
+	overflow-y: hidden;
+}
