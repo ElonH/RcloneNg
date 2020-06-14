@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { combineLatest, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { CombErr } from '../../../@dataflow/core';
@@ -79,6 +79,8 @@ export class RemoteDetailComponent implements OnInit {
 
 	@ViewChild(RngSpaceUsageChartComponent) chart: RngSpaceUsageChartComponent;
 
+	@Input() initNode: NavigationFlowOutNode;
+	// TODO: replace it as initNode?
 	navNode(x: NavigationFlowOutNode) {
 		this.remote = x.remote || '';
 		this.loadingFsinfo = true;
@@ -120,5 +122,9 @@ export class RemoteDetailComponent implements OnInit {
 			if (x[1].length !== 0) return;
 			this.chart.data = x[0].about;
 		});
+		if (this.initNode)
+			setTimeout(() => {
+				this.navNode(this.initNode);
+			}, 100);
 	}
 }

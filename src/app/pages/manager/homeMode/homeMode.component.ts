@@ -18,15 +18,27 @@ import { ConnectionService } from '../../connection.service';
 			<div
 				[ngClass]="{
 					'cloud col-sm-6': true,
-					'col-xl-3 col-md-4': !detail,
-					'col-lg-4 col-md-6': detail
+					'col-xl-3 col-md-4': !pcDetailView,
+					'col-lg-4 col-md-6': pcDetailView
 				}"
 				*ngFor="let remote of remotes"
 			>
 				<app-home-view-remote
+					*hideItBootstrap="['xs']"
 					[easyMode]="true"
 					[title]="remote"
 					(click)="showDetail.emit({ remote: remote })"
+					(dblclick)="jump.emit({ remote: remote })"
+				>
+				</app-home-view-remote>
+				<!-- associate with manager.pcDetailViewEnable -->
+				<app-home-view-remote
+					*showItBootstrap="['xs']"
+					[easyMode]="true"
+					[title]="remote"
+					(contextmenu)="
+						showDetail.emit({ remote: remote }); $event.preventDefault(); $event.stopPropagation()
+					"
 					(dblclick)="jump.emit({ remote: remote })"
 				>
 				</app-home-view-remote>
@@ -40,7 +52,7 @@ export class HomeModeComponent implements OnInit {
 
 	remotes: string[] = [];
 
-	@Input() detail: boolean;
+	@Input() pcDetailView: boolean;
 	@Output() jump = new EventEmitter<NavigationFlowOutNode>();
 	@Output() showDetail = new EventEmitter<NavigationFlowOutNode>();
 

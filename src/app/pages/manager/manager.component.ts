@@ -1,6 +1,6 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NbSidebarComponent, NbToastrService } from '@nebular/theme';
+import { NbSidebarComponent, NbSidebarService, NbToastrService } from '@nebular/theme';
 import { overlayConfigFactory } from 'ngx-modialog-7';
 // tslint:disable-next-line: no-submodule-imports
 import { Modal, VEXModalContext } from 'ngx-modialog-7/plugins/vex';
@@ -8,7 +8,12 @@ import { ResponsiveSizeInfoRx } from 'ngx-responsive';
 import { Observable, Subject } from 'rxjs';
 import { distinctUntilChanged, map, takeWhile, withLatestFrom } from 'rxjs/operators';
 import { CombErr } from '../../@dataflow/core';
-import { IManipulate, NavigationFlow, NavigationFlowOutNode } from '../../@dataflow/extra';
+import {
+	IManipulate,
+	NavigationFlow,
+	NavigationFlowOutNode,
+	OperationsListExtendsFlowOutItemNode,
+} from '../../@dataflow/extra';
 import { OperationsMkdirFlow, OperationsMkdirFlowInNode } from '../../@dataflow/rclone';
 import { ConnectionService } from '../connection.service';
 import { ClipboardDialogComponent } from './clipboard/clipboard.dialog';
@@ -28,34 +33,46 @@ import { TaskService } from './tasks/tasks.service';
 			<app-manager-breadcrumb [nav$]="nav$" (jump)="addrJump($event)"> </app-manager-breadcrumb>
 			<a class="push-to-right option" (click)="refresh()"><nb-icon icon="refresh"></nb-icon></a>
 			<a class="option"><nb-icon icon="list"></nb-icon></a>
-			<a class="option" *ngIf="detailBar || detailExpanded" (click)="toggleDetail()">
+			<!-- *hideItBootstrap="['xs']" -->
+			<a class="option" *ngIf="pcDetailViewEnable" (click)="toggleDetail()">
 				<nb-icon icon="info"></nb-icon>
 			</a>
 		</nb-layout-header>
-		<div [ngClass]="{ subcolumn: true, 'subcolumn-right-bar': detailExpanded }">
+		<div [ngClass]="{ subcolumn: true, 'subcolumn-right-bar': pcDetailView }">
 			<nb-card>
 				<nb-card-body>
 					<app-manager-home-mode
 						*ngIf="homeMode"
-						[detail]="detailExpanded"
+						[pcDetailView]="pcDetailView"
 						(jump)="addrJump($event)"
-						(showDetail)="remoteDetail.navNode($event)"
+						(showDetail)="openRemoteDetail($event)"
 					>
 					</app-manager-home-mode>
 					<app-manager-file-mode
 						*ngIf="fileMode"
 						[nav$]="nav$"
 						(jump)="addrJump($event)"
-						(showDetail)="fileDetail.itemNode($event)"
+						(showDetail)="openFileDetail($event)"
 					>
 					</app-manager-file-mode>
 				</nb-card-body>
 			</nb-card>
 		</div>
-		<nb-sidebar fixed end class="right-bar" tag="detail" state="collapsed">
+		<!-- *hideItBootstrap="['xs']" -->
+		<nb-sidebar
+			*ngIf="pcDetailViewEnable"
+			fixed
+			end
+			class="right-bar"
+			tag="detail"
+			state="collapsed"
+		>
 			<app-home-remote-detail *ngIf="homeMode"> </app-home-remote-detail>
 			<app-file-file-detail *ngIf="fileMode"> </app-file-file-detail>
 		</nb-sidebar>
+		<ng-template #MobileRemoteDetail let-ctx="dialogRef.context">
+			<app-home-remote-detail [initNode]="ctx.navNode"> </app-home-remote-detail>
+		</ng-template>
 		<nb-layout-footer [ngClass]="{ mobile: !mainBar, pc: mainBar }">
 			<nb-actions>
 				<nb-action *ngIf="fileMode" icon="copy" (click)="file.manipulate('copy')"></nb-action>
@@ -156,17 +173,17 @@ export class ManagerComponent implements OnInit, OnDestroy {
 		private resp: ResponsiveSizeInfoRx,
 		public modal: Modal,
 		private router: Router,
-		private route: ActivatedRoute
+		private route: ActivatedRoute,
+		private sidebarService: NbSidebarService
 	) {}
 	homeMode = false;
 	fileMode = false;
 	mainBar = false;
-	detailBar = true;
 
 	@ViewChild(FileModeComponent) file: FileModeComponent;
 	@ViewChild(HomeModeComponent) home: HomeModeComponent;
-	@ViewChild(NbSidebarComponent) detail: NbSidebarComponent;
 	@ViewChild(RemoteDetailComponent) remoteDetail: RemoteDetailComponent;
+	@ViewChild('MobileRemoteDetail') remoteDetailMobile: TemplateRef<any>;
 	@ViewChild(FileDetailComponent) fileDetail: FileDetailComponent;
 
 	private navTrigger = new Subject<NavigationFlowOutNode>();
@@ -181,7 +198,8 @@ export class ManagerComponent implements OnInit, OnDestroy {
 
 	public orderCnt = 0;
 
-	detailExpanded = false;
+	pcDetailViewEnable = false;
+	pcDetailView = false;
 
 	visable = false;
 
@@ -331,17 +349,32 @@ export class ManagerComponent implements OnInit, OnDestroy {
 	private sidebarDeploy() {
 		this.resp.getResponsiveSize.subscribe(data => {
 			this.mainBar = !(data === 'xs' || data === 'sm' || data === 'md');
-			this.detailBar = data !== 'xs';
-			if (!this.detailBar) {
-				this.detail.collapse();
-				this.detailExpanded = false;
+			this.pcDetailViewEnable = data !== 'xs';
+			if (data === 'xs') {
+				this.pcDetailView = false;
+				this.sidebarService.collapse('detail');
 			}
 		});
 	}
 
 	toggleDetail() {
-		this.detail.toggle(false);
-		this.detailExpanded = this.detail.expanded;
+		this.pcDetailView = !this.pcDetailView;
+		this.sidebarService.toggle(false, 'detail');
+	}
+
+	openRemoteDetail(item: NavigationFlowOutNode) {
+		if (this.pcDetailView) this.remoteDetail.navNode(item);
+		if (!this.pcDetailViewEnable) {
+			console.log('remote detail');
+			this.modal.open(
+				this.remoteDetailMobile,
+				overlayConfigFactory({ isBlocking: false, navNode: item }, VEXModalContext)
+			);
+		}
+	}
+	openFileDetail(item: OperationsListExtendsFlowOutItemNode) {
+		if (this.pcDetailView) this.fileDetail.itemNode(item);
+		if (!this.pcDetailViewEnable) console.log('file detail');
 	}
 
 	ngOnInit(): void {
