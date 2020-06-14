@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NbLayoutModule, NbMenuModule, NbThemeModule, NbToastrModule } from '@nebular/theme';
+import { ContextMenuModule } from 'ngx-contextmenu';
 import { ModalModule } from 'ngx-modialog-7';
 // tslint:disable-next-line: no-submodule-imports
 import { VexModalModule } from 'ngx-modialog-7/plugins/vex';
@@ -23,6 +24,7 @@ import { AppComponent } from './app.component';
 		NbToastrModule.forRoot(),
 		NbLayoutModule,
 		ModalModule.forRoot(),
+		ContextMenuModule.forRoot({ useBootstrap4: true }),
 		VexModalModule,
 	],
 	providers: [PaginationService],

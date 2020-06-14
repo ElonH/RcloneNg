@@ -13,16 +13,23 @@ import {
 	NbSpinnerModule,
 } from '@nebular/theme';
 import { ChartsModule } from 'ng2-charts';
+import { ContextMenuModule } from 'ngx-contextmenu';
 import { TableModule } from 'ngx-easy-table';
 import { ResponsiveModule } from 'ngx-responsive';
 import { RngModule } from '../../components/rng.module';
+import { GroupOptionsContextMenuComponent } from './contextmenu/group-options.contextmenu';
 import { CleanFinishedGroupDialogComponent } from './dialogs/clean-finished-groups.dialog';
 import { JobsRoutingModule } from './jobs-routing.module';
 import { JobsComponent } from './jobs.component';
 import { TransfersComponent } from './transferring/transferring.component';
 
 @NgModule({
-	declarations: [JobsComponent, TransfersComponent, CleanFinishedGroupDialogComponent],
+	declarations: [
+		JobsComponent,
+		TransfersComponent,
+		CleanFinishedGroupDialogComponent,
+		GroupOptionsContextMenuComponent,
+	],
 	imports: [
 		CommonModule,
 		ResponsiveModule,
@@ -39,6 +46,7 @@ import { TransfersComponent } from './transferring/transferring.component';
 		NbButtonModule,
 		NbCheckboxModule,
 		NbSpinnerModule,
+		ContextMenuModule,
 	],
 })
 export class JobsModule {}

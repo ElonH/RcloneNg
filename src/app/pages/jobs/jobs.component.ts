@@ -19,7 +19,7 @@ import { CleanFinishedGroupDialogComponent } from './dialogs/clean-finished-grou
 					<nb-icon icon="trash-2-outline" (click)="clearGroups()"></nb-icon>
 					<nb-icon
 						[ngClass]="{ 'infinte-rotate': refreshing }"
-						icon="refresh"
+						icon="sync"
 						(click)="refreshList()"
 					></nb-icon>
 				</nb-card-header>
@@ -29,6 +29,7 @@ import { CleanFinishedGroupDialogComponent } from './dialogs/clean-finished-grou
 						[ngClass]="{ 'active-group': activeGroup === '' }"
 					>
 						[All]
+						<nb-icon icon="more-vertical" (click)="OptionsMenu.onContextMenu($event, '')"></nb-icon>
 					</nb-list-item>
 					<nb-list-item
 						*ngFor="let item of groups"
@@ -36,9 +37,14 @@ import { CleanFinishedGroupDialogComponent } from './dialogs/clean-finished-grou
 						[ngClass]="{ 'active-group': activeGroup === item }"
 					>
 						{{ item }}
+						<nb-icon
+							icon="more-vertical"
+							(click)="OptionsMenu.onContextMenu($event, item)"
+						></nb-icon>
 					</nb-list-item>
 				</nb-list>
 			</nb-sidebar>
+			<app-job-group-options-context-menu #OptionsMenu> </app-job-group-options-context-menu>
 
 			<nb-layout-column>
 				<nb-card *hideItBootstrap="['xl', 'lg', 'md']">
@@ -57,14 +63,16 @@ import { CleanFinishedGroupDialogComponent } from './dialogs/clean-finished-grou
 							<nb-option value="">[All]</nb-option>
 							<nb-option *ngFor="let item of groups" [value]="item"> {{ item }}</nb-option>
 						</nb-select>
-						<nb-icon icon="refresh" (click)="refreshList()"></nb-icon>
+						<nb-icon icon="sync" (click)="refreshList()"></nb-icon>
 					</nb-card-header>
 				</nb-card>
 				<div class="container-flex">
 					<div class="row">
 						<div class="col-xl-6 col-lg-7 col-md-6 col-sm-5 col-sx-12">
 							<nb-card size="small">
-								<nb-card-header> Speed </nb-card-header>
+								<nb-card-header>
+									Speed
+								</nb-card-header>
 								<nb-card-body class="speed-body">
 									<app-rng-speed-chart [stats$]="stats$"> </app-rng-speed-chart>
 								</nb-card-body>
@@ -72,7 +80,14 @@ import { CleanFinishedGroupDialogComponent } from './dialogs/clean-finished-grou
 						</div>
 						<div class="col-xl-6 col-lg-5 col-md-6 col-sm-7 col-sx-12">
 							<nb-card>
-								<nb-card-header> Summary </nb-card-header>
+								<nb-card-header>
+									Summary
+									<nb-icon
+										*hideItBootstrap="['xl', 'lg', 'md']"
+										icon="more-vertical"
+										(click)="OptionsMenu.onContextMenu($event, activeGroup)"
+									></nb-icon>
+								</nb-card-header>
 								<nb-card-body>
 									<app-rng-summary [stats$]="stats$"> </app-rng-summary>
 								</nb-card-body>

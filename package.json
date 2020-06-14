@@ -55,6 +55,7 @@
     "moment": "^2.26.0",
     "nebular-icons": "^1.1.0",
     "ng2-charts": "^2.3.2",
+    "ngx-contextmenu": "^5.4.0",
     "ngx-easy-table": "^12.0.0",
     "ngx-filesaver": "^9.0.0",
     "ngx-markdown": "^9.1.1",
