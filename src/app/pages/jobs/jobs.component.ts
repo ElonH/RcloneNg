@@ -63,7 +63,11 @@ import { CleanFinishedGroupDialogComponent } from './dialogs/clean-finished-grou
 							<nb-option value="">[All]</nb-option>
 							<nb-option *ngFor="let item of groups" [value]="item"> {{ item }}</nb-option>
 						</nb-select>
-						<nb-icon icon="sync" (click)="refreshList()"></nb-icon>
+						<nb-icon
+							[ngClass]="{ 'infinte-rotate': refreshing }"
+							icon="sync"
+							(click)="refreshList()"
+						></nb-icon>
 					</nb-card-header>
 				</nb-card>
 				<div class="container-flex">
