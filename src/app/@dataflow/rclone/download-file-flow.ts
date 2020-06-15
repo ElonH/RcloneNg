@@ -20,7 +20,7 @@ export abstract class DownloadFileFlow extends GetFlow<
 		req.responseType = 'blob';
 		return req;
 	}
-	protected reconstructAjaxResult(x: AjaxFlowInteralNode): AjaxFlowInteralNode {
+	protected reconstructAjaxResult(x: CombErr<AjaxFlowInteralNode>): CombErr<AjaxFlowInteralNode> {
 		return x;
 	}
 }

@@ -21,7 +21,7 @@ export abstract class CoreStatsResetFlow extends PostFlow<
 		if (pre[0].group && pre[0].group !== '') return { group: pre[0].group };
 		return {};
 	};
-	protected reconstructAjaxResult(x: AjaxFlowInteralNode): CombErr<FlowOutNode> {
+	protected reconstructAjaxResult(x: CombErr<AjaxFlowInteralNode>): CombErr<FlowOutNode> {
 		return x;
 	}
 }

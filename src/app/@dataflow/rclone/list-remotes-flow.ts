@@ -14,7 +14,7 @@ export abstract class ListRemotesFlow extends PostFlow<IRcloneServer, ListRemote
 	protected cmd = 'config/listremotes';
 	protected params: object = {};
 	protected cacheSupport = true;
-	protected reconstructAjaxResult(x: AjaxFlowInteralNode): CombErr<ListRemotesOutNode> {
+	protected reconstructAjaxResult(x: CombErr<AjaxFlowInteralNode>): CombErr<ListRemotesOutNode> {
 		if (x[1].length !== 0) return [{}, x[1]] as any;
 		const rsp = x[0].ajaxRsp.response;
 		return [{ remotes: rsp['remotes'] }, []];

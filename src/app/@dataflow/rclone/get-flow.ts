@@ -19,7 +19,7 @@ export abstract class GetFlow<
 			headers,
 		};
 	}
-	// protected reconstructAjaxResult(x: AjaxFlowInteralNode): CombErr<Tout> {
+	// protected reconstructAjaxResult(x: CombErr<AjaxFlowInteralNode>): CombErr<Tout> {
 	// 	throw new Error('Method not implemented.');
 	// }
 }

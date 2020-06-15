@@ -54,7 +54,9 @@ export abstract class OperationsListFlow extends PostFlow<
 			// },
 		};
 	};
-	protected reconstructAjaxResult(x: AjaxFlowInteralNode): CombErr<OperationsListFlowOutNode> {
+	protected reconstructAjaxResult(
+		x: CombErr<AjaxFlowInteralNode>
+	): CombErr<OperationsListFlowOutNode> {
 		if (x[1].length !== 0) return [{}, x[1]] as any;
 		const rsp = x[0].ajaxRsp.response;
 		return [{ list: rsp['list'] }, []];

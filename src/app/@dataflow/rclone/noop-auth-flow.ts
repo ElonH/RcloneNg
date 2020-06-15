@@ -21,7 +21,7 @@ export abstract class NoopAuthFlow extends PostFlow<IRcloneServer, NoopAuthFlowO
 		};
 		return ans;
 	}
-	protected reconstructAjaxResult(x: AjaxFlowInteralNode): CombErr<NoopAuthFlowOutNode> {
+	protected reconstructAjaxResult(x: CombErr<AjaxFlowInteralNode>): CombErr<NoopAuthFlowOutNode> {
 		if (x[1].length !== 0) return [{}, x[1]] as any;
 		const rspjson = x[0]['ajaxRsp'].response;
 		const rst = new Date().getTime() - rspjson.timestamp;

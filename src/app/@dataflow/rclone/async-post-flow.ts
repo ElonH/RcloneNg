@@ -27,7 +27,7 @@ export abstract class AsyncPostFlow<
 		res.body._async = true;
 		return res;
 	}
-	protected reconstructAjaxResult(x: AjaxFlowInteralNode): CombErr<AsyncPostFlowOutNode> {
+	protected reconstructAjaxResult(x: CombErr<AjaxFlowInteralNode>): CombErr<AsyncPostFlowOutNode> {
 		if (x[1].length !== 0) return [{}, x[1]] as any;
 		const rsp = x[0].ajaxRsp.response;
 		return [{ jobid: rsp['jobid'] }, []];

@@ -38,7 +38,9 @@ export abstract class OperationsAboutFlow extends PostFlow<
 		if (pre[0].path) return { fs: `${pre[0].remote}:${pre[0].path}` };
 		return { fs: `${pre[0].remote}:` };
 	};
-	protected reconstructAjaxResult(x: AjaxFlowInteralNode): CombErr<OperationsAboutFlowOutNode> {
+	protected reconstructAjaxResult(
+		x: CombErr<AjaxFlowInteralNode>
+	): CombErr<OperationsAboutFlowOutNode> {
 		if (x[1].length !== 0) return [{}, x[1]] as any;
 		const rsp = x[0].ajaxRsp.response;
 		return [{ about: rsp }, []];

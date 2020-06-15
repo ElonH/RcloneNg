@@ -20,7 +20,7 @@ export abstract class ListCmdFlow extends PostFlow<IRcloneServer, ListCmdFlowOut
 	protected cmd = 'rc/list';
 	protected params = {};
 	protected cacheSupport = false;
-	protected reconstructAjaxResult(x: AjaxFlowInteralNode): CombErr<ListCmdFlowOutNode> {
+	protected reconstructAjaxResult(x: CombErr<AjaxFlowInteralNode>): CombErr<ListCmdFlowOutNode> {
 		if (x[1].length !== 0) return [{}, x[1]] as any;
 		const rsp = x[0].ajaxRsp.response;
 		return [{ commands: rsp['commands'] }, []];

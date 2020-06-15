@@ -73,7 +73,9 @@ export abstract class OperationsFsinfoFlow extends PostFlow<
 		if (pre[1].length !== 0) return {} as any;
 		return { fs: `${pre[0].remote}:` };
 	};
-	protected reconstructAjaxResult(x: AjaxFlowInteralNode): CombErr<OperationsFsinfoFlowOutNode> {
+	protected reconstructAjaxResult(
+		x: CombErr<AjaxFlowInteralNode>
+	): CombErr<OperationsFsinfoFlowOutNode> {
 		if (x[1].length !== 0) return [{}, x[1]] as any;
 		const rsp = x[0].ajaxRsp.response;
 		return [{ 'fs-info': rsp }, []];

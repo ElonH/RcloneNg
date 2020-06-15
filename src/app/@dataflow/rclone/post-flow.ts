@@ -13,7 +13,7 @@ export abstract class PostFlow<
 > extends AjaxFlow<Tin, Tout, Tsup> {
 	// protected cacheSupport: boolean;
 	// public prerequest$: Observable<CombErr<Tin>>;
-	// protected reconstructAjaxResult(x: AjaxFlowInteralNode): CombErr<Tout> {
+	// protected reconstructAjaxResult(x: CombErr<AjaxFlowInteralNode>): CombErr<Tout> {
 	// 	throw new Error('Method not implemented.');
 	// }
 	protected abstract cmd: string;

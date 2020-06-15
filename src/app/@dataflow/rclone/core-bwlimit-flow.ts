@@ -28,7 +28,9 @@ export abstract class CoreBwlimitFlow extends PostFlow<
 		if (pre[0].rate) return { rate: pre[0].rate };
 		return {};
 	};
-	protected reconstructAjaxResult(x: AjaxFlowInteralNode): CombErr<CoreBwlimitFlowOutNode> {
+	protected reconstructAjaxResult(
+		x: CombErr<AjaxFlowInteralNode>
+	): CombErr<CoreBwlimitFlowOutNode> {
 		if (x[1].length !== 0) return [{}, x[1]] as any;
 		const rsp = x[0].ajaxRsp.response;
 		return [{ bandwidth: rsp }, []];

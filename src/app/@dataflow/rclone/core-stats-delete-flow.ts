@@ -20,7 +20,7 @@ export abstract class CoreStatsDeleteFlow extends PostFlow<
 		if (pre[1].length !== 0 || !pre[0].group) return {} as any;
 		return { group: pre[0].group };
 	};
-	protected reconstructAjaxResult(x: AjaxFlowInteralNode): CombErr<FlowOutNode> {
+	protected reconstructAjaxResult(x: CombErr<AjaxFlowInteralNode>): CombErr<FlowOutNode> {
 		return x;
 	}
 }

@@ -586,7 +586,7 @@ export abstract class OptionsGetFlow extends PostFlow<IRcloneServer, OptionsGetF
 	protected cmd = 'options/get';
 	protected cacheSupport = false;
 	protected params = {};
-	protected reconstructAjaxResult(x: AjaxFlowInteralNode): CombErr<OptionsGetFlowOutNode> {
+	protected reconstructAjaxResult(x: CombErr<AjaxFlowInteralNode>): CombErr<OptionsGetFlowOutNode> {
 		if (x[1].length !== 0) return [{}, x[1]] as any;
 		const rsp = x[0].ajaxRsp.response;
 		return [{ options: rsp }, []];

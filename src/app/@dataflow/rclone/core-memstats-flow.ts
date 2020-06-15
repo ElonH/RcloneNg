@@ -32,7 +32,9 @@ export abstract class CoreMemstatsFlow extends PostFlow<IRcloneServer, CoreMemst
 	protected cmd = 'core/memstats';
 	protected params = {};
 	protected cacheSupport = true;
-	protected reconstructAjaxResult(x: AjaxFlowInteralNode): CombErr<CoreMemstatsFlowOutNode> {
+	protected reconstructAjaxResult(
+		x: CombErr<AjaxFlowInteralNode>
+	): CombErr<CoreMemstatsFlowOutNode> {
 		if (x[1].length !== 0) return [{}, x[1]] as any;
 		const rsp = x[0].ajaxRsp.response;
 		return [{ 'mem-stats': rsp }, []];

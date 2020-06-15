@@ -25,7 +25,7 @@ export abstract class OptionsSetFlow extends PostFlow<
 		if (pre[1].length !== 0) return {} as any;
 		return pre[0].options;
 	};
-	protected reconstructAjaxResult(x: AjaxFlowInteralNode): CombErr<FlowOutNode> {
+	protected reconstructAjaxResult(x: CombErr<AjaxFlowInteralNode>): CombErr<FlowOutNode> {
 		return [{}, x[1]];
 	}
 }

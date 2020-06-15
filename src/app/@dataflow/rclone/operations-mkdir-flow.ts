@@ -26,7 +26,9 @@ export abstract class OperationsMkdirFlow extends PostFlow<
 			remote: pre[0].path,
 		};
 	};
-	protected reconstructAjaxResult(x: AjaxFlowInteralNode): CombErr<OperationsMkdirFlowOutNode> {
+	protected reconstructAjaxResult(
+		x: CombErr<AjaxFlowInteralNode>
+	): CombErr<OperationsMkdirFlowOutNode> {
 		return [{}, x[1]];
 	}
 }

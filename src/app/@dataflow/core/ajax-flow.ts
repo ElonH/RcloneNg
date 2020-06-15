@@ -5,8 +5,9 @@ import { CombErr, FlowInNode, FlowOutNode } from './bare-flow';
 import { CacheFlow } from './cache-flow';
 import { FlowSupNode } from './superset-flow';
 
-// TODO: rename
-export type AjaxFlowInteralNode = [{ ajaxRsp: AjaxResponse }, Error[]];
+export interface AjaxFlowInteralNode {
+	ajaxRsp: AjaxResponse;
+}
 
 export abstract class AjaxFlow<
 	Tin extends FlowInNode,
@@ -17,11 +18,14 @@ export abstract class AjaxFlow<
 	// protected cachePath: string;
 
 	protected abstract requestAjax(pre: CombErr<Tin>): AjaxRequest;
-	protected abstract reconstructAjaxResult(x: AjaxFlowInteralNode): CombErr<Tout>;
+	protected abstract reconstructAjaxResult(x: CombErr<AjaxFlowInteralNode>): CombErr<Tout>;
 	protected requestCache(pre: CombErr<Tin>): Observable<CombErr<Tout>> {
 		return ajax(this.requestAjax(pre)).pipe(
-			map(x => [{ ajaxRsp: x }, []] as AjaxFlowInteralNode),
-			catchError((err): Observable<AjaxFlowInteralNode> => of([{}, [err]] as AjaxFlowInteralNode)),
+			map(x => [{ ajaxRsp: x }, []] as CombErr<AjaxFlowInteralNode>),
+			catchError(
+				(err): Observable<CombErr<AjaxFlowInteralNode>> =>
+					of([{}, [err]] as CombErr<AjaxFlowInteralNode>)
+			),
 			map(x => this.reconstructAjaxResult(x))
 		);
 	}

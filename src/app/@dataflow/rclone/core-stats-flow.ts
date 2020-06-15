@@ -51,7 +51,7 @@ export abstract class CoreStatsFlow extends PostFlow<
 		if (pre[1].length !== 0 || !pre[0].group) return {};
 		return { group: pre[0].group };
 	};
-	protected reconstructAjaxResult(x: AjaxFlowInteralNode): CombErr<CoreStatsFlowOutNode> {
+	protected reconstructAjaxResult(x: CombErr<AjaxFlowInteralNode>): CombErr<CoreStatsFlowOutNode> {
 		if (x[1].length !== 0) return [{}, x[1]] as any;
 		const rsp = x[0].ajaxRsp.response;
 		return [{ 'core-stats': rsp }, []];
