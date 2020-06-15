@@ -12,7 +12,7 @@ import {
 } from 'rxjs/operators';
 import { CombErr, NothingFlow } from '../../../@dataflow/core';
 import {
-	Clipboard,
+	Clipboard as RngClipboard,
 	ClipboardItem,
 	IManipulate,
 	NavigationFlowOutNode,
@@ -36,8 +36,8 @@ import { ConnectionService } from '../../connection.service';
 import { ClipboardService } from '../clipboard/clipboard.service';
 
 export interface TasksPoolNode {
-	failure: Clipboard;
-	order: Clipboard;
+	failure: RngClipboard;
+	order: RngClipboard;
 }
 export abstract class TasksPoolFlow extends NothingFlow<TasksPoolNode> {}
 
@@ -58,8 +58,8 @@ export class TaskService {
 	}
 	private createTrigger = new Subject<[NavigationFlowOutNode, IManipulate[]]>();
 
-	private tasksPool = new Clipboard(); // TODO: rename Clipboard to RngClipboar, for avoiding name conffict
-	private tasksFailure = new Clipboard();
+	private tasksPool = new RngClipboard();
+	private tasksFailure = new RngClipboard();
 
 	private postTrigger = new Subject<number>();
 	private post$: Observable<ClipboardItem>;
