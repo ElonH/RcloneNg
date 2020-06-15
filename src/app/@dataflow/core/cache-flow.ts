@@ -12,7 +12,7 @@ export abstract class CacheFlow<
 
 	protected abstract cacheSupport: boolean;
 	protected abstract cachePath: string | undefined;
-	protected cleanCacheFlag = false;
+	private cleanCacheFlag = false;
 
 	public static purgeAllCache() {
 		CacheFlow.cacheStorage = {};
