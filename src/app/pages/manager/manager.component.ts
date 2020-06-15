@@ -142,7 +142,7 @@ import { TaskService } from './tasks/tasks.service';
 				padding-top: 5rem;
 			} */
 			nb-layout-footer {
-				z-index: 1001;
+				z-index: 998;
 				position: fixed;
 				bottom: 0;
 			}
