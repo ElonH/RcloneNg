@@ -1,14 +1,16 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ResponsiveSizeInfoRx } from 'ngx-responsive';
-import { combineLatest, Subject } from 'rxjs';
+import { combineLatest, Observable, Subject } from 'rxjs';
 import { map, pairwise, takeWhile } from 'rxjs/operators';
 import { CombErr } from '../../@dataflow/core';
+import { IRcloneServer } from '../../@dataflow/extra';
 import {
 	CoreBwlimitFlow,
 	CoreBwlimitFlowInNode,
 	CoreMemstatsFlow,
 	CoreStatsFlow,
 	CoreStatsFlowInNode,
+	CoreVersionFlow,
 } from '../../@dataflow/rclone';
 import { FormatBytes } from '../../utils/format-bytes';
 import { ConnectionService } from '../connection.service';
@@ -116,6 +118,14 @@ import { ConnectionService } from '../connection.service';
 						</nb-card-body>
 					</nb-card>
 				</div>
+				<div class="col-sm-12 col-md-6">
+					<nb-card>
+						<nb-card-header> Version </nb-card-header>
+						<nb-card-body>
+							<app-rng-kv-table [keys]="verKeys" [data]="verVals"> </app-rng-kv-table>
+						</nb-card-body>
+					</nb-card>
+				</div>
 			</div>
 		</div>
 	`,
@@ -180,8 +190,19 @@ export class DashboardComponent implements OnInit, OnDestroy {
 	memVals = {};
 	memDiff = {};
 
+	verKeys = [
+		{ key: 'version', title: 'Rclone Ver' },
+		{ key: 'isGit', title: 'Git' },
+		{ key: 'goVersion', title: 'Go Ver' },
+		{ key: 'arch', title: 'Architecture' },
+		{ key: 'os', title: 'Os' },
+	];
+	verVals = {};
+
 	private memTrigger = new Subject<number>();
 	mem$: CoreMemstatsFlow;
+
+	ver$: CoreVersionFlow;
 
 	isSmallerThanSmSize = false;
 
@@ -244,6 +265,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
 				}
 			});
 		this.memTrigger.next(1);
+
+		this.ver$ = new (class extends CoreVersionFlow {
+			public prerequest$: Observable<CombErr<IRcloneServer>> = outer.cmdService.listCmd$.verify(
+				this.cmd
+			);
+		})();
+		this.ver$.deploy();
+		this.ver$.getOutput().subscribe(x => {
+			if (x[1].length !== 0) return;
+			this.verVals = x[0];
+		});
 
 		this.bwlimit$ = new (class extends CoreBwlimitFlow {
 			public prerequest$ = combineLatest([

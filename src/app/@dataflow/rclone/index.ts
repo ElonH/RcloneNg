@@ -24,3 +24,4 @@ export * from './get-flow';
 export * from './download-file-flow';
 export * from './core-stats-delete-flow';
 export * from './core-stats-reset-flow';
+export * from './core-version-flow';
