@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## [0.4.0-dev.0](https://github.com/ElonH/RcloneNg/compare/v0.3.2...v0.4.0-dev.0) (2020-06-15)
+## [0.4.0-dev.0](https://github.com/ElonH/RcloneNg/compare/v0.3.2...v0.4.0-dev.0) (2020-06-18)
 
 
 ### ⚠ BREAKING CHANGES
@@ -13,6 +13,7 @@ detail dialog.
 
 ### Features
 
+* **dashboard:** add version card ([a36fcbe](https://github.com/ElonH/RcloneNg/commit/a36fcbe91912a1f35c9c84693b4c96647d72d268))
 * **home-mode:** support remote detail on mobile view ([2015e2f](https://github.com/ElonH/RcloneNg/commit/2015e2fea6db9fa7eb2adc3b3b5f755c33a52031))
 * **jobs-manager:** clean finished groups ([188fcdf](https://github.com/ElonH/RcloneNg/commit/188fcdf56cc00ab0f9be5520714ea09677c15259))
 * **jobs-manager:** enable reset stats ([ec025bd](https://github.com/ElonH/RcloneNg/commit/ec025bd8d4a0322f7bcf3b1bfd7cf1f4303f9e1a))
