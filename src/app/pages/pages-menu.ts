@@ -30,6 +30,11 @@ export const MENU_ITEMS: NbMenuItem[] = [
 		link: 'jobs',
 	},
 	{
+		title: 'Share Manager',
+		icon: 'share-outline',
+		link: 'share',
+	},
+	{
 		title: 'Settings',
 		group: true,
 	},

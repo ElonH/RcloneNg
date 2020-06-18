@@ -2,8 +2,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { DashboardModule } from './dashboard/dashboard.module';
-import { JobsModule } from './jobs/jobs.module';
-import { ManagerModule } from './manager/manager.module';
 import { PagesComponent } from './pages.component';
 import { UserModule } from './user/user.module';
 
@@ -31,6 +29,10 @@ const routes: Routes = [
 				path: 'jobs',
 				loadChildren: () => import('./jobs/jobs.module').then(m => m.JobsModule),
 				// loadChildren: () => JobsModule,
+			},
+			{
+				path: 'share',
+				loadChildren: () => import('./share/share.module').then(m => m.ShareModule),
 			},
 			{
 				path: 'settings',
