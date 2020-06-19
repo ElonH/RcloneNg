@@ -1,9 +1,10 @@
 import { Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { NbToastrService } from '@nebular/theme';
 import { overlayConfigFactory } from 'ngx-modialog-7';
 // tslint:disable-next-line: no-submodule-imports
 import { Modal, VEXModalContext } from 'ngx-modialog-7/plugins/vex';
-import { combineLatest, Subject } from 'rxjs';
+import { combineLatest, Observable, of, Subject } from 'rxjs';
 import { map, withLatestFrom } from 'rxjs/operators';
 import { CombErr } from '../../../@dataflow/core';
 import {
@@ -15,6 +16,8 @@ import {
 	OperationsAboutFlow,
 	OperationsFsinfoFlow,
 	OperationsFsinfoFlowInNode,
+	ShareCreateFlow,
+	ShareCreateFlowInNode,
 } from '../../../@dataflow/rclone';
 import { RngSpaceUsageChartComponent } from '../../../components/space-usage-chart/space-usage-chart.component';
 import { ConnectionService } from '../../connection.service';
@@ -28,6 +31,9 @@ import { DownloadFileService } from './download-file.service';
 			<img [src]="'assets/icons/' + typeIcon" />
 			<h5>{{ name }}</h5>
 			<button nbButton (click)="download()" *ngIf="!isDir">download</button>
+			<button nbButton (click)="plyr()" *ngIf="!isDir && mimeType.startsWith('video/')">
+				play in plyr
+			</button>
 			<app-rng-space-usage-chart *ngIf="isDir" [loading]="loadingAbout">
 			</app-rng-space-usage-chart>
 		</div>
@@ -66,6 +72,9 @@ import { DownloadFileService } from './download-file.service';
 				display: flex;
 				flex-direction: column;
 			}
+			.detail > button {
+				margin: 0.5rem 0;
+			}
 			img {
 				width: 8rem;
 				margin: 0 auto;
@@ -86,7 +95,8 @@ export class FileDetailComponent implements OnInit {
 		private serverSettingService: ServerSettingService,
 		public modal: Modal,
 		private toastrService: NbToastrService,
-		private cmdService: ConnectionService
+		private cmdService: ConnectionService,
+		private router: Router
 	) {}
 
 	/** if user wasn't select any item, right sidebar can show current directory detail. */
@@ -97,6 +107,7 @@ export class FileDetailComponent implements OnInit {
 	name = '';
 	isDir = true;
 	typeIcon = '';
+	mimeType = '';
 
 	private downloadTrigger = new Subject<number>();
 	private aboutTrigger = new Subject<NavigationFlowOutNode>();
@@ -114,6 +125,7 @@ export class FileDetailComponent implements OnInit {
 		this.name = x.Name || '';
 		this.isDir = x.IsDir;
 		this.typeIcon = x.TypeIcon;
+		this.mimeType = x.MimeType;
 		if (this.remote !== '' && this.path !== '' && this.name !== '') this.currentDirDetail = false;
 		if (!this.currentDirDetail && this.isDir) {
 			this.loadingAbout = true;
@@ -200,5 +212,45 @@ export class FileDetailComponent implements OnInit {
 			setTimeout(() => {
 				this.itemNode(this.initNode);
 			}, 100);
+	}
+
+	createShare() {
+		const outer = this;
+		const shareCreate$ = new (class extends ShareCreateFlow {
+			public prerequest$: Observable<CombErr<ShareCreateFlowInNode>> = of(1).pipe(
+				withLatestFrom(outer.cmdService.listCmd$.verify(this.cmd)),
+				map(
+					([, cmdNode]): CombErr<ShareCreateFlowInNode> => {
+						if (cmdNode[1].length !== 0) return [{}, cmdNode[1]] as any;
+						return [
+							{
+								...cmdNode[0],
+								fs: outer.remote + ':',
+								remote: outer.path,
+							},
+							[],
+						];
+					}
+				)
+			);
+		})();
+		shareCreate$.deploy();
+		return shareCreate$.getSupersetOutput();
+	}
+
+	plyr() {
+		this.createShare().subscribe(x => {
+			if (x[1].length !== 0) return;
+			const url = this.router.serializeUrl(
+				this.router.createUrlTree(['plugins', 'plyr'], {
+					queryParams: {
+						mimeType: this.mimeType,
+						link: x[0].url + '/' + x[0].sharedLink,
+						name: this.name,
+					},
+				})
+			);
+			window.open('#' + url, '_blank');
+		});
 	}
 }

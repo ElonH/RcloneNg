@@ -5,6 +5,7 @@ import { PluginsComponent } from './plugins.component';
 
 const routes: Routes = [
 	{ path: '', component: PluginsComponent },
+	{ path: 'plyr', loadChildren: () => import('./plyr/plyr.module').then(m => m.PlyrPluginModule) },
 ];
 
 @NgModule({

@@ -11,6 +11,7 @@
 @import '~vex-js/dist/css/vex-theme-plain.css';
 @import '~vex-js/dist/css/vex-theme-top.css';
 @import '~vex-js/dist/css/vex-theme-wireframe.css';
+@import '~plyr/src/sass/plyr.scss';
 
 @include nb-install() {
 	@include nb-theme-global();
