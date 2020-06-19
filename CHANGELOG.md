@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## [0.4.0-dev.0](https://github.com/ElonH/RcloneNg/compare/v0.3.2...v0.4.0-dev.0) (2020-06-18)
+## [0.4.0-dev.0](https://github.com/ElonH/RcloneNg/compare/v0.3.2...v0.4.0-dev.0) (2020-06-19)
 
 
 ### ⚠ BREAKING CHANGES
@@ -18,6 +18,7 @@ detail dialog.
 * **jobs-manager:** clean finished groups ([188fcdf](https://github.com/ElonH/RcloneNg/commit/188fcdf56cc00ab0f9be5520714ea09677c15259))
 * **jobs-manager:** enable reset stats ([ec025bd](https://github.com/ElonH/RcloneNg/commit/ec025bd8d4a0322f7bcf3b1bfd7cf1f4303f9e1a))
 * **list-view:** support file detail on mobile view ([ce36cf2](https://github.com/ElonH/RcloneNg/commit/ce36cf25cff32627041d2899af7a4dcce303191d))
+* **pages:** show response time ([9a02b22](https://github.com/ElonH/RcloneNg/commit/9a02b22ea56d46ce3be11407c5f32b73221c5534))
 
 
 ### Bug Fixes
