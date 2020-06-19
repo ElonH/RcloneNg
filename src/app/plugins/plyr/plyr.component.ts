@@ -26,7 +26,7 @@ export class RngPlyrComponent implements OnInit {
 	Options: Plyr.Options & { blankVideo: string } = {
 		iconUrl: 'assets/plyr/plyr.svg',
 		blankVideo: 'assets/plyr/blank.mp4',
-		autoplay: true,
+		autoplay: false,
 	};
 
 	videoSources: Plyr.Source[] = [];
