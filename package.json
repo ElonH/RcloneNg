@@ -26,6 +26,8 @@
     "release:dry": "standard-version --dry-run",
     "release": "standard-version",
     "build": "ng build",
+    "build:stats": "ng build --stats-json",
+    "analyze": "webpack-bundle-analyzer dist/RcloneNg/stats-es2015.json",
     "test": "ng test",
     "lint": "ng lint",
     "deploy:dry": "ng deploy --dry-run",
@@ -99,7 +101,8 @@
     "tslint-angular": "^3.0.2",
     "tslint-config-prettier": "^1.18.0",
     "typescript": "~3.8.3",
-    "vscode-icons": "git+https://github.com/vscode-icons/vscode-icons.git#b40aa3dfff732920a76e49bd437284a49f972ac6"
+    "vscode-icons": "git+https://github.com/vscode-icons/vscode-icons.git#b40aa3dfff732920a76e49bd437284a49f972ac6",
+    "webpack-bundle-analyzer": "^3.8.0"
   },
   "config": {
     "commitizen": {
