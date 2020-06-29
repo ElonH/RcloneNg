@@ -1,6 +1,6 @@
 import { HumanizeDuration, HumanizeDurationLanguage } from 'humanize-duration-ts';
 
-const langService = new HumanizeDurationLanguage();
+export const langService = new HumanizeDurationLanguage();
 langService.addLanguage('shortEn', {
 	y: () => 'y',
 	mo: () => 'mo',
@@ -17,4 +17,5 @@ ForamtDuration.setOptions({
 	language: 'shortEn',
 	round: true,
 	units: ['y', 'mo', 'd', 'h', 'm', 's'],
+	largest: 6,
 });

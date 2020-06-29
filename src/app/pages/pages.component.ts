@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { NbMenuItem, NbSidebarService } from '@nebular/theme';
+import { HumanizeDuration } from 'humanize-duration-ts';
 import { ResponsiveSizeInfoRx } from 'ngx-responsive';
-import { ForamtDuration } from '../utils/format-duration';
+import { langService } from '../utils/format-duration';
 import { ConnectionService } from './connection.service';
 import { CurrentUserService } from './current-user.service';
 import { MENU_ITEMS } from './pages-menu';
@@ -110,10 +111,14 @@ export class PagesComponent implements OnInit {
 				this.menu[0].title = this.currUser + ' ∞';
 				return;
 			}
-			this.menu[0].title = `${this.currUser} ${ForamtDuration.humanize(x[0]['response-time'], {
+			const ForamtDuration = new HumanizeDuration(langService);
+			ForamtDuration.setOptions({
+				language: 'shortEn',
+				round: true,
 				units: ['m', 's', 'ms'],
 				largest: 2,
-			})}`;
+			});
+			this.menu[0].title = `${this.currUser} ${ForamtDuration.humanize(x[0]['response-time'])}`;
 		});
 	}
 }
