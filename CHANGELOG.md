@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## [0.4.0-dev.0](https://github.com/ElonH/RcloneNg/compare/v0.3.2...v0.4.0-dev.0) (2020-06-27)
+## [0.4.0-dev.0](https://github.com/ElonH/RcloneNg/compare/v0.3.2...v0.4.0-dev.0) (2020-06-29)
 
 
 ### ⚠ BREAKING CHANGES
@@ -23,6 +23,7 @@ detail dialog.
 
 ### Bug Fixes
 
+* avoid duration format error on other page ([a1c4f75](https://github.com/ElonH/RcloneNg/commit/a1c4f7521a69c80b30abffe424785a2e1f681215))
 * **file-manager:** footer over main sidebar in mobile view ([48b855a](https://github.com/ElonH/RcloneNg/commit/48b855a7f434573a45d671dfcc2f5609a151e10a)), closes [#2](https://github.com/ElonH/RcloneNg/issues/2)
 * **jobs-manager:** no animation on refresh button in mobile view ([b0d21d7](https://github.com/ElonH/RcloneNg/commit/b0d21d74161a45847b461fe763b23dd701a0e746))
 * **list-view:** prevent showing detail when checking item ([a2a4fa2](https://github.com/ElonH/RcloneNg/commit/a2a4fa2c5dbe532cf224bdc030bf579bf3a591bd))
