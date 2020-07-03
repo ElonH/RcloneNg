@@ -38,6 +38,7 @@ jobs:
         run: |
           npm run build:prod
       - name: deploy github page
+        if: github.event_name == 'push'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
