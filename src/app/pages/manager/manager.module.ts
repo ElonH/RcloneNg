@@ -36,7 +36,6 @@ import { RemoteComponent } from './homeMode/remote.component';
 import { RemoteDetailComponent } from './homeMode/remote.detail';
 import { ManagerRoutingModule } from './manager-routing.module';
 import { ManagerComponent } from './manager.component';
-import { TasksDialogComponent } from './tasks/tasks.dialog';
 
 @NgModule({
 	declarations: [
@@ -48,7 +47,6 @@ import { TasksDialogComponent } from './tasks/tasks.dialog';
 		ListViewComponent,
 		ClipboardDialogComponent,
 		ClipboardRemotesTableComponent,
-		TasksDialogComponent,
 		MkdirDialogComponent,
 		RemoteDetailComponent,
 		FileDetailComponent,

@@ -65,6 +65,7 @@
     "ngx-monaco-editor": "^9.0.0",
     "ngx-pagination": "^5.0.0",
     "ngx-responsive": "^9.0.3",
+    "p-queue": "^6.4.0",
     "popper.js": "^1.16.1",
     "rxjs": "~6.5.4",
     "tslib": "^1.13.0",

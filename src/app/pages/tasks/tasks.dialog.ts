@@ -3,9 +3,10 @@ import { Columns, Config } from 'ngx-easy-table';
 import { DialogRef, ModalComponent } from 'ngx-modialog-7';
 // tslint:disable-next-line: no-submodule-imports
 import { DialogPreset } from 'ngx-modialog-7/plugins/vex/ngx-modialog-7-plugins-vex';
-import { ClipboardItem, IManipulate } from '../../../@dataflow/extra';
+import { ClipboardItem, IManipulate, Manipulate2Icon } from '../../../@dataflow/extra';
 import { TaskService } from './tasks.service';
 
+// TODO: deprecate or reconstruct it
 @Component({
 	selector: 'app-manager-tasks-dialog',
 	template: `
@@ -116,6 +117,8 @@ export class TasksDialogComponent implements OnInit, ModalComponent<DialogPreset
 	failSize = 0;
 	failData: ClipboardItem[] = [];
 
+	public manipulate2Icon = Manipulate2Icon;
+
 	ngOnInit() {
 		this.service.detail$.getOutput().subscribe(x => {
 			if (x[1].length !== 0) return;
@@ -126,11 +129,6 @@ export class TasksDialogComponent implements OnInit, ModalComponent<DialogPreset
 			this.orderData = order.values;
 			this.failData = fail.values;
 		});
-	}
-
-	public manipulate2Icon(o: IManipulate): string {
-		if (o === 'del') return 'trash-2';
-		return o;
 	}
 
 	retryFailure() {

@@ -11,6 +11,7 @@ import { API, APIDefinition, Columns, Config, DefaultConfig } from 'ngx-easy-tab
 import { Subscription } from 'rxjs';
 import {
 	IManipulate,
+	Manipulate2Icon,
 	NavigationFlowOutNode,
 	OperationsListExtendsFlow,
 	OperationsListExtendsFlowOutItemNode,
@@ -160,13 +161,9 @@ export class ListViewComponent implements OnInit, OnDestroy {
 			if (!x.check) return;
 			this.clipboardService.add(o, this.remote, x);
 			x.check = false;
-			x.ManipulateIcon = this.manipulate2Icon(o);
+			x.ManipulateIcon = Manipulate2Icon(o);
 		});
 		this.onToggle();
-	}
-	private manipulate2Icon(o: IManipulate): string {
-		if (o === 'del') return 'trash-2';
-		return o;
 	}
 
 	ngOnInit() {
@@ -187,7 +184,7 @@ export class ListViewComponent implements OnInit, OnDestroy {
 			this.data = listNode[0].list as any;
 			this.data.forEach(x => {
 				x.check = false;
-				x.ManipulateIcon = this.manipulate2Icon(x.Manipulation);
+				x.ManipulateIcon = Manipulate2Icon(x.Manipulation);
 			});
 		});
 	}

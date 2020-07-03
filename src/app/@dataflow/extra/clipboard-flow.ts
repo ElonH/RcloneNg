@@ -4,6 +4,10 @@ import { NavigationFlowOutNode } from './navigation-flow';
 
 export type IManipulate = 'copy' | 'move' | 'del';
 
+export function Manipulate2Icon(o: IManipulate): string {
+	if (o === 'del') return 'trash-2';
+	return o;
+}
 export interface ClipboardItem {
 	oper: IManipulate;
 	key: string;

@@ -10,12 +10,14 @@ import { distinctUntilChanged, map, takeWhile, withLatestFrom } from 'rxjs/opera
 import { CombErr } from '../../@dataflow/core';
 import {
 	IManipulate,
+	Manipulate2Icon,
 	NavigationFlow,
 	NavigationFlowOutNode,
 	OperationsListExtendsFlowOutItemNode,
 } from '../../@dataflow/extra';
 import { OperationsMkdirFlow, OperationsMkdirFlowInNode } from '../../@dataflow/rclone';
 import { ConnectionService } from '../connection.service';
+import { TasksQueueService } from '../tasks/tasks-queue.service';
 import { ClipboardDialogComponent } from './clipboard/clipboard.dialog';
 import { ClipboardService } from './clipboard/clipboard.service';
 import { MkdirDialogComponent } from './dialogs/mkdir.dialog';
@@ -23,8 +25,6 @@ import { FileDetailComponent } from './fileMode/file.detail';
 import { FileModeComponent } from './fileMode/fileMode.component';
 import { HomeModeComponent } from './homeMode/homeMode.component';
 import { RemoteDetailComponent } from './homeMode/remote.detail';
-import { TasksDialogComponent } from './tasks/tasks.dialog';
-import { TaskService } from './tasks/tasks.service';
 
 @Component({
 	selector: 'app-manager',
@@ -96,10 +96,6 @@ import { TaskService } from './tasks/tasks.service';
 						status="info"
 						position="top end"
 					></nb-badge>
-				</nb-action>
-				<nb-action style="padding-right: 1.5rem;padding-left: 0.5rem;" (click)="tasksDialog()">
-					<nb-icon icon="email-outline" style="font-size: 1.5rem"> </nb-icon>
-					<nb-badge *ngIf="orderCnt" [text]="orderCnt" status="info" position="top end"></nb-badge>
 				</nb-action>
 			</nb-actions>
 		</nb-layout-footer>
@@ -173,12 +169,12 @@ export class ManagerComponent implements OnInit, OnDestroy {
 		private connectService: ConnectionService,
 		private toastrService: NbToastrService,
 		private clipboard: ClipboardService,
-		private taskService: TaskService,
 		private resp: ResponsiveSizeInfoRx,
 		public modal: Modal,
 		private router: Router,
 		private route: ActivatedRoute,
-		private sidebarService: NbSidebarService
+		private sidebarService: NbSidebarService,
+		private tasksQueueService: TasksQueueService
 	) {}
 	homeMode = false;
 	fileMode = false;
@@ -258,32 +254,22 @@ export class ManagerComponent implements OnInit, OnDestroy {
 
 	private mkdirDeploy() {
 		const outer = this;
-		this.mkdir$ = new (class extends OperationsMkdirFlow {
-			public prerequest$: Observable<CombErr<OperationsMkdirFlowInNode>> = outer.mkdirTrigger.pipe(
-				withLatestFrom(outer.nav$.getOutput(), outer.connectService.listCmd$.verify(this.cmd)),
-				map(
-					([path, navNode, cmdNode]): CombErr<OperationsMkdirFlowInNode> => {
-						const err = [].concat(navNode[1], cmdNode[1]);
-						if (err.length !== 0) return [{}, err] as any;
-						// console.log({ ...cmdNode[0], remote: navNode[0].remote, path: path });
-						// return [{}, err] as any;
-						if (navNode[0].path) {
-							path = [navNode[0].path, path].join('/');
-						}
-						outer.toastrService.default('Creating directory', 'Waiting...');
-						return [{ ...cmdNode[0], remote: navNode[0].remote, path }, []];
+		outer.mkdirTrigger.pipe(withLatestFrom(outer.nav$.getOutput())).subscribe(
+			([path, navNode]): CombErr<NavigationFlowOutNode> => {
+				if (navNode[1].length !== 0) return navNode as any;
+				if (navNode[0].path) {
+					path = [navNode[0].path, path].join('/');
+				}
+				outer.toastrService.default('Creating directory', 'Waiting...');
+				this.tasksQueueService.AddTaskMkdir([{ remote: navNode[0].remote, path }, []]).then(x => {
+					if (x[1].length !== 0) {
+						this.toastrService.danger('create dir failure');
+					} else {
+						this.toastrService.success('create dir success');
 					}
-				)
-			);
-		})();
-		this.mkdir$.deploy();
-		this.mkdir$.getOutput().subscribe(x => {
-			if (x[1].length !== 0) {
-				this.toastrService.danger('create dir failure');
-			} else {
-				this.toastrService.success('create dir success');
+				});
 			}
-		});
+		);
 	}
 	private clipboardDeploy() {
 		this.clipboard.clipboard$.getOutput().subscribe(node => {
@@ -294,7 +280,19 @@ export class ManagerComponent implements OnInit, OnDestroy {
 	private pasteDeploy() {
 		this.pasteTrigger.pipe(withLatestFrom(this.nav$.getOutput())).subscribe(([opers, dstNode]) => {
 			if (dstNode[1].length !== 0) throw Error("can't not get destination.");
-			this.taskService.createTask(dstNode[0], ...opers);
+			opers.forEach(oper => {
+				this.clipboard.post(dstNode[0], oper).then(val => {
+					if (val[1].length === 0)
+						this.toastrService.success(`"${oper}" tasks sent to server`, 'Success', {
+							icon: Manipulate2Icon(oper),
+						});
+					else
+						this.toastrService.danger(`"${oper}" tasks sent to server`, 'Failure', {
+							icon: Manipulate2Icon(oper),
+							destroyByClick: true,
+						});
+				});
+			});
 		});
 	}
 
@@ -305,24 +303,6 @@ export class ManagerComponent implements OnInit, OnDestroy {
 	clipboardDialog() {
 		this.modal
 			.open(ClipboardDialogComponent, overlayConfigFactory({ isBlocking: false }, VEXModalContext))
-			.result.then(
-				confirm => {
-					if (confirm === true) this.pasteTrigger.next(['del']);
-				},
-				() => {}
-			);
-	}
-
-	private tasksDeploy() {
-		this.taskService.detail$.getOutput().subscribe(x => {
-			if (x[1].length !== 0) return;
-			this.orderCnt = x[0].order.size + x[0].failure.size;
-		});
-	}
-
-	tasksDialog() {
-		this.modal
-			.open(TasksDialogComponent, overlayConfigFactory({ isBlocking: false }, VEXModalContext))
 			.result.then(
 				confirm => {
 					if (confirm === true) this.pasteTrigger.next(['del']);
@@ -394,7 +374,6 @@ export class ManagerComponent implements OnInit, OnDestroy {
 		this.mkdirDeploy();
 		this.clipboardDeploy();
 		this.pasteDeploy();
-		this.tasksDeploy();
 	}
 
 	ngOnDestroy() {
