@@ -2,6 +2,35 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.4.0](https://github.com/ElonH/RcloneNg/compare/v0.3.2...v0.4.0) (2020-07-03)
+
+
+### ⚠ BREAKING CHANGES
+
+* **tasks:** remove tasks viewer
+* **list-view:** In Mobile View, double click to open directory, lomg press it to popup detail log.
+* **home-mode:** In Mobile View, double click remote item to enter file system,and long press it to popup
+detail dialog.
+
+### Features
+
+* **dashboard:** add version card ([a36fcbe](https://github.com/ElonH/RcloneNg/commit/a36fcbe91912a1f35c9c84693b4c96647d72d268))
+* **home-mode:** support remote detail on mobile view ([2015e2f](https://github.com/ElonH/RcloneNg/commit/2015e2fea6db9fa7eb2adc3b3b5f755c33a52031))
+* **jobs-manager:** clean finished groups ([188fcdf](https://github.com/ElonH/RcloneNg/commit/188fcdf56cc00ab0f9be5520714ea09677c15259))
+* **jobs-manager:** enable reset stats ([ec025bd](https://github.com/ElonH/RcloneNg/commit/ec025bd8d4a0322f7bcf3b1bfd7cf1f4303f9e1a))
+* **list-view:** support file detail on mobile view ([ce36cf2](https://github.com/ElonH/RcloneNg/commit/ce36cf25cff32627041d2899af7a4dcce303191d))
+* **pages:** show response time ([9a02b22](https://github.com/ElonH/RcloneNg/commit/9a02b22ea56d46ce3be11407c5f32b73221c5534))
+
+
+### Bug Fixes
+
+* **file-manager:** footer over main sidebar in mobile view ([48b855a](https://github.com/ElonH/RcloneNg/commit/48b855a7f434573a45d671dfcc2f5609a151e10a)), closes [#2](https://github.com/ElonH/RcloneNg/issues/2)
+* **jobs-manager:** no animation on refresh button in mobile view ([b0d21d7](https://github.com/ElonH/RcloneNg/commit/b0d21d74161a45847b461fe763b23dd701a0e746))
+* **list-view:** prevent showing detail when checking item ([a2a4fa2](https://github.com/ElonH/RcloneNg/commit/a2a4fa2c5dbe532cf224bdc030bf579bf3a591bd))
+* avoid duration format error on other page ([a1c4f75](https://github.com/ElonH/RcloneNg/commit/a1c4f7521a69c80b30abffe424785a2e1f681215))
+* cancel underline in <a> ([6c179fa](https://github.com/ElonH/RcloneNg/commit/6c179fa3e7a7d26042dfbbf28d97e9f4462629e9))
+* **tasks:** paste again not work around ([c339dfa](https://github.com/ElonH/RcloneNg/commit/c339dfa07fb7f99a6ccf62ac64f6b5398e9e2185))
+
 ### [0.3.2](https://github.com/ElonH/RcloneNg/compare/v0.3.1...v0.3.2) (2020-06-14)
 
 
