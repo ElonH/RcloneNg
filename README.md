@@ -2,6 +2,7 @@
 
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/elonh/rcloneng)
 ![GitHub All Releases](https://img.shields.io/github/downloads/elonh/rcloneng/total)
+[![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/ElonH/RcloneNg)
 
 An angular web application for rclone
 
@@ -43,14 +44,22 @@ rclone rcd --rc-user=<user> --rc-pass=<password> --rc-allow-origin="http://local
 
 2. getting RcloneNg
 
-```bash
-git clone https://github.com/ElonH/RcloneNg.git
-cd RcloneNg
-npm install # NodeJs version >= 10
-npm run start
-```
+   - local way
 
-> NB: if set `--rc-allow-origin="https://elonh.github.io"`, <https://elonh.github.io/RcloneNg> can be used directly.
+     ```bash
+     git clone https://github.com/ElonH/RcloneNg.git
+     cd RcloneNg
+     npm install # NodeJs version >= 10
+     npm run start
+     ```
+
+   - online way
+
+     [![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/ElonH/RcloneNg)
+
+   - lazy way
+
+     if set `--rc-allow-origin="https://elonh.github.io"`, <https://elonh.github.io/RcloneNg> can be used directly.
 
 3. editing server connection in RcloneNg.
 

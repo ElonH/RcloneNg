@@ -1,0 +1,9 @@
+tasks:
+  - init: npm install
+    command: npm run start
+
+vscode:
+  extensions:
+    - Angular.ng-template@0.1000.1:SI9sdELNl5vkSjqL6IsEnA==
+    - esbenp.prettier-vscode@5.1.0:M3Ww4EayZWhGCgk49C1Ldw==
+    - DavidAnson.vscode-markdownlint@0.36.1:5xO8Po7lfq/3zIQ0RF9qXQ==
