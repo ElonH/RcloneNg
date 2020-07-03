@@ -2,7 +2,9 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## [0.4.0-dev.0](https://github.com/ElonH/RcloneNg/compare/v0.3.2...v0.4.0-dev.0) (2020-07-03)
+### [0.4.1-dev.0](https://github.com/ElonH/RcloneNg/compare/v0.4.0...v0.4.1-dev.0) (2020-07-03)
+
+## [0.4.0](https://github.com/ElonH/RcloneNg/compare/v0.3.2...v0.4.0) (2020-07-03)
 
 
 ### ⚠ BREAKING CHANGES
@@ -24,12 +26,12 @@ detail dialog.
 
 ### Bug Fixes
 
-* **tasks:** paste again not work around ([c339dfa](https://github.com/ElonH/RcloneNg/commit/c339dfa07fb7f99a6ccf62ac64f6b5398e9e2185))
-* avoid duration format error on other page ([a1c4f75](https://github.com/ElonH/RcloneNg/commit/a1c4f7521a69c80b30abffe424785a2e1f681215))
 * **file-manager:** footer over main sidebar in mobile view ([48b855a](https://github.com/ElonH/RcloneNg/commit/48b855a7f434573a45d671dfcc2f5609a151e10a)), closes [#2](https://github.com/ElonH/RcloneNg/issues/2)
 * **jobs-manager:** no animation on refresh button in mobile view ([b0d21d7](https://github.com/ElonH/RcloneNg/commit/b0d21d74161a45847b461fe763b23dd701a0e746))
 * **list-view:** prevent showing detail when checking item ([a2a4fa2](https://github.com/ElonH/RcloneNg/commit/a2a4fa2c5dbe532cf224bdc030bf579bf3a591bd))
+* avoid duration format error on other page ([a1c4f75](https://github.com/ElonH/RcloneNg/commit/a1c4f7521a69c80b30abffe424785a2e1f681215))
 * cancel underline in <a> ([6c179fa](https://github.com/ElonH/RcloneNg/commit/6c179fa3e7a7d26042dfbbf28d97e9f4462629e9))
+* **tasks:** paste again not work around ([c339dfa](https://github.com/ElonH/RcloneNg/commit/c339dfa07fb7f99a6ccf62ac64f6b5398e9e2185))
 
 ### [0.3.2](https://github.com/ElonH/RcloneNg/compare/v0.3.1...v0.3.2) (2020-06-14)
 
