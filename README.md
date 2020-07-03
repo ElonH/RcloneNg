@@ -2,6 +2,8 @@
 
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/elonh/rcloneng)
 ![GitHub All Releases](https://img.shields.io/github/downloads/elonh/rcloneng/total)
+[![Gitpod ready-to-code](https://img.shields.io/badge/Gitpod-ready--to--code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/ElonH/RcloneNg)
+
 
 An angular web application for rclone
 
