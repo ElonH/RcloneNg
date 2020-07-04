@@ -7,7 +7,13 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Features
 
+* **browser-setting:** add item `rng.speedChart.windowSize` ([339a55f](https://github.com/ElonH/RcloneNg/commit/339a55faaddfdc62b7ddea6695557ae194b0193d))
 * **browser-setting:** set some value associated with browser or RcloneNg rather server ([cded9c5](https://github.com/ElonH/RcloneNg/commit/cded9c50deba0758d0927057a80aa9d980439461))
+
+
+### Bug Fixes
+
+* **browser-setting-flow:** existed data is build on default settings ([e102370](https://github.com/ElonH/RcloneNg/commit/e10237090ab63003099e3b3076d41147f9d9cbb9))
 
 ## [0.4.0](https://github.com/ElonH/RcloneNg/compare/v0.3.2...v0.4.0) (2020-07-03)
 
