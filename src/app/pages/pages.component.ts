@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { NbMenuItem, NbSidebarService } from '@nebular/theme';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { NbMenuItem, NbSidebarComponent, NbSidebarService } from '@nebular/theme';
 import { HumanizeDuration } from 'humanize-duration-ts';
 import { ResponsiveSizeInfoRx } from 'ngx-responsive';
 import { langService } from '../utils/format-duration';
 import { ConnectionService } from './connection.service';
 import { CurrentUserService } from './current-user.service';
+import { LayoutService, SidebarStatus } from './layout.service';
 import { MENU_ITEMS } from './pages-menu';
 
 @Component({
@@ -61,7 +62,8 @@ export class PagesComponent implements OnInit {
 		private sidebarService: NbSidebarService,
 		private currUserService: CurrentUserService,
 		private rstService: ConnectionService,
-		private resp: ResponsiveSizeInfoRx
+		private resp: ResponsiveSizeInfoRx,
+		private layoutService: LayoutService
 	) {
 		resp.connect();
 	}
@@ -71,8 +73,22 @@ export class PagesComponent implements OnInit {
 
 	currUser = '';
 
+	@ViewChild(NbSidebarComponent, { static: true }) nav: NbSidebarComponent;
+
 	toggleNav() {
 		this.sidebarService.toggle(false, 'nav');
+		this.updateLayout();
+	}
+
+	private updateLayout() {
+		const status: SidebarStatus = this.mainSideBarFixed
+			? SidebarStatus.None
+			: this.nav.collapsed
+			? SidebarStatus.None
+			: this.nav.expanded
+			? SidebarStatus.Full
+			: SidebarStatus.Icon;
+		this.layoutService.mainSidebarTrigger.next(status);
 	}
 
 	ngOnInit(): void {
@@ -80,6 +96,7 @@ export class PagesComponent implements OnInit {
 			this.mainSideBarFixed = data === 'xs' || data === 'sm' || data === 'md';
 			if (!this.mainSideBarFixed) this.sidebarService.expand('nav');
 			else this.sidebarService.collapse('nav');
+			this.updateLayout();
 		});
 		this.currUserService.currentUserFlow$.getSupersetOutput().subscribe(node => {
 			if (node[1].length !== 0) return;
