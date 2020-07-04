@@ -56,14 +56,15 @@ export abstract class BrowserSettingFlow extends BareFlow<
 > {
 	public abstract prerequest$: Observable<CombErr<NestedPartial<IBrowserSetting>>>;
 	protected data: IBrowserSetting;
+	private readonly defaultData = JSON.stringify(brwoserSettingDefault);
 	constructor() {
 		super();
 		let strg = localStorage.getItem('browserConfig');
 		if (!strg) {
-			strg = JSON.stringify(brwoserSettingDefault);
+			strg = this.defaultData;
 			localStorage.setItem('browserConfig', strg);
 		}
-		this.data = JSON.parse(strg);
+		this.data = { ...JSON.parse(this.defaultData), ...JSON.parse(strg) };
 	}
 	protected request(
 		pre: CombErr<NestedPartial<IBrowserSetting>>
