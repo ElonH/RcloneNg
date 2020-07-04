@@ -1,0 +1,17 @@
+{
+	"$ref": "#/definitions/IBrowserSetting",
+	"$schema": "http://json-schema.org/draft-07/schema#",
+	"definitions": {
+		"IBrowserSetting": {
+			"additionalProperties": false,
+			"properties": {
+				"rng.request-interval": {
+					"description": "请求间隔, 需要定时从rclone服务器中获取数据的时间间隔.\n\n单位: 毫秒(ms)\n\n影响范围:\n  - 响应时间的刷新频率(位于主侧栏左上角)\n  - Dashboard 和 Job Manager 的更新间隔\n\n建议:\n  - 如果与 rclone 服务器响应时间小于 100ms(通常在局域网下), 可以适当调低数值",
+					"type": "number"
+				}
+			},
+			"required": ["rng.request-interval"],
+			"type": "object"
+		}
+	}
+}

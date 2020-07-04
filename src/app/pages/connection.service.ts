@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { combineLatest, interval, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { CombErr } from '../@dataflow/core';
 import {
 	ConnectionFlow,
@@ -9,17 +9,24 @@ import {
 	NoopAuthFlowSupNode,
 } from '../@dataflow/rclone';
 import { CurrentUserService } from './current-user.service';
+import { BrowserSettingService } from './settings/browser-setting/browser-setting.service';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class ConnectionService {
-	private timer = interval(3000);
+	private timer: Observable<number>;
 	public rst$: NoopAuthFlow;
 	public connection$: ConnectionFlow;
 	public listCmd$: ListCmdFlow;
 
-	constructor(currentUserService: CurrentUserService) {
+	constructor(
+		currentUserService: CurrentUserService,
+		private browserSettingService: BrowserSettingService
+	) {
+		this.timer = browserSettingService
+			.partialBrowserSetting$('rng.request-interval')
+			.pipe(switchMap(([int, err]) => interval(int)));
 		const outer = this;
 		this.rst$ = new (class extends NoopAuthFlow {
 			public prerequest$ = combineLatest([
