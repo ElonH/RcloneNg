@@ -8,9 +8,13 @@
 				"rng.request-interval": {
 					"description": "请求间隔, 需要定时从rclone服务器中获取数据的时间间隔.\n\n单位: 毫秒(ms)\n\n影响范围:\n  - 响应时间的刷新频率(位于主侧栏左上角)\n  - Dashboard 和 Job Manager 的更新间隔\n\n建议:\n  - 如果与 rclone 服务器响应时间小于 100ms(通常在局域网下), 可以适当调低数值",
 					"type": "number"
+				},
+				"rng.speedChart.windowSize": {
+					"description": "速度图表的时间跨度, 速度图表只会保留最近一段时间内的数据\n\n单位: 秒(s)\n\n原则:\n  - 应小于 `rng.request-interval`(转化为相同单位后)\n\n影响范围:\n  - dashboard 和 Job manager 中的速度图表时间跨度",
+					"type": "number"
 				}
 			},
-			"required": ["rng.request-interval"],
+			"required": ["rng.request-interval", "rng.speedChart.windowSize"],
 			"type": "object"
 		}
 	}

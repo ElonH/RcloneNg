@@ -4,6 +4,7 @@ import * as moment from 'moment';
 import { BaseChartDirective, Color } from 'ng2-charts';
 import { pairwise } from 'rxjs/operators';
 import { CoreStatsFlow } from '../../@dataflow/rclone';
+import { BrowserSettingService } from '../../pages/settings/browser-setting/browser-setting.service';
 import { FormatBytes } from '../../utils/format-bytes';
 
 @Component({
@@ -40,7 +41,7 @@ import { FormatBytes } from '../../utils/format-bytes';
 	],
 })
 export class RngSpeedChartComponent implements OnInit {
-	constructor() {}
+	constructor(private browserSettingService: BrowserSettingService) {}
 	public lineChartData: ChartDataSets[] = [
 		{
 			data: [
@@ -182,6 +183,9 @@ export class RngSpeedChartComponent implements OnInit {
 	speedDiff = 0;
 
 	ngOnInit() {
+		this.browserSettingService
+			.partialBrowserSetting$('rng.speedChart.windowSize')
+			.subscribe(([v, err]) => (this.treadhold = v));
 		const statsOut = this.stats$.getOutput();
 		statsOut.subscribe(node => {
 			if (node[1].length !== 0) return;
