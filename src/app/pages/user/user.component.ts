@@ -1,54 +1,71 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { NbStepComponent, NbStepperComponent } from '@nebular/theme';
-import { Observable, of, Subject } from 'rxjs';
-import { filter, map, tap, withLatestFrom } from 'rxjs/operators';
-import { CombErr, FlowInNode, NothingFlow } from '../../@dataflow/core';
-import { IUser, UsersFlow, UsersFlowOutNode } from '../../@dataflow/extra';
+import { Component, OnInit } from '@angular/core';
+import { overlayConfigFactory } from 'ngx-modialog-7';
+// tslint:disable-next-line: no-submodule-imports
+import { Modal, VEXModalContext } from 'ngx-modialog-7/plugins/vex';
+import { IUser, UsersFlow } from '../../@dataflow/extra';
+import { LayoutService, SidebarStatus } from '../layout.service';
 import { UsersService } from '../users.service';
+import { UserDeleteDialogComponent } from './del/delete.dialog';
 
 @Component({
 	selector: 'app-user',
 	template: `
-		<router-outlet> </router-outlet>
 		<nb-card>
+			<nb-card-header>
+				<nb-icon icon="grid-outline" style="margin-right: 0.5rem;" status="basic"> </nb-icon>
+				Users Manager
+				<nb-actions class="push-to-right" size="small">
+					<nb-action
+						[icon]="{ icon: 'person-add', status: 'primary' }"
+						title="New User"
+						link="./add"
+					>
+					</nb-action>
+				</nb-actions>
+			</nb-card-header>
 			<nb-card-body>
-				<nb-stepper orientation="horizontal" disableStepNavigation>
-					<nb-step label="Operation">
-						<h4>Select an operation</h4>
-						<ng-container *ngFor="let item of operation">
-							<button
-								nbButton
-								class="operation"
-								shape="round"
-								[status]="item.status"
-								(click)="stepsRequest(item.request)"
-							>
-								<nb-icon [icon]="item.icon + '-outline'"></nb-icon>{{ item.text }}
-							</button>
-							<br />
-						</ng-container>
-					</nb-step>
-					<nb-step hidden label="Select">
-						<h4>Select User</h4>
-						<app-user-select (confirm)="selectTrigger.next($event); realNext()"> </app-user-select>
-						<button nbButton (click)="realPrev()">prev</button>
-					</nb-step>
-					<nb-step hidden label="Config">
-						<h4>Configurate User</h4>
-						<app-user-config [select$]="select$" (save)="saveTrigger.next($event); stepper.reset()">
-						</app-user-config>
-						<button nbButton (click)="realPrev()">prev</button>
-					</nb-step>
-					<nb-step hidden label="Confirm">
-						<h4>Delete Confirm</h4>
-						<app-user-confirm
-							[select$]="select$"
-							(delete)="confirmTrigger.next(1); stepper.reset()"
-						>
-						</app-user-confirm>
-						<button nbButton (click)="realPrev()">prev</button>
-					</nb-step>
-				</nb-stepper>
+				<div class="container-fluid" style="padding: 0;">
+					<div class="row">
+						<div class="col-12" *ngFor="let usr of users">
+							<table class="grid-container">
+								<tr>
+									<td rowspan="2" style="padding-right: 1rem;">
+										<nb-icon icon="person-outline"></nb-icon>
+									</td>
+									<td rowspan="1" class="name">{{ usr.name }}</td>
+									<td rowspan="2">
+										<nb-actions size="small">
+											<!-- <nb-action
+												[icon]="{ icon: 'edit-outline', status: 'info' }"
+												title="Edit user"
+											>
+											</nb-action> -->
+											<nb-action
+												[icon]="{ icon: 'trash-outline', status: 'danger' }"
+												title="Delete user"
+												(click)="deleteUser(usr)"
+											>
+											</nb-action>
+										</nb-actions>
+									</td>
+								</tr>
+								<tr>
+									<td
+										rowspan="1"
+										class="url"
+										[ngClass]="{
+											'url-sidebar': mainSidebar,
+											'url-non-sidebar': !mainSidebar,
+											url: true
+										}"
+									>
+										{{ usr.url }}
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</div>
 			</nb-card-body>
 		</nb-card>
 	`,
@@ -58,113 +75,93 @@ import { UsersService } from '../users.service';
 				margin-left: 3rem;
 				margin-bottom: 1rem;
 			}
+
+			nb-card-header {
+				display: flex;
+				align-items: center;
+			}
+			.push-to-right {
+				margin-left: auto;
+			}
+			nb-action {
+				padding: 0 0.5rem !important;
+			}
+			.row > div {
+				border-radius: 0.25rem;
+				margin: 0.25rem 0;
+				box-shadow: 0.5rem 0.125rem 0.5rem 0 rgba(44, 51, 73, 0.1);
+			}
+			.name {
+				padding-top: 0.25rem;
+				width: 100%;
+				font-size: 1.25rem;
+			}
+			.url {
+				width: 100%;
+				color: #8f9bb3;
+				padding-bottom: 0.25rem;
+				overflow-x: auto;
+        display: flex;
+      }
+      .url-sidebar {
+				width: calc(100vw - 10rem - 16rem);
+      }
+      .url-non-sidebar {
+				width: calc(100vw - 10rem);
+      }
+			.url::-webkit-scrollbar {
+				height: 0.315rem;
+			}
+			.url::-webkit-scrollbar-track {
+				border-radius: 10px;
+			}
+			.url::-webkit-scrollbar-thumb {
+				background: #e4e9f2;
+				border-radius: 10px;
+			}
+			.url::-webkit-scrollbar-thumb:hover {
+				background: #8f9bb3;
+			}
+			}
 		`,
 	],
 })
 export class UserComponent implements OnInit {
-	public selectTrigger = new Subject<string>();
-	public select$: NothingFlow<IUser>;
+	public users: IUser[] = [];
 
-	public confirmTrigger = new Subject<number>();
-	public confirm$: NothingFlow<IUser>;
+	public mainSidebar = false;
 
-	public saveTrigger = new Subject<IUser>();
-	public save$: NothingFlow<UsersFlowOutNode>;
-
-	constructor(private usersService: UsersService) {}
-
-	operation = [
-		{ request: [false, true, false], icon: 'plus-square', status: 'primary', text: 'Add user' },
-		{ request: [true, true, false], icon: 'edit', status: 'info', text: 'Edit user' },
-		{ request: [true, false, true], icon: 'trash', status: 'danger', text: 'Delete user' },
-	];
-
-	@ViewChild(NbStepperComponent) stepper: NbStepperComponent;
-
-	stepsRequest(args: boolean[]) {
-		const steps = this.stepper.steps.toArray();
-		steps[1].hidden = !args[0];
-		steps[2].hidden = !args[1];
-		steps[3].hidden = !args[2];
-		this.realNext();
-		this.selectTrigger.next(''); // clear privious result or init value
-	}
-
-	public realNext() {
-		const current = this.stepper.selectedIndex;
-		const steps = this.stepper.steps.toArray();
-		for (let i = current + 1; i < steps.length; i++) {
-			if (steps[i].hidden) this.stepper.next();
-			else {
-				this.stepper.next();
-				return;
-			}
-		}
-	}
-
-	public realPrev() {
-		const current = this.stepper.selectedIndex;
-		const steps = this.stepper.steps.toArray();
-		for (let i = current - 1; i >= 0; i--) {
-			if (steps[i].hidden) this.stepper.previous();
-			else {
-				this.stepper.previous();
-				return;
-			}
-		}
-	}
+	constructor(
+		private usersService: UsersService,
+		private layoutService: LayoutService,
+		public modal: Modal
+	) {}
 
 	ngOnInit(): void {
-		const outer = this;
-		this.select$ = new (class extends NothingFlow<IUser> {
-			public prerequest$: Observable<CombErr<IUser>> = outer.selectTrigger.pipe(
-				withLatestFrom(outer.usersService.usersFlow$.getOutput()),
-				map(
-					([name, usersNode]): CombErr<IUser> => {
-						if (usersNode[1].length !== 0) return [{}, usersNode[1]] as any;
-						if (name === '')
-							return [{ name: '', url: 'http://localhost:5572', user: '', password: '' }, []]; // default value, add new conf
-						const selected = usersNode[0].users.find(x => x.name === name);
-						if (!selected) return [{}, [new Error(`user '${name}'not found`)]] as any;
-						return [selected, []];
-					}
-				)
-			);
-		})();
-		this.select$.deploy();
-
-		this.confirm$ = new (class extends NothingFlow<IUser> {
-			public prerequest$: Observable<CombErr<IUser>> = outer.confirmTrigger.pipe(
-				withLatestFrom(outer.select$.getOutput()),
-				map(([, secNode]): CombErr<IUser> => secNode)
-			);
-		})();
-		this.confirm$.deploy();
-		this.confirm$.getOutput().subscribe(([x, err]) => {
-			if (err.length !== 0) return;
-			UsersFlow.del(x.name);
-			this.usersService.update();
+		this.usersService.usersFlow$.getOutput().subscribe(node => {
+			if (node[1].length !== 0) return;
+			this.users = node[0].users;
 		});
-
-		this.save$ = new (class extends NothingFlow<UsersFlowOutNode> {
-			public prerequest$: Observable<CombErr<UsersFlowOutNode>> = outer.saveTrigger.pipe(
-				withLatestFrom(outer.select$.getOutput(), outer.usersService.usersFlow$.getOutput()),
-				map(
-					([curUser, secNode, usersNode]): CombErr<UsersFlowOutNode> => {
-						if (secNode[1].length !== 0 || usersNode[1].length !== 0)
-							return [{}, [].concat(secNode[1], usersNode[1])] as any;
-						const rst = usersNode[0].users.filter(x => x.name !== secNode[0].name);
-						rst.push(curUser);
-						return [{ users: rst }, []];
-					}
-				)
-			);
-		})();
-		this.save$.deploy();
-		this.save$.getOutput().subscribe(([x, err]) => {
-			if (err.length !== 0) return;
-			UsersFlow.setAll(x.users);
-			this.usersService.update();
+		this.layoutService.mainSidebar$.getOutput().subscribe(node => {
+			if (node[1].length !== 0) return;
+			this.mainSidebar = node[0] !== SidebarStatus.None;
 		});
+	}
+
+	deleteUser(usr: IUser) {
+		this.modal
+			.open(
+				UserDeleteDialogComponent,
+				overlayConfigFactory({ isBlocking: false, content: usr }, VEXModalContext)
+			)
+			.result.then(
+				x => {
+					if (x) {
+						UsersFlow.del(usr.name);
+						this.usersService.update();
+					}
+				},
+				() => {}
+			);
 	}
 }
