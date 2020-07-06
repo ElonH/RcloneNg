@@ -11,10 +11,11 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### Features
 
-* **layout.service:** provide some information to archive responsive view ([9359bc9](https://github.com/ElonH/RcloneNg/commit/9359bc9d6680cbbb178e5048e1003c7f01d6dc77))
-* add subtitle in preloader ([b457e3f](https://github.com/ElonH/RcloneNg/commit/b457e3fea847474aefd600a8d92b0ba0cba9a65e))
 * **browser-setting:** add item `rng.speedChart.windowSize` ([339a55f](https://github.com/ElonH/RcloneNg/commit/339a55faaddfdc62b7ddea6695557ae194b0193d))
 * **browser-setting:** set some value associated with browser or RcloneNg rather server ([cded9c5](https://github.com/ElonH/RcloneNg/commit/cded9c50deba0758d0927057a80aa9d980439461))
+* **layout.service:** provide some information to archive responsive view ([9359bc9](https://github.com/ElonH/RcloneNg/commit/9359bc9d6680cbbb178e5048e1003c7f01d6dc77))
+* **mounts-manager:** show current mount points ([0a0c2e7](https://github.com/ElonH/RcloneNg/commit/0a0c2e76ca264fba17d35a37cdbec99be59f603a))
+* add subtitle in preloader ([b457e3f](https://github.com/ElonH/RcloneNg/commit/b457e3fea847474aefd600a8d92b0ba0cba9a65e))
 
 
 ### Bug Fixes
