@@ -1,6 +1,6 @@
 import { AjaxRequest } from 'rxjs/ajax';
 import { AjaxFlow, CombErr, FlowOutNode, FlowSupNode } from '../core';
-import { IRcloneServer } from '../extra';
+import { IRcloneServer } from './post-flow';
 
 export abstract class GetFlow<
 	Tin extends IRcloneServer,

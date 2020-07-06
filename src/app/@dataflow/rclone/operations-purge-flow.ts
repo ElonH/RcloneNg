@@ -1,5 +1,5 @@
 import { CombErr } from '../core';
-import { IRcloneServer } from '../extra';
+import { IRcloneServer } from './post-flow';
 import { AsyncPostFlow, AsyncPostFlowParamsNode } from './async-post-flow';
 
 export interface OperationsPurgeFlowParamsNode extends AsyncPostFlowParamsNode {

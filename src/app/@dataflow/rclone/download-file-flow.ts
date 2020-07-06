@@ -1,7 +1,7 @@
 import { AjaxRequest, AjaxResponse } from 'rxjs/ajax';
 import { AjaxFlowInteralNode, CombErr } from '../core';
-import { IRcloneServer } from '../extra';
 import { GetFlow } from './get-flow';
+import { IRcloneServer } from './post-flow';
 
 export interface DownloadFileFlowParamsNode {
 	remote: string;

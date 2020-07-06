@@ -2,15 +2,10 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { mapTo } from 'rxjs/operators';
 import { CombErr } from '../../../@dataflow/core';
-import {
-	Clipboard,
-	ClipboardFlow,
-	ClipboardFlowNode,
-	IManipulate,
-	NavigationFlowOutNode,
-} from '../../../@dataflow/extra';
+import { Clipboard, ClipboardFlow, ClipboardFlowNode, IManipulate } from '../../../@dataflow/extra';
 import { Package, Task } from '../../tasks/tasks-queue';
 import { TasksQueueService } from '../../tasks/tasks-queue.service';
+import { NavigationFlowOutNode } from '../../../@dataflow/rclone';
 
 @Injectable({
 	providedIn: 'root',

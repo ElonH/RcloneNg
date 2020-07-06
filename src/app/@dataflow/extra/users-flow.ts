@@ -1,11 +1,6 @@
 import { Observable, of, Subject } from 'rxjs';
 import { BareFlow, CombErr, FlowInNode } from '../core';
-
-export interface IRcloneServer {
-	url: string;
-	user?: string;
-	password?: string;
-}
+import { IRcloneServer } from '../rclone';
 
 export interface IUser extends IRcloneServer {
 	name: string;

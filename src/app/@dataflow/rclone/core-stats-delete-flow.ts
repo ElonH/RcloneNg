@@ -1,6 +1,5 @@
 import { AjaxFlowInteralNode, CombErr, FlowOutNode } from '../core';
-import { IRcloneServer } from '../extra';
-import { PostFlow } from './post-flow';
+import { IRcloneServer, PostFlow } from './post-flow';
 
 export interface CoreStatsDeleteFlowParamsNode {
 	group: string;

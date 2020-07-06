@@ -9,10 +9,10 @@ import {
 } from '@angular/core';
 import { API, APIDefinition, Columns, Config, DefaultConfig } from 'ngx-easy-table';
 import { Subscription } from 'rxjs';
+import { NavigationFlowOutNode } from '../../../../@dataflow/rclone';
 import {
 	IManipulate,
 	Manipulate2Icon,
-	NavigationFlowOutNode,
 	OperationsListExtendsFlow,
 	OperationsListExtendsFlowOutItemNode,
 } from '../../../../@dataflow/extra';

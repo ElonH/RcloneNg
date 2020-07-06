@@ -1,21 +1,19 @@
 import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NbSidebarComponent, NbSidebarService, NbToastrService } from '@nebular/theme';
+import { NbSidebarService, NbToastrService } from '@nebular/theme';
 import { overlayConfigFactory } from 'ngx-modialog-7';
 // tslint:disable-next-line: no-submodule-imports
 import { Modal, VEXModalContext } from 'ngx-modialog-7/plugins/vex';
 import { ResponsiveSizeInfoRx } from 'ngx-responsive';
-import { Observable, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { distinctUntilChanged, map, takeWhile, withLatestFrom } from 'rxjs/operators';
 import { CombErr } from '../../@dataflow/core';
 import {
 	IManipulate,
 	Manipulate2Icon,
-	NavigationFlow,
-	NavigationFlowOutNode,
 	OperationsListExtendsFlowOutItemNode,
 } from '../../@dataflow/extra';
-import { OperationsMkdirFlow, OperationsMkdirFlowInNode } from '../../@dataflow/rclone';
+import { OperationsMkdirFlow, NavigationFlowOutNode, NavigationFlow } from '../../@dataflow/rclone';
 import { ConnectionService } from '../connection.service';
 import { TasksQueueService } from '../tasks/tasks-queue.service';
 import { ClipboardDialogComponent } from './clipboard/clipboard.dialog';
@@ -166,7 +164,6 @@ import { RemoteDetailComponent } from './homeMode/remote.detail';
 })
 export class ManagerComponent implements OnInit, OnDestroy {
 	constructor(
-		private connectService: ConnectionService,
 		private toastrService: NbToastrService,
 		private clipboard: ClipboardService,
 		private resp: ResponsiveSizeInfoRx,

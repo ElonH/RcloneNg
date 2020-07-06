@@ -1,6 +1,5 @@
 import { AjaxFlowInteralNode, CombErr } from '../core';
-import { IRcloneServer } from '../extra';
-import { PostFlow } from './post-flow';
+import { IRcloneServer, PostFlow } from './post-flow';
 
 export interface CoreBwlimitFlowParamsNode {
 	rate?: string;

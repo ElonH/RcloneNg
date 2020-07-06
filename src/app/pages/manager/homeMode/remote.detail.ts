@@ -2,11 +2,11 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { combineLatest, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { CombErr } from '../../../@dataflow/core';
-import { NavigationFlowOutNode } from '../../../@dataflow/extra';
 import {
 	OperationsAboutFlow,
 	OperationsFsinfoFlow,
 	OperationsFsinfoFlowInNode,
+	NavigationFlowOutNode,
 } from '../../../@dataflow/rclone';
 import { RngSpaceUsageChartComponent } from '../../../components/space-usage-chart/space-usage-chart.component';
 import { ConnectionService } from '../../connection.service';

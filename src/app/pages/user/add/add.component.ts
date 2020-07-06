@@ -3,8 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { combineLatest, Observable, Subject, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { CombErr } from '../../../@dataflow/core';
-import { IRcloneServer, IUser, UsersFlow } from '../../../@dataflow/extra';
-import { NoopAuthFlow } from '../../../@dataflow/rclone';
+import { IUser, UsersFlow } from '../../../@dataflow/extra';
+import { IRcloneServer, NoopAuthFlow } from '../../../@dataflow/rclone';
 import { UsersService } from '../../users.service';
 
 @Component({

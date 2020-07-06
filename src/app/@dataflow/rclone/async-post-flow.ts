@@ -1,7 +1,6 @@
 import { AjaxRequest } from 'rxjs/ajax';
 import { AjaxFlowInteralNode, CombErr, FlowSupNode } from '../core';
-import { IRcloneServer } from '../extra';
-import { PostFlow } from './post-flow';
+import { IRcloneServer, PostFlow } from './post-flow';
 
 export interface AsyncPostFlowParamsNode {
 	group?: string;
