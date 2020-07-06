@@ -24,12 +24,13 @@ export abstract class AsyncPostFlow<
 
 	protected requestAjax(x: CombErr<Tin>): AjaxRequest {
 		const res = super.requestAjax(x);
+		// eslint-disable-next-line no-underscore-dangle
 		res.body._async = true;
 		return res;
 	}
 	protected reconstructAjaxResult(x: CombErr<AjaxFlowInteralNode>): CombErr<AsyncPostFlowOutNode> {
 		if (x[1].length !== 0) return [{}, x[1]] as any;
 		const rsp = x[0].ajaxRsp.response;
-		return [{ jobid: rsp['jobid'] }, []];
+		return [{ jobid: rsp.jobid }, []];
 	}
 }

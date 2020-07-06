@@ -15,7 +15,7 @@ export class UserLoginComponent implements OnInit {
 	) {}
 
 	ngOnInit() {
-		const user = UsersFlow.get(this.route.snapshot.queryParams['name']);
+		const user = UsersFlow.get(this.route.snapshot.queryParams.name);
 		if (user) {
 			this.currUserService.switchUser(user.name);
 		}

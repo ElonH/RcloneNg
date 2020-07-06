@@ -3,20 +3,20 @@ import { DebugElement } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
-import { KeyValueTableComponent } from './key-value-table.component';
+import { RngKeyValueTableComponent } from './key-value-table.component';
 
 describe('KeyValueTableComponent', () => {
-	let component: KeyValueTableComponent;
-	let fixture: ComponentFixture<KeyValueTableComponent>;
+	let component: RngKeyValueTableComponent;
+	let fixture: ComponentFixture<RngKeyValueTableComponent>;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [KeyValueTableComponent],
+			declarations: [RngKeyValueTableComponent],
 		}).compileComponents();
 	}));
 
 	beforeEach(() => {
-		fixture = TestBed.createComponent(KeyValueTableComponent);
+		fixture = TestBed.createComponent(RngKeyValueTableComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});

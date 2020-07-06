@@ -98,6 +98,8 @@ export class BrowserSettingComponent implements OnInit {
 				},
 			],
 		});
+		/**
+		 */
 		function updateValue(v: IBrowserSetting) {
 			editor.setValue(JSON.stringify(v, null, 4));
 			editor.trigger('', 'editor.action.formatDocument', {});

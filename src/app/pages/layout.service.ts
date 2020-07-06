@@ -1,6 +1,6 @@
+import { mainModule } from 'process';
 import { Injectable } from '@angular/core';
 import { NbSidebarComponent } from '@nebular/theme';
-import { mainModule } from 'process';
 import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { CombErr, NothingFlow } from '../@dataflow/core';

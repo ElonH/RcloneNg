@@ -1,8 +1,8 @@
 import { Observable, of } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
-import { NoopAuthFlowSupNode } from '.';
 import { CombErr, SupersetFlow } from '../core';
 import { IRcloneServer } from '../extra';
+import { NoopAuthFlowSupNode } from '.';
 
 export abstract class ConnectionFlow extends SupersetFlow<
 	NoopAuthFlowSupNode,

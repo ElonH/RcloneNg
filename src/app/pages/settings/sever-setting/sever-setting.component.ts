@@ -99,6 +99,9 @@ export class SeverSettingComponent implements OnInit {
 				},
 			],
 		});
+		/**
+		 *
+		 */
 		function updateValue(v: IRcloneOptions) {
 			editor.setValue(JSON.stringify(v, null, 4));
 			editor.trigger('', 'editor.action.formatDocument', {});
@@ -129,7 +132,7 @@ export class SeverSettingComponent implements OnInit {
 /**
  * object shouldn't include array
  */
-function difference(oriObj: object, newObj: object) {
+function difference(oriObj: any, newObj: any) {
 	const ans = {};
 	for (const key in newObj) {
 		if (!newObj.hasOwnProperty(key)) continue;

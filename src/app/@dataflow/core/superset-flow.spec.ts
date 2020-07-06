@@ -14,7 +14,7 @@ describe('SupersetFlow', () => {
 	it('prerequest twice(different value), got twice', () => {
 		scheduler.run(helpers => {
 			const { cold, hot, expectObservable, expectSubscriptions, flush } = helpers;
-			const values: { [id: string]: CombErr<{}> } = {
+			const values: { [id: string]: CombErr<any> } = {
 				a: [{ ab: 555 }, []],
 				b: [{ ab: 123 }, []],
 				c: [{ ab: 555, cd: 556 }, []],
@@ -25,8 +25,8 @@ describe('SupersetFlow', () => {
 
 			const rst = new (class extends SupersetFlow<FlowInNode, FlowOutNode> {
 				public prerequest$ = inp;
-				protected request(pre: CombErr<FlowInNode>): Observable<CombErr<FlowOutNode>> {
-					return of([{ cd: pre[0]['ab'] + 1 }, []]);
+				protected request(pre: CombErr<any>): Observable<CombErr<FlowOutNode>> {
+					return of([{ cd: pre[0].ab + 1 }, []]);
 				}
 			})();
 			rst.deploy();

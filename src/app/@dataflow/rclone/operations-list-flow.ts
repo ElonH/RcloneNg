@@ -59,6 +59,6 @@ export abstract class OperationsListFlow extends PostFlow<
 	): CombErr<OperationsListFlowOutNode> {
 		if (x[1].length !== 0) return [{}, x[1]] as any;
 		const rsp = x[0].ajaxRsp.response;
-		return [{ list: rsp['list'] }, []];
+		return [{ list: rsp.list }, []];
 	}
 }

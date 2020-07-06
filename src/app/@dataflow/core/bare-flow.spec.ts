@@ -14,7 +14,7 @@ describe('BareFlow', () => {
 		scheduler.run(helpers => {
 			const { cold, hot, expectObservable, expectSubscriptions, flush } = helpers;
 			const values = {
-				a: [{}, [new Error('123')]] as CombErr<{}>,
+				a: [{}, [new Error('123')]] as CombErr<unknown>,
 			};
 			const inp = cold('a----', values);
 			const expected = 'a----';
@@ -102,7 +102,7 @@ describe('BareFlow', () => {
 				// }
 				public prerequest$ = inp;
 				protected request(pre: CombErr<TestPreNode>): Observable<CombErr<TestPreNode>> {
-					return of([{ ab: pre[0]['ab'] + 1 }, []]);
+					return of([{ ab: pre[0].ab + 1 }, []]);
 				}
 			})();
 			rst.deploy();

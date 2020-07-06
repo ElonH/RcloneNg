@@ -4,6 +4,9 @@ import { NavigationFlowOutNode } from './navigation-flow';
 
 export type IManipulate = 'copy' | 'move' | 'del';
 
+/**
+ * @param o operation
+ */
 export function Manipulate2Icon(o: IManipulate): string {
 	if (o === 'del') return 'trash-2';
 	return o;
