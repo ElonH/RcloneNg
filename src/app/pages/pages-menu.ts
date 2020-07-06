@@ -1,4 +1,4 @@
-import { NbMenuItem } from '@nebular/theme';
+import { NbMenuItem, NbIconConfig } from '@nebular/theme';
 
 export const MENU_ITEMS: NbMenuItem[] = [
 	{
@@ -28,6 +28,14 @@ export const MENU_ITEMS: NbMenuItem[] = [
 		title: 'Jobs Manager',
 		icon: 'briefcase-outline',
 		link: 'jobs',
+	},
+	{
+		title: 'Mounts Manager',
+		icon: {
+			icon: 'list-tree',
+			pack: 'css.gg',
+		} as NbIconConfig,
+		link: 'mounts',
 	},
 	{
 		title: 'Settings',

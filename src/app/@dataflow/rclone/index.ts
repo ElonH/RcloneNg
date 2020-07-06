@@ -26,3 +26,4 @@ export * from './core-stats-delete-flow';
 export * from './core-stats-reset-flow';
 export * from './core-version-flow';
 export * from './navigation-flow';
+export * from './list-mounts-flow';

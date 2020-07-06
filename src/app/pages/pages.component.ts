@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { NbMenuItem, NbSidebarComponent, NbSidebarService } from '@nebular/theme';
+import { NbMenuItem, NbSidebarComponent, NbSidebarService, NbIconLibraries } from '@nebular/theme';
 import { HumanizeDuration } from 'humanize-duration-ts';
 import { ResponsiveSizeInfoRx } from 'ngx-responsive';
 import { langService } from '../utils/format-duration';
@@ -63,9 +63,14 @@ export class PagesComponent implements OnInit {
 		private currUserService: CurrentUserService,
 		private rstService: ConnectionService,
 		private resp: ResponsiveSizeInfoRx,
-		private layoutService: LayoutService
+		private layoutService: LayoutService,
+		private iconLibraries: NbIconLibraries
 	) {
 		resp.connect();
+		this.iconLibraries.registerSvgPack('css.gg', {
+			'list-tree':
+				'<svg width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 24 24"><use xlink:href="/all.svg#gg-list-tree"/></svg>',
+		});
 	}
 	menu = MENU_ITEMS;
 
