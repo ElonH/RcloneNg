@@ -23,7 +23,8 @@
 	"editor.detectIndentation": false,
 	"editor.tabSize": 2,
 	"editor.insertSpaces": false,
-	"typescript.suggest.paths": false,
+	"typescript.suggest.paths": true,
+	"todo-tree.highlights.enabled": false,
 	"todohighlight.isEnable": true,
 	"todohighlight.isCaseSensitive": false,
 	"todohighlight.defaultStyle": {
