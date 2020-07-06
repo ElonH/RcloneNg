@@ -1,0 +1,22 @@
+{
+	"recommendations": [
+		"angular.ng-template",
+		"dbaeumer.vscode-eslint",
+		"esbenp.prettier-vscode",
+		"natewallace.angular2-inline",
+		"cyrilletuzi.angular-schematics",
+		"kamikillerto.vscode-colorize",
+		"msjsdiag.debugger-for-chrome",
+		"dbaeumer.vscode-eslintd",
+		"oderwat.indent-rainbow",
+		"2gua.rainbow-brackets",
+		"mrmlnc.vscode-scss",
+		"nrwl.angular-console",
+		"editorconfig.editorconfig",
+		"johnpapa.angular2",
+		"christian-kohler.path-intellisense",
+		"formulahendry.auto-close-tag",
+		"gruntfuggly.todo-tree",
+		"wayou.vscode-todo-highlight"
+	]
+}
