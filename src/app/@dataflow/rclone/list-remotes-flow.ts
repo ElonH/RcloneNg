@@ -12,11 +12,11 @@ export interface ListRemotesSupNode extends ListRemotesOutNode, NoopAuthFlowSupN
 export abstract class ListRemotesFlow extends PostFlow<IRcloneServer, ListRemotesOutNode> {
 	// public prerequest$: Observable<CombErr<IRcloneServer>>;
 	protected cmd = 'config/listremotes';
-	protected params: object = {};
+	protected params: unknown = {};
 	protected cacheSupport = true;
 	protected reconstructAjaxResult(x: CombErr<AjaxFlowInteralNode>): CombErr<ListRemotesOutNode> {
 		if (x[1].length !== 0) return [{}, x[1]] as any;
 		const rsp = x[0].ajaxRsp.response;
-		return [{ remotes: rsp['remotes'] }, []];
+		return [{ remotes: rsp.remotes }, []];
 	}
 }

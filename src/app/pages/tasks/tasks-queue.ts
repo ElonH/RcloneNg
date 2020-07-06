@@ -24,6 +24,8 @@ export interface Task<Tin, Tout> {
 export class TaskHandlerManager {
 	protected static map: { [name: string]: TaskHandler<any, any> } = {};
 	/**
+	 * @param id global unique id
+	 * @param h handler
 	 * @description Add task handler to global manager.
 	 *
 	 * Recomand to add `id` into type of `Task.handler`.
@@ -83,6 +85,7 @@ export class TasksQueue {
 	}
 
 	/**
+	 * @param t task
 	 * @description Enqueue task
 	 */
 	public async AddTask<Tin, Tout>(t: Task<Tin, Tout>): Promise<CombErr<Tout>> {
@@ -114,7 +117,8 @@ export class TasksQueue {
 			let currItem = iter.next();
 			const rstAll: CombErr<any | any[]>[] = [];
 			while (!currItem.done) {
-				console.log(currItem.value);
+				// TODO: test
+				// console.log(currItem.value);
 				const out: CombErr<any | any[]> = await (Array.isArray(currItem)
 					? this.AddPack(currItem.value as Package)
 					: this.AddTask(currItem.value as Task<any, any>));
@@ -131,6 +135,7 @@ export class TasksQueue {
 	}
 
 	/**
+	 * @param p package
 	 * @description Enqueue package
 	 */
 	public async AddPack(p: Package): Promise<CombErr<any[]>> {
@@ -141,6 +146,7 @@ export class TasksQueue {
 	}
 
 	/**
+	 * @param g group
 	 * @description Enqueue group
 	 */
 	public async AddGroup(g: Group): Promise<CombErr<any[][]>> {

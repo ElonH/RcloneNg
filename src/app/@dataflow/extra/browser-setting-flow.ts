@@ -43,7 +43,7 @@ export const brwoserSettingDefault: IBrowserSetting = {
 };
 
 export type NestedPartial<T> = {
-	[K in keyof T]?: T[K] extends Array<infer R> ? Array<NestedPartial<R>> : NestedPartial<T[K]>;
+	[K in keyof T]?: T[K] extends (infer R)[] ? NestedPartial<R>[] : NestedPartial<T[K]>;
 };
 
 /**

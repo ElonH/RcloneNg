@@ -225,9 +225,9 @@ export class ManagerComponent implements OnInit, OnDestroy {
 				distinctUntilChanged((x, y) => JSON.stringify(x) === JSON.stringify(y)),
 				map(
 					(x): CombErr<NavigationFlowOutNode> => {
-						let remote = x['remote'];
+						let remote = x.remote;
 						if (remote && remote === '') remote = undefined;
-						let path = x['path'];
+						let path = x.path;
 						if (path && path === '') path = undefined;
 
 						outer.homeMode = !remote;

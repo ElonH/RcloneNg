@@ -3,20 +3,20 @@ import { DebugElement } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
-import { SpaceUsageChartComponent } from './space-usage-chart.component';
+import { RngSpaceUsageChartComponent } from './space-usage-chart.component';
 
 describe('SpaceUsageChartComponent', () => {
-	let component: SpaceUsageChartComponent;
-	let fixture: ComponentFixture<SpaceUsageChartComponent>;
+	let component: RngSpaceUsageChartComponent;
+	let fixture: ComponentFixture<RngSpaceUsageChartComponent>;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [SpaceUsageChartComponent],
+			declarations: [RngSpaceUsageChartComponent],
 		}).compileComponents();
 	}));
 
 	beforeEach(() => {
-		fixture = TestBed.createComponent(SpaceUsageChartComponent);
+		fixture = TestBed.createComponent(RngSpaceUsageChartComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});

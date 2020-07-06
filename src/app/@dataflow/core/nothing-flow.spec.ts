@@ -1,7 +1,7 @@
 import { TestScheduler } from 'rxjs/testing';
-import { CombErr } from '.';
 import { FlowInNode } from './bare-flow';
 import { NothingFlow } from './nothing-flow';
+import { CombErr } from '.';
 
 describe('NothingFlow', () => {
 	let scheduler: TestScheduler;
@@ -15,7 +15,7 @@ describe('NothingFlow', () => {
 		scheduler.run(helpers => {
 			const { cold, hot, expectObservable, expectSubscriptions, flush } = helpers;
 			const values = {
-				a: [{ a: '123' }, []] as CombErr<{}>,
+				a: [{ a: '123' }, []] as CombErr<any>,
 			};
 			const inp = cold('a----', values);
 			const expected = 'a----';

@@ -23,7 +23,7 @@ export abstract class ListCmdFlow extends PostFlow<IRcloneServer, ListCmdFlowOut
 	protected reconstructAjaxResult(x: CombErr<AjaxFlowInteralNode>): CombErr<ListCmdFlowOutNode> {
 		if (x[1].length !== 0) return [{}, x[1]] as any;
 		const rsp = x[0].ajaxRsp.response;
-		return [{ commands: rsp['commands'] }, []];
+		return [{ commands: rsp.commands }, []];
 	}
 	public verify(cmd: string): Observable<CombErr<IRcloneServer>> {
 		return this.getSupersetOutput().pipe(

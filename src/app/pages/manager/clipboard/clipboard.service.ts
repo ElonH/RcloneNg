@@ -27,7 +27,7 @@ export class ClipboardService extends Clipboard {
 	/**
 	 * @description post copy/move/delete tasks to server
 	 * @param dst only needed by copy/move
-	 * @param opers
+	 * @param opers a group of operation to be post
 	 */
 	public async post(dst: NavigationFlowOutNode, ...opers: IManipulate[]) {
 		const pack: Package = this.values

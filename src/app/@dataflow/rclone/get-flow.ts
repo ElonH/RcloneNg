@@ -11,9 +11,9 @@ export abstract class GetFlow<
 	protected cacheSupport = false;
 	protected cachePath = '';
 	protected requestAjax(x: CombErr<Tin>): AjaxRequest {
-		const headers = {};
-		if (x[0]['user'] && x[0]['user'] !== '' && x[0]['password'] && x[0]['password'] !== '')
-			headers['Authorization'] = 'Basic ' + btoa(`${x[0]['user']}:${x[0]['password']}`);
+		const headers: any = {};
+		if (x[0].user && x[0].user !== '' && x[0].password && x[0].password !== '')
+			headers.Authorization = 'Basic ' + btoa(`${x[0].user}:${x[0].password}`);
 		return {
 			method: 'GET',
 			headers,

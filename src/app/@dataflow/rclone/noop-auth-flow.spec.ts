@@ -36,7 +36,7 @@ describe('NoopAuthFlow', () => {
 
 			expectObservable(
 				rst.getOutput().pipe(
-					tap(x => console.log(x)),
+					// tap(x => console.log(x)),
 					map(x => x[1].length === 0)
 				)
 			).toBe(expected, values);

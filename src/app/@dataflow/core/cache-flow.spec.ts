@@ -75,7 +75,7 @@ describe('CacheFlow', () => {
 				protected cachePath = 'foo';
 				public prerequest$ = null;
 				protected requestCache(pre: CombErr<TestIn>): Observable<CombErr<TestOut>> {
-					return of([{ k: pre[0]['ab'] }, []]);
+					return of([{ k: pre[0].ab }, []]);
 				}
 				constructor(pre: Observable<CombErr<TestIn>>) {
 					super();
@@ -121,7 +121,7 @@ describe('CacheFlow', () => {
 				protected cachePath = 'foo';
 				public prerequest$ = pre;
 				protected requestCache(pre: CombErr<TestIn>): Observable<CombErr<TestOut>> {
-					return of([{ cd: pre[0]['ab'] + 1 }, []]);
+					return of([{ cd: pre[0].ab + 1 }, []]);
 				}
 			})();
 			rst.deploy();

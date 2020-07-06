@@ -593,7 +593,10 @@ export abstract class OptionsGetFlow extends PostFlow<IRcloneServer, OptionsGetF
 	}
 }
 
-export function NestedGet(obj: object, ...path: (string | number)[]) {
+/**
+ * access deeply nested properties without assertion
+ */
+export function NestedGet(obj: unknown, ...path: (string | number)[]) {
 	return path.reduce(
 		(pre, cur) => (pre && typeof pre[cur] !== 'undefined' ? pre[cur] : undefined),
 		obj

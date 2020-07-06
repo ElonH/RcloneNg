@@ -3,20 +3,20 @@ import { DebugElement } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 
-import { SpeedChartComponent } from './speed-chart.component';
+import { RngSpeedChartComponent } from './speed-chart.component';
 
 describe('SpeedChartComponent', () => {
-	let component: SpeedChartComponent;
-	let fixture: ComponentFixture<SpeedChartComponent>;
+	let component: RngSpeedChartComponent;
+	let fixture: ComponentFixture<RngSpeedChartComponent>;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [SpeedChartComponent],
+			declarations: [RngSpeedChartComponent],
 		}).compileComponents();
 	}));
 
 	beforeEach(() => {
-		fixture = TestBed.createComponent(SpeedChartComponent);
+		fixture = TestBed.createComponent(RngSpeedChartComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});
