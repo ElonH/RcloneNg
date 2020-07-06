@@ -2,8 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-### [0.4.1-dev.0](https://github.com/ElonH/RcloneNg/compare/v0.4.0...v0.4.1-dev.0) (2020-07-05)
+## [0.5.0-dev.0](https://github.com/ElonH/RcloneNg/compare/v0.4.0...v0.5.0-dev.0) (2020-07-06)
 
+
+### ⚠ BREAKING CHANGES
+
+* eslint as default linter
 
 ### Features
 
@@ -16,6 +20,9 @@ All notable changes to this project will be documented in this file. See [standa
 ### Bug Fixes
 
 * **browser-setting-flow:** existed data is build on default settings ([e102370](https://github.com/ElonH/RcloneNg/commit/e10237090ab63003099e3b3076d41147f9d9cbb9))
+
+
+* migrating from tslint to eslint ([a66ec4f](https://github.com/ElonH/RcloneNg/commit/a66ec4fb2a1794ab414a9c8e848bcf92b71f21f7))
 
 ## [0.4.0](https://github.com/ElonH/RcloneNg/compare/v0.3.2...v0.4.0) (2020-07-03)
 
