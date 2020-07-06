@@ -72,7 +72,7 @@
     "rxjs": "~6.6.0",
     "tslib": "^1.13.0",
     "vex-js": "^4.1.0",
-    "vscode-icons-js": "^9.3.0",
+    "vscode-icons-js": "^10.1.1",
     "zone.js": "~0.10.2"
   },
   "devDependencies": {
@@ -115,7 +115,7 @@
     "tslint": "^5.20.1",
     "tslint-angular": "^3.0.2",
     "typescript": "~3.8.3",
-    "vscode-icons": "github:vscode-icons/vscode-icons#v9.3.0",
+    "vscode-icons": "github:vscode-icons/vscode-icons#v10.1.1",
     "webpack-bundle-analyzer": "^3.8.0"
   },
   "config": {
