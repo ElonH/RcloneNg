@@ -1,5 +1,5 @@
 {
-	"extends": ["tslint:latest", "tslint-angular", "tslint-config-prettier"],
+	"extends": ["tslint:latest", "tslint-angular"],
 	"rules": {
 		"array-type": false,
 		"arrow-return-shorthand": true,

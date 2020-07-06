@@ -1,0 +1,103 @@
+{
+	"eslint.enable": true,
+	"tslint.exclude": "**",
+	"eslint.options": {
+		"configFile": ".eslintrc.json",
+		"extensions": [".ts", ".html"]
+	},
+	"eslint.validate": ["javascript", "javascriptreact", "html", "typescriptreact"],
+	"[json]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"[jsonc]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"[typescript]": {
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
+	},
+	"editor.codeActionsOnSave": {
+		"source.fixAll.eslint": true
+	},
+	"prettier.requireConfig": true,
+	"prettier.configPath": ".prettierrc.json",
+	"editor.detectIndentation": false,
+	"editor.tabSize": 2,
+	"editor.insertSpaces": false,
+	"typescript.suggest.paths": false,
+	"todohighlight.isEnable": true,
+	"todohighlight.isCaseSensitive": false,
+	"todohighlight.defaultStyle": {
+		"backgroundColor": "#ffab00",
+		"border": "1px solid #eee",
+		"borderRadius": "2px",
+		"color": "red",
+		"cursor": "pointer",
+		"isWholeLine": false,
+		"overviewRulerColor": "#ffab00"
+	},
+	"todohighlight.exclude": [
+		"**/node_modules/**",
+		"**/bower_components/**",
+		"**/dist/**",
+		"**/build/**",
+		"**/.vscode/**",
+		"**/.github/**",
+		"**/_output/**",
+		"**/*.min.*",
+		"**/*.map",
+		"**/.next/**"
+	],
+	"todohighlight.include": [
+		"**/*.js",
+		"**/*.jsx",
+		"**/*.py",
+		"**/*.ts",
+		"**/*.tsx",
+		"**/*.html",
+		"**/*.php",
+		"**/*.css",
+		"**/*.scss",
+		"**/*.h",
+		"**/*.cpp",
+		"**/*.cxx"
+	],
+	"todohighlight.keywords": [
+		"DEBUG:",
+		"REVIEW:",
+		{
+			"backgroundColor": "cyan",
+			"color": "#000",
+			"overviewRulerColor": "cyan",
+			"text": "NOTE:"
+		},
+		"Warning:",
+		{
+			"backgroundColor": "red",
+			"color": "#ffffff",
+			"overviewRulerColor": "red",
+			"text": "Error:"
+		},
+		{
+			"color": "#000",
+			"isWholeLine": false,
+			"text": "HACK:"
+		},
+		{
+			"backgroundColor": "rgba(0,0,0,.2)",
+			"border": "1px solid red",
+			"borderRadius": "2px",
+			"color": "red",
+			"overviewRulerColor": "grey",
+			"text": "TODO:"
+		},
+		{
+			"text": "OPMZ:",
+			"backgroundColor": "rgba(0,0,0,.2)",
+			"color": "green",
+			"border": "1px solid green",
+			"borderRadius": "3px"
+		}
+	],
+	"todohighlight.maxFilesForSearch": 5120,
+	"todohighlight.toggleURI": false
+}
