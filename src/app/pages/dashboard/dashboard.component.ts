@@ -3,8 +3,8 @@ import { ResponsiveSizeInfoRx } from 'ngx-responsive';
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { map, pairwise, takeWhile } from 'rxjs/operators';
 import { CombErr } from '../../@dataflow/core';
-import { IRcloneServer } from '../../@dataflow/extra';
 import {
+	IRcloneServer,
 	CoreBwlimitFlow,
 	CoreBwlimitFlowInNode,
 	CoreMemstatsFlow,
@@ -12,6 +12,7 @@ import {
 	CoreStatsFlowInNode,
 	CoreVersionFlow,
 } from '../../@dataflow/rclone';
+
 import { FormatBytes } from '../../utils/format-bytes';
 import { ConnectionService } from '../connection.service';
 

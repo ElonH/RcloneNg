@@ -1,7 +1,6 @@
 import { AjaxFlowInteralNode, CombErr, FlowOutNode } from '../core';
-import { IRcloneServer } from '../extra';
+import { IRcloneServer, PostFlow } from './post-flow';
 import { IRcloneOptions } from './options-get-flow';
-import { PostFlow } from './post-flow';
 
 type NestedPartial<T> = {
 	[K in keyof T]?: T[K] extends (infer R)[] ? NestedPartial<R>[] : NestedPartial<T[K]>;

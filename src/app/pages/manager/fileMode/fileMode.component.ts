@@ -4,13 +4,16 @@ import { filter, map } from 'rxjs/operators';
 import { CombErr } from '../../../@dataflow/core';
 import {
 	IManipulate,
-	NavigationFlow,
-	NavigationFlowOutNode,
 	OperationsListExtendsFlow,
 	OperationsListExtendsFlowInNode,
 	OperationsListExtendsFlowOutItemNode,
 } from '../../../@dataflow/extra';
-import { OperationsListFlow, OperationsListFlowInNode } from '../../../@dataflow/rclone';
+import {
+	OperationsListFlow,
+	OperationsListFlowInNode,
+	NavigationFlow,
+	NavigationFlowOutNode,
+} from '../../../@dataflow/rclone';
 import { ConnectionService } from '../../connection.service';
 import { ClipboardService } from '../clipboard/clipboard.service';
 import { ListViewComponent } from './listView/listView.component';

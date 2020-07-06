@@ -1,7 +1,6 @@
 import { AjaxFlowInteralNode, CombErr } from '../core';
-import { IRcloneServer } from '../extra';
+import { IRcloneServer, PostFlow } from './post-flow';
 import { NoopAuthFlowSupNode } from './noop-auth-flow';
-import { PostFlow } from './post-flow';
 
 export interface CoreVersionOutNode {
 	arch: string;

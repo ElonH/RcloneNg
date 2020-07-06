@@ -2,7 +2,7 @@ import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { TestScheduler } from 'rxjs/testing';
 import { CombErr } from '../core';
-import { IRcloneServer } from '../extra';
+import { IRcloneServer } from './post-flow';
 import { NoopAuthFlow, NoopAuthFlowOutNode } from './noop-auth-flow';
 
 describe('NoopAuthFlow', () => {

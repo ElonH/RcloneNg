@@ -1,6 +1,6 @@
 import { NothingFlow } from '../core';
 import { OperationsListFlowOutItemNode } from '../rclone';
-import { NavigationFlowOutNode } from './navigation-flow';
+import { NavigationFlowOutNode } from '../rclone/navigation-flow';
 
 export type IManipulate = 'copy' | 'move' | 'del';
 

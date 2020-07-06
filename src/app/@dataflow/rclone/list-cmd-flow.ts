@@ -1,8 +1,7 @@
 import { Observable } from 'rxjs';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 import { AjaxFlowInteralNode, CombErr } from '../core';
-import { IRcloneServer } from '../extra';
-import { PostFlow } from './post-flow';
+import { IRcloneServer, PostFlow } from './post-flow';
 
 export interface IRcloneCmd {
 	Path: string;

@@ -7,18 +7,16 @@ import { combineLatest, Subject } from 'rxjs';
 import { map, withLatestFrom } from 'rxjs/operators';
 import { CombErr } from '../../../@dataflow/core';
 import {
-	NavigationFlowOutNode,
-	OperationsListExtendsFlowOutItemNode,
-} from '../../../@dataflow/extra';
-import {
 	NestedGet,
 	OperationsAboutFlow,
 	OperationsFsinfoFlow,
 	OperationsFsinfoFlowInNode,
+	NavigationFlowOutNode,
 } from '../../../@dataflow/rclone';
 import { RngSpaceUsageChartComponent } from '../../../components/space-usage-chart/space-usage-chart.component';
 import { ConnectionService } from '../../connection.service';
 import { ServerSettingService } from '../../settings/sever-setting/server-setting.service';
+import { OperationsListExtendsFlowOutItemNode } from '../../../@dataflow/extra';
 import { DownloadFileService } from './download-file.service';
 
 @Component({

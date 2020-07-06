@@ -1,8 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { combineLatest, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { NavigationFlowOutNode } from '../../../@dataflow/extra';
-import { ListRemotesFlow } from '../../../@dataflow/rclone';
+import { NavigationFlowOutNode, ListRemotesFlow } from '../../../@dataflow/rclone';
 import { ConnectionService } from '../../connection.service';
 
 @Component({

@@ -1,6 +1,6 @@
 import { AjaxFlowInteralNode, CombErr } from '../core';
-import { IRcloneServer, NavigationFlowOutNode } from '../extra';
-import { PostFlow } from './post-flow';
+import { NavigationFlowOutNode } from './navigation-flow';
+import { PostFlow, IRcloneServer } from './post-flow';
 
 export interface OperationsListFlowParmsNode {
 	fs: string;

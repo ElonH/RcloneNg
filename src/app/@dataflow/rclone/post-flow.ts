@@ -1,7 +1,12 @@
 import { Observable } from 'rxjs';
 import { AjaxRequest, AjaxResponse } from 'rxjs/ajax';
 import { AjaxFlow, CombErr, FlowInNode, FlowOutNode, FlowSupNode } from '../core';
-import { IRcloneServer } from '../extra';
+
+export interface IRcloneServer {
+	url: string;
+	user?: string;
+	password?: string;
+}
 
 export type AjaxFlowNode = [AjaxResponse | any, Error[]];
 

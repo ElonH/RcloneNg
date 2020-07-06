@@ -1,6 +1,6 @@
 import { AjaxFlowInteralNode, CombErr, FlowOutNode } from '../core';
-import { IRcloneServer, NavigationFlowOutNode } from '../extra';
-import { PostFlow } from './post-flow';
+import { NavigationFlowOutNode } from './navigation-flow';
+import { PostFlow, IRcloneServer } from './post-flow';
 
 export interface OperationsMkdirFlowParamsNode {
 	/** a remote name string eg “drive:” */

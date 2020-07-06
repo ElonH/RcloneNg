@@ -14,7 +14,7 @@
 				"ecmaVersion": 2020,
 				"sourceType": "module"
 			},
-			"plugins": ["eslint-plugin-prefer-arrow", "jsdoc"],
+			"plugins": ["jsdoc"],
 			"extends": [
 				// "eslint:recommended",
 				// "plugin:@typescript-eslint/recommended",
@@ -46,8 +46,7 @@
 				"import/no-unresolved": "error",
 				"import/named": "error",
 				"import/no-self-import": "error",
-				// TODO: NavigationFlowOutNode, NavigationFlow
-				// "import/no-cycle": "error",
+				"import/no-cycle": "error",
 				"import/newline-after-import": "error",
 				"jsdoc/require-returns": "off",
 				"jsdoc/require-param": "off",
@@ -268,8 +267,6 @@
 		"no-var": "error",
 		"object-shorthand": "error",
 		"one-var": ["error", "never"],
-		// TODO:
-		// "prefer-arrow/prefer-arrow-functions": "error",
 		"prefer-const": "error",
 		"prefer-object-spread": "error",
 		"quotes": "off",

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NbGlobalLogicalPosition, NbToastrService } from '@nebular/theme';
-import { NavigationFlow, NavigationFlowOutNode } from '../../../@dataflow/extra';
+import { NavigationFlow, NavigationFlowOutNode } from '../../../@dataflow/rclone';
 
 @Component({
 	selector: 'app-manager-breadcrumb',

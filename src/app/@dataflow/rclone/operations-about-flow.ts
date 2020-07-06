@@ -1,8 +1,8 @@
 import { Observable, of } from 'rxjs';
 import { AjaxFlowInteralNode, CombErr, FlowOutNode } from '../core';
-import { IRcloneServer, NavigationFlowOutNode } from '../extra';
+import { NavigationFlowOutNode } from './navigation-flow';
 import { OperationsFsinfoFlowOutNode } from './operations-fsinfo-flow';
-import { PostFlow } from './post-flow';
+import { PostFlow, IRcloneServer } from './post-flow';
 
 export interface OperationsAboutFlowParamsNode {
 	/** a remote name string eg "drive:" */

@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { CombErr } from '../../@dataflow/core';
-import { NavigationFlowOutNode } from '../../@dataflow/extra';
 import {
 	AsyncPostFlowOutNode,
 	OperationsCopyfileFlow,
@@ -27,6 +26,7 @@ import {
 	SyncMoveFlow,
 	SyncMoveFlowInNode,
 	SyncMoveFlowParamsNode,
+	NavigationFlowOutNode,
 } from '../../@dataflow/rclone';
 import { ConnectionService } from '../connection.service';
 import { TaskHandlerManager, TasksQueue } from './tasks-queue';
