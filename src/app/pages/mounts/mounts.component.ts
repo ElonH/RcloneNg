@@ -20,7 +20,11 @@ import { MountsService } from './mounts.service';
 				Mount Point Manager
 				<nb-actions class="push-to-right">
 					<nb-action icon="trash-2-outline" (click)="unmountAll()"></nb-action>
-					<nb-action icon="sync" (click)="refresh()"></nb-action>
+					<nb-action
+						[ngClass]="{ 'infinte-rotate': configuration.isLoading }"
+						icon="sync"
+						(click)="refresh()"
+					></nb-action>
 				</nb-actions>
 			</nb-card-header>
 			<nb-card-body>
