@@ -1,8 +1,8 @@
-import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnInit, ViewChild, TemplateRef, OnDestroy } from '@angular/core';
 import { Config, Columns, DefaultConfig } from 'ngx-easy-table';
 import { NbToastrService } from '@nebular/theme';
 import * as moment from 'moment';
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {
 	ListMountsOutItemNode,
@@ -96,7 +96,9 @@ import { MountsService } from './mounts.service';
 		`,
 	],
 })
-export class MountsComponent implements OnInit {
+export class MountsComponent implements OnInit, OnDestroy {
+	private scrb: Subscription[] = [];
+
 	public configuration: Config;
 	public columns: Columns[] = [
 		{ key: 'Fs', title: 'Filesystem', width: '37.5%' },
@@ -144,33 +146,37 @@ export class MountsComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		this.mountService.list$.getOutput().subscribe(node => {
-			this.configuration.isLoading = false;
-			if (node[1].length !== 0) {
-				this.toastr.danger(node[1].join(' \n'), 'fetch mounts list failure', {
-					icon: 'list-tree',
-					iconPack: 'css.gg',
-					destroyByClick: true,
-					duration: 0,
+		this.scrb.push(
+			this.mountService.list$.getOutput().subscribe(node => {
+				this.configuration.isLoading = false;
+				if (node[1].length !== 0) {
+					this.toastr.danger(node[1].join(' \n'), 'fetch mounts list failure', {
+						icon: 'list-tree',
+						iconPack: 'css.gg',
+						destroyByClick: true,
+						duration: 0,
+					});
+					return;
+				}
+				this.data = node[0].mountPoints.map(part => {
+					return {
+						...part,
+						MountedTimeHumanReadable: moment(part.MountedOn).fromNow(),
+					};
 				});
-				return;
-			}
-			this.data = node[0].mountPoints.map(part => {
-				return {
-					...part,
-					MountedTimeHumanReadable: moment(part.MountedOn).fromNow(),
-				};
-			});
-		});
+			})
+		);
 
-		this.mountService.add$.getOutput().subscribe(node => {
-			if (node[1].length !== 0) {
-				this.toastr.danger(node[1].join(' \n'), 'Create mount point failure', {
-					icon: 'alert-triangle-outline',
-				});
-				return;
-			}
-		});
+		this.scrb.push(
+			this.mountService.add$.getOutput().subscribe(node => {
+				if (node[1].length !== 0) {
+					this.toastr.danger(node[1].join(' \n'), 'Create mount point failure', {
+						icon: 'alert-triangle-outline',
+					});
+					return;
+				}
+			})
+		);
 		this.refresh();
 
 		this.configuration = { ...DefaultConfig };
@@ -179,5 +185,10 @@ export class MountsComponent implements OnInit {
 
 		this.options = ['mount', 'cmount', 'mount2'];
 		this.filteredOptions$ = of(this.options);
+	}
+
+	ngOnDestroy() {
+		this.scrb.forEach(x => x.unsubscribe());
+		this.scrb = [];
 	}
 }
