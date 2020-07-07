@@ -46,7 +46,7 @@ import { MountsService } from './mounts.service';
 					nbInput
 					fullWidth
 					fieldSize="small"
-					placeholder="remote path to be mounted"
+					placeholder="remote path to be mounted ([remote]:[path])"
 					[(ngModel)]="newMount.fs"
 				/>
 			</th>
@@ -152,6 +152,13 @@ export class MountsComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit() {
+		this.configuration = { ...DefaultConfig };
+		this.configuration.searchEnabled = false;
+		this.configuration.isLoading = true;
+
+		this.options = ['mount', 'cmount', 'mount2'];
+		this.filteredOptions$ = of(this.options);
+
 		this.scrb.push(
 			this.mountService.list$.getOutput().subscribe(node => {
 				this.configuration.isLoading = false;
@@ -202,13 +209,6 @@ export class MountsComponent implements OnInit, OnDestroy {
 			})
 		);
 		this.refresh();
-
-		this.configuration = { ...DefaultConfig };
-		this.configuration.searchEnabled = false;
-		this.configuration.isLoading = true;
-
-		this.options = ['mount', 'cmount', 'mount2'];
-		this.filteredOptions$ = of(this.options);
 	}
 
 	ngOnDestroy() {
