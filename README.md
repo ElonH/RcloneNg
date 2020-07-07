@@ -13,13 +13,15 @@ An angular web application for rclone
 
 - Explore remote file system
 
-- Create **asynchronous** jobs of coping/moving objects between remotes
+- Create asynchronous jobs of coping/moving objects between remotes
 
 - Download file from remote
 
 - Observe the progress of running jobs (by groups)
 
 - Allow editing of rclone server configuration (power by [monaco editor](https://github.com/microsoft/monaco-editor), supporting lint, document description)
+
+- Manager Rclone mounts
 
 ## Screenshots
 
@@ -34,6 +36,8 @@ An angular web application for rclone
 ![Screenshot 3](./assets/screenshot-3.png)
 
 ![Screenshot 4](./assets/screenshot-4.png)
+
+![Screenshot 7](./assets/screenshot-7.png)
 
 ## Get Started
 
