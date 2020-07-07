@@ -59,6 +59,7 @@ export class MountsComponent implements OnInit {
 	list$: ListMountsFlow;
 
 	refresh() {
+		this.list$.clearCache();
 		this.listTrigger.next(1);
 	}
 
