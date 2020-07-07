@@ -15,6 +15,8 @@ All notable changes to this project will be documented in this file. See [standa
 * **browser-setting:** set some value associated with browser or RcloneNg rather server ([cded9c5](https://github.com/ElonH/RcloneNg/commit/cded9c50deba0758d0927057a80aa9d980439461))
 * **layout.service:** provide some information to archive responsive view ([9359bc9](https://github.com/ElonH/RcloneNg/commit/9359bc9d6680cbbb178e5048e1003c7f01d6dc77))
 * **mount-manager:** enable to create a new mount point ([9a6ec51](https://github.com/ElonH/RcloneNg/commit/9a6ec51bd1d4bda6f11a0d75ba3ce0bcf9bb7441))
+* **mounts-manager:** add animation on refresh button ([0f298f0](https://github.com/ElonH/RcloneNg/commit/0f298f0cc7e5cf84f3b1ad825a8e48986e639c6c))
+* **mounts-manager:** add button to unmount all mounts ([d736533](https://github.com/ElonH/RcloneNg/commit/d7365331684d0f8f5bcd4841079ed9177ab8966f))
 * **mounts-manager:** show current mount points ([0a0c2e7](https://github.com/ElonH/RcloneNg/commit/0a0c2e76ca264fba17d35a37cdbec99be59f603a))
 * **mounts-manager:** unmount selected active mount ([f57d8b7](https://github.com/ElonH/RcloneNg/commit/f57d8b713bb9468287f1062484a5ec7fb8724604))
 * add subtitle in preloader ([b457e3f](https://github.com/ElonH/RcloneNg/commit/b457e3fea847474aefd600a8d92b0ba0cba9a65e))
@@ -24,6 +26,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 * **browser-setting-flow:** existed data is build on default settings ([e102370](https://github.com/ElonH/RcloneNg/commit/e10237090ab63003099e3b3076d41147f9d9cbb9))
 * **css.gg:** fix svg path ([3cd617e](https://github.com/ElonH/RcloneNg/commit/3cd617e1ec19b111baec87abf59b20ec18adacc6))
+* **mounts-manager:** fix `isLoading` undefined ([922ebab](https://github.com/ElonH/RcloneNg/commit/922ebab139f3284132f88da981b7dfdc8ad6add6))
 * **mounts-manager:** refresh not work around ([1ac7cd2](https://github.com/ElonH/RcloneNg/commit/1ac7cd2778d8d1c7c00562f7ca8bedc506a92922))
 * **mounts-manager:** unscribe on destory ([3676b5a](https://github.com/ElonH/RcloneNg/commit/3676b5ad4ed19c483f185490c1d95b5169948a68))
 
