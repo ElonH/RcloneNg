@@ -4,6 +4,7 @@ import { NbToastrService } from '@nebular/theme';
 import * as moment from 'moment';
 import { Observable, of, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { Modal } from 'ngx-modialog-7/plugins/vex';
 import {
 	ListMountsOutItemNode,
 	IMountType,
@@ -17,7 +18,10 @@ import { MountsService } from './mounts.service';
 		<nb-card>
 			<nb-card-header>
 				Mount Point Manager
-				<nb-icon icon="sync" (click)="refresh()"></nb-icon>
+				<nb-actions class="push-to-right">
+					<nb-action icon="trash-2-outline" (click)="unmountAll()"></nb-action>
+					<nb-action icon="sync" (click)="refresh()"></nb-action>
+				</nb-actions>
 			</nb-card-header>
 			<nb-card-body>
 				<ngx-table
@@ -90,7 +94,7 @@ import { MountsService } from './mounts.service';
 			nb-card-header {
 				display: flex;
 			}
-			nb-card-header > nb-icon {
+			.push-to-right {
 				margin-left: auto;
 			}
 		`,
@@ -110,7 +114,11 @@ export class MountsComponent implements OnInit, OnDestroy {
 		MountedTimeHumanReadable: string;
 	})[] = [];
 
-	constructor(private mountService: MountsService, private toastr: NbToastrService) {}
+	constructor(
+		private mountService: MountsService,
+		private toastr: NbToastrService,
+		public modal: Modal
+	) {}
 
 	options: IMountType[];
 	filteredOptions$: Observable<IMountType[]>;
@@ -149,6 +157,22 @@ export class MountsComponent implements OnInit, OnDestroy {
 	unmount(item: ListMountsOutItemNode) {
 		this.unmountItem = item;
 		this.mountService.unmount({ mountPoint: item.MountPoint });
+	}
+
+	unmountAll() {
+		this.modal
+			.confirm()
+			.className('flat-attack')
+			.message(`Unmount all activated mounts?`)
+			.isBlocking(false)
+			.open()
+			.result.then(
+				ok => {
+					if (!ok) return;
+					this.mountService.unmountAll();
+				},
+				() => {}
+			);
 	}
 
 	ngOnInit() {
@@ -204,6 +228,20 @@ export class MountsComponent implements OnInit, OnDestroy {
 				this.newMount.mountPoint = this.unmountItem.MountPoint;
 				this.newMount.mountType = '';
 				this.toastr.success(this.unmountItem.MountPoint, 'Unmount actived mount successfully', {
+					icon: 'checkmark-circle-outline',
+				});
+			})
+		);
+
+		this.scrb.push(
+			this.mountService.unmountAll$.getOutput().subscribe(node => {
+				if (node[1].length !== 0) {
+					this.toastr.danger(node[1].join(' \n'), 'Unmount all mounts failure', {
+						icon: 'alert-triangle-outline',
+					});
+					return;
+				}
+				this.toastr.success('', 'Unmount all mounts successfully', {
 					icon: 'checkmark-circle-outline',
 				});
 			})

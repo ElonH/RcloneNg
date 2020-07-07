@@ -8,6 +8,7 @@ import {
 	NbInputModule,
 	NbAutocompleteModule,
 	NbButtonModule,
+	NbActionsModule,
 } from '@nebular/theme';
 import { FormsModule } from '@angular/forms';
 import { MountsRoutingModule } from './mounts-routing.module';
@@ -25,6 +26,7 @@ import { MountsComponent } from './mounts.component';
 		NbAutocompleteModule,
 		NbButtonModule,
 		FormsModule,
+		NbActionsModule,
 	],
 })
 export class MountsModule {}

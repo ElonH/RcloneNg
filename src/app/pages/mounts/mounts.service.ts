@@ -9,6 +9,7 @@ import {
 	MountUnmountFlow,
 	MountUnmountFlowInNode,
 	MountUnmountFlowParamsNode,
+	MountUnmountAllFlow,
 } from '../../@dataflow/rclone';
 import { CombErr } from '../../@dataflow/core';
 import { ConnectionService } from '../connection.service';
@@ -25,6 +26,9 @@ export class MountsService {
 
 	private unmountTrigger = new Subject<MountUnmountFlowParamsNode>();
 	unmount$: MountUnmountFlow;
+
+	private unmountAllTrigger = new Subject<number>();
+	unmountAll$: MountUnmountAllFlow;
 
 	constructor(private connectService: ConnectionService) {
 		const outer = this;
@@ -58,6 +62,18 @@ export class MountsService {
 			if (node[1].length !== 0) return;
 			this.refreshList();
 		});
+
+		this.unmountAll$ = new (class extends MountUnmountAllFlow {
+			public prerequest$: Observable<CombErr<IRcloneServer>> = combineLatest(
+				[outer.unmountAllTrigger, outer.connectService.listCmd$.verify(this.cmd)],
+				(_, node) => node
+			);
+		})();
+		this.unmountAll$.deploy();
+		this.unmountAll$.getOutput().subscribe(node => {
+			if (node[1].length !== 0) return;
+			this.refreshList();
+		});
 	}
 	refreshList() {
 		this.list$.clearCache();
@@ -70,5 +86,9 @@ export class MountsService {
 
 	unmount(params: MountUnmountFlowParamsNode) {
 		this.unmountTrigger.next(params);
+	}
+
+	unmountAll() {
+		this.unmountAllTrigger.next(1);
 	}
 }
