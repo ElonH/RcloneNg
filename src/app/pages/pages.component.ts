@@ -69,7 +69,7 @@ export class PagesComponent implements OnInit {
 		resp.connect();
 		this.iconLibraries.registerSvgPack('css.gg', {
 			'list-tree':
-				'<svg width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 24 24"><use xlink:href="/all.svg#gg-list-tree"/></svg>',
+				'<svg width="100%" height="100%" preserveAspectRatio="none" viewBox="0 0 24 24"><use xlink:href="./all.svg#gg-list-tree"/></svg>',
 		});
 	}
 	menu = MENU_ITEMS;
