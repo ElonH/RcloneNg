@@ -22,6 +22,7 @@ All notable changes to this project will be documented in this file. See [standa
 
 * **browser-setting-flow:** existed data is build on default settings ([e102370](https://github.com/ElonH/RcloneNg/commit/e10237090ab63003099e3b3076d41147f9d9cbb9))
 * **css.gg:** fix svg path ([3cd617e](https://github.com/ElonH/RcloneNg/commit/3cd617e1ec19b111baec87abf59b20ec18adacc6))
+* **mounts-manager:** refresh not work around ([1ac7cd2](https://github.com/ElonH/RcloneNg/commit/1ac7cd2778d8d1c7c00562f7ca8bedc506a92922))
 
 
 * migrating from tslint to eslint ([a66ec4f](https://github.com/ElonH/RcloneNg/commit/a66ec4fb2a1794ab414a9c8e848bcf92b71f21f7))
