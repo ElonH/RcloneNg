@@ -30,11 +30,11 @@ import { MountsService } from './mounts.service';
 						<td>{{ row.Fs }}</td>
 						<td>{{ row.MountPoint }}</td>
 						<td>{{ row.MountedTimeHumanReadable }}</td>
-						<!-- <td>
-							<button nbButton status="danger" size="small" (click)="(newMount)">
+						<td>
+							<button nbButton status="danger" size="small" (click)="unmount(row)">
 								<nb-icon icon="close-outline"></nb-icon>
 							</button>
-						</td> -->
+						</td>
 					</ng-template>
 				</ngx-table>
 			</nb-card-body>
@@ -118,6 +118,7 @@ export class MountsComponent implements OnInit, OnDestroy {
 	@ViewChild('mountTypeInp') mountTypeInp: any;
 
 	newMount: MountMountFlowParamsNode = { fs: '', mountPoint: '', mountType: '' };
+	private unmountItem: ListMountsOutItemNode;
 
 	private filter(value: string): string[] {
 		const filterValue = value.toLowerCase();
@@ -143,6 +144,11 @@ export class MountsComponent implements OnInit, OnDestroy {
 
 	mount() {
 		this.mountService.mount(this.newMount);
+	}
+
+	unmount(item: ListMountsOutItemNode) {
+		this.unmountItem = item;
+		this.mountService.unmount({ mountPoint: item.MountPoint });
 	}
 
 	ngOnInit() {
@@ -175,6 +181,24 @@ export class MountsComponent implements OnInit, OnDestroy {
 					});
 					return;
 				}
+			})
+		);
+
+		this.scrb.push(
+			this.mountService.unmount$.getOutput().subscribe(node => {
+				if (node[1].length !== 0) {
+					this.toastr.danger(node[1].join(' \n'), 'Unmount actived mount failure', {
+						icon: 'alert-triangle-outline',
+					});
+					return;
+				}
+				// if successfully unmount, push unmount item to input
+				this.newMount.fs = this.unmountItem.Fs;
+				this.newMount.mountPoint = this.unmountItem.MountPoint;
+				this.newMount.mountType = '';
+				this.toastr.success(this.unmountItem.MountPoint, 'Unmount actived mount successfully', {
+					icon: 'checkmark-circle-outline',
+				});
 			})
 		);
 		this.refresh();

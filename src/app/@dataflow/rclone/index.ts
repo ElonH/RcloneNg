@@ -28,3 +28,4 @@ export * from './core-version-flow';
 export * from './navigation-flow';
 export * from './list-mounts-flow';
 export * from './mount-mount-flow';
+export * from './mount-unmount-flow';
