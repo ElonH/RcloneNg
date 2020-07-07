@@ -34,8 +34,7 @@
     "deploy": "ng deploy",
     "build:schemas": "npm run build:schemas:server && npm run build:schemas:browser",
     "build:schemas:server": "ts-json-schema-generator --path ./src/app/@dataflow/rclone/options-get-flow.ts --type IRcloneOptions --expose none -o ./src/app/@dataflow/extra/server-setting-schema.json",
-    "build:schemas:browser": "ts-json-schema-generator --path ./src/app/@dataflow/extra/browser-setting-flow.ts --type IBrowserSetting --expose none -o ./src/app/@dataflow/extra/browser-setting-schema.json",
-    "tslint-check": "tslint-config-prettier-check ./tslint.json"
+    "build:schemas:browser": "ts-json-schema-generator --path ./src/app/@dataflow/extra/browser-setting-flow.ts --type IBrowserSetting --expose none -o ./src/app/@dataflow/extra/browser-setting-schema.json"
   },
   "private": true,
   "dependencies": {
