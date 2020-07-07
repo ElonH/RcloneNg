@@ -1,5 +1,5 @@
 tasks:
-  - init: npm install
+  - init: NG_CLI_ANALYTICS=ci npm install
     command: npm run start
 
 vscode:
