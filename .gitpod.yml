@@ -4,6 +4,17 @@ tasks:
 
 vscode:
   extensions:
-    - Angular.ng-template@0.1000.1:SI9sdELNl5vkSjqL6IsEnA==
-    - esbenp.prettier-vscode@5.1.0:M3Ww4EayZWhGCgk49C1Ldw==
     - DavidAnson.vscode-markdownlint@0.36.1:5xO8Po7lfq/3zIQ0RF9qXQ==
+    - dbaeumer.vscode-eslint@2.1.3:1NRvj3UKNTNwmYjptmUmIw==
+    - Angular.ng-template@0.1000.2:fow5NOWTo34TjwpJKA+ETw==
+    - vscode-icons-team.vscode-icons@10.1.1:PKCY8FKQ+GNh32Vd7rsvuA==
+    - esbenp.prettier-vscode@5.1.3:t532ajsImUSrA9N8Bd7jQw==
+    - msjsdiag.debugger-for-chrome@4.12.6:IdQBlCQEnixzHAOkHC36ew==
+    - oderwat.indent-rainbow@7.4.0:fDVCkGVYd1R2lfcs1tHk+Q==
+    - CoenraadS.bracket-pair-colorizer-2@0.1.4:+JUeb/jFYZt2/0MS/gUllA==
+    - mrmlnc.vscode-scss@0.9.1:Xtvl8tTagyF2RBdAFpjFvg==
+    - johnpapa.Angular2@9.1.2:uM4PeIXJe98IILNHmOn+nA==
+    - christian-kohler.path-intellisense@2.2.1:fMWBG5pfnZrunkTMwUwEDg==
+    - formulahendry.auto-close-tag@0.5.7:ofk2Iz4wGQdoTFrnRwzI7w==
+    - Gruntfuggly.todo-tree@0.0.177:GCyi2twUFe/rN35G99jXYQ==
+    - wayou.vscode-todo-highlight@1.0.4:TEjqQVt71hdvHUZA7eWgHA==
