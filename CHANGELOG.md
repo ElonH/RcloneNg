@@ -2,7 +2,9 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## [0.5.0-dev.0](https://github.com/ElonH/RcloneNg/compare/v0.4.0...v0.5.0-dev.0) (2020-07-07)
+### [0.5.1-dev.0](https://github.com/ElonH/RcloneNg/compare/v0.5.0...v0.5.1-dev.0) (2020-07-28)
+
+## [0.5.0](https://github.com/ElonH/RcloneNg/compare/v0.4.0...v0.5.0) (2020-07-28)
 
 
 ### ⚠ BREAKING CHANGES
