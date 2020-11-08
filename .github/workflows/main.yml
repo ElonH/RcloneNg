@@ -43,7 +43,7 @@ jobs:
         run: |
           npm run release -- -p dev && git reset HEAD~
           npm run deploy --  --name="ElonH" --email="elonhhuang@gmail.com"
-	docker:		
+  docker:		
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
