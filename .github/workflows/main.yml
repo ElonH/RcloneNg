@@ -74,4 +74,4 @@ jobs:
                 if [ "$GITHUB_EVENT_NAME" == "push" ]; then
                   PUSH="--push"
                 fi
-                docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 --pull $PUSH -t $DOCKER_IMAGE .
+                docker buildx build --platform linux/amd64 --pull $PUSH -t $DOCKER_IMAGE .
