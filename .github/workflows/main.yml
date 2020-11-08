@@ -2,7 +2,7 @@ name: Build
 on:
   push:
     branches:
-      - master
+			- master
   pull_request:
     branches:
       - master
@@ -63,13 +63,16 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
       - name: Docker Build
         env:
-          DOCKER_REGISTRY: ${{ secrets.GITHUB_REPOSITORY }}
           DOCKER_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_PASSWORD }}
         run: |      
           docker buildx create --name mybuilder
           docker buildx use mybuilder
           docker buildx inspect --bootstrap
-          DOCKER_IMAGE="${GITHUB_REPOSITORY}"
-          docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 --pull --push \
+					DOCKER_IMAGE="${GITHUB_REPOSITORY}"
+					PUSH=""
+					if [ "$GITHUB_EVENT_NAME" == "push" ]; then
+					  PUSH="--push"
+					fi
+          docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 --pull $PUSH \
           -t $DOCKER_IMAGE .        
