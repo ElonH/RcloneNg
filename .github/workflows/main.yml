@@ -71,5 +71,4 @@ jobs:
           docker buildx use mybuilder
           docker buildx inspect --bootstrap
           DOCKER_IMAGE="${GITHUB_REPOSITORY}"
-          docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 --pull --push \
-          -t $DOCKER_IMAGE .        
+          docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 --pull --push -t $DOCKER_IMAGE .        
