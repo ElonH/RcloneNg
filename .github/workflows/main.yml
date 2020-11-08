@@ -69,7 +69,7 @@ jobs:
                 docker buildx create --name mybuilder
                 docker buildx use mybuilder
                 docker buildx inspect --bootstrap
-                DOCKER_IMAGE="${GITHUB_REPOSITORY}"
+                DOCKER_IMAGE="$(echo ${GITHUB_REPOSITORY} | awk '{print tolower($0)}')"
                 PUSH=""
                 if [ "$GITHUB_EVENT_NAME" == "push" ]; then
                   PUSH="--push"
