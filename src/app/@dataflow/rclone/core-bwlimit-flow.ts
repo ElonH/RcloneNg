@@ -14,6 +14,9 @@ export interface CoreBwlimitFlowOutNode {
 	};
 }
 
+/**
+ * newwork flow to query or setting rclone bandwidth
+ */
 export abstract class CoreBwlimitFlow extends PostFlow<
 	CoreBwlimitFlowInNode,
 	CoreBwlimitFlowOutNode,

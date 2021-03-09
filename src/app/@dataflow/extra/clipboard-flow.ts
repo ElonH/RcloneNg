@@ -19,16 +19,28 @@ export interface ClipboardItem {
 	dst?: NavigationFlowOutNode;
 }
 
+/**
+ * @description A tiny build-in clipboard system
+ */
 export class Clipboard {
+	/**
+	 * @description	All of items in clipboard
+	 */
 	public get values(): ClipboardItem[] {
 		return Array.from(this.data.values());
 	}
 
+	/**
+	 * @description count items in clipboard
+	 */
 	public get size(): number {
 		return this.data.size;
 	}
 	private data = new Map<string, ClipboardItem>();
 
+	/**
+	 * marshal remote path
+	 */
 	public static genKey(remote: string, path: string) {
 		return JSON.stringify({ r: remote, p: path });
 	}
@@ -62,13 +74,20 @@ export class Clipboard {
 		if (!this.data.has(key)) return undefined;
 		return this.data.get(key).oper;
 	}
-
+	/**
+	 * count items whose manipulation kind is `o`
+	 */
 	public countManipulation(o: IManipulate): number {
 		let cnt = 0;
 		this.data.forEach(x => (x.oper === o ? cnt++ : null));
 		return cnt;
 	}
 
+	/**
+	 * clear items
+	 *
+	 * @param opers a list of operation kind
+	 */
 	public clear(...opers: IManipulate[]) {
 		if (opers.length === 0) this.data.clear();
 		else

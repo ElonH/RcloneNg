@@ -8,6 +8,9 @@ export abstract class CurrentUserFlow extends SupersetFlow<
 	UsersFlowOutNode,
 	CurrentUserFlowOutNode
 > {
+	/**
+	 * switch user
+	 */
 	public static setLogin(name: string) {
 		localStorage.setItem('loginUser', name);
 	}
