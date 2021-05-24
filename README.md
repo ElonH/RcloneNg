@@ -64,7 +64,11 @@ rclone rcd --rc-user=<user> --rc-pass=<password> --rc-allow-origin="http://local
 
    - lazy way
 
-     if set `--rc-allow-origin="https://elonh.github.io"`, <https://elonh.github.io/RcloneNg> can be used directly.
+     if set `--rc-allow-origin="https://elonh.github.io"`, <https://elonh.github.io/RcloneNg> can be used directly.ç
+	 - Docker way
+	   ```bash
+	   docker run --name rcloneng -d -p 8080:80 elonh/rcloneng
+		 ```
 
 3. editing server connection in RcloneNg.
 
